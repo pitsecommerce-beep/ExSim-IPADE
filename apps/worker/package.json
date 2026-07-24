@@ -1,0 +1,23 @@
+{
+  "name": "@exsim/worker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@exsim/engine": "workspace:*",
+    "@exsim/schema": "workspace:*",
+    "@supabase/supabase-js": "^2.49.0",
+    "pg-boss": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
