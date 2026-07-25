@@ -1,7 +1,7 @@
 import PgBoss from "pg-boss";
 import { createClient } from "@supabase/supabase-js";
 import { simulatePeriod } from "@exsim/engine";
-import type { SimulationInput } from "@exsim/engine";
+import type { SimulationInput, PeriodReport } from "@exsim/engine";
 
 const DATABASE_URL = process.env["DATABASE_URL"];
 const SUPABASE_URL = process.env["SUPABASE_URL"];
@@ -66,7 +66,7 @@ async function handleSimulationJob(jobs: PgBoss.Job<SimulationJobData>[]): Promi
 
   const output = simulatePeriod(input);
 
-  const results = output.reports.map((report) => ({
+  const results = output.reports.map((report: PeriodReport) => ({
     period_id: periodId,
     team_id: report.teamId,
     state_snapshot: output.nextState,
