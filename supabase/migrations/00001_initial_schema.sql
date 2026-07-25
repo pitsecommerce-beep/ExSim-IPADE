@@ -2,19 +2,33 @@
 -- All money values in integer cents (no floating point)
 -- RLS enabled on every table
 
--- Enums
+-- ============================================================
+-- 1. ENUMS
+-- ============================================================
 CREATE TYPE public.user_role AS ENUM ('professor', 'participant');
 CREATE TYPE public.world_status AS ENUM ('setup', 'active', 'paused', 'completed');
 CREATE TYPE public.period_status AS ENUM ('pending', 'decisions_open', 'processing', 'completed');
 
--- Helper: current user id
+-- ============================================================
+-- 2. HELPER FUNCTION
+-- ============================================================
 CREATE OR REPLACE FUNCTION public.auth_uid() RETURNS uuid
   LANGUAGE sql STABLE
   AS $$ SELECT auth.uid() $$;
 
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 -- ============================================================
--- PROFILES — simulation configuration templates
+-- 3. ALL TABLES (no policies yet — avoids forward references)
 -- ============================================================
+
+-- PROFILES
 CREATE TABLE public.profiles (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name        text NOT NULL,
@@ -24,8 +38,113 @@ CREATE TABLE public.profiles (
   updated_at  timestamptz NOT NULL DEFAULT now()
 );
 
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+-- COURSES
+CREATE TABLE public.courses (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name          text NOT NULL,
+  professor_id  uuid NOT NULL REFERENCES auth.users(id),
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now()
+);
 
+-- WORLDS
+CREATE TABLE public.worlds (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  course_id       uuid NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
+  profile_id      uuid NOT NULL REFERENCES public.profiles(id),
+  name            text NOT NULL,
+  current_period  integer NOT NULL DEFAULT 7,
+  status          public.world_status NOT NULL DEFAULT 'setup',
+  seed            integer NOT NULL DEFAULT floor(random() * 2147483647)::integer,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  updated_at      timestamptz NOT NULL DEFAULT now()
+);
+
+-- TEAMS
+CREATE TABLE public.teams (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  world_id    uuid NOT NULL REFERENCES public.worlds(id) ON DELETE CASCADE,
+  name        text NOT NULL,
+  created_at  timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (world_id, name)
+);
+
+-- TEAM_MEMBERS
+CREATE TABLE public.team_members (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  team_id       uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
+  user_id       uuid NOT NULL REFERENCES auth.users(id),
+  role_in_team  text,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (team_id, user_id)
+);
+
+-- PERIODS
+CREATE TABLE public.periods (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  world_id        uuid NOT NULL REFERENCES public.worlds(id) ON DELETE CASCADE,
+  period_number   integer NOT NULL,
+  status          public.period_status NOT NULL DEFAULT 'pending',
+  deadline        timestamptz,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (world_id, period_number)
+);
+
+-- DECISIONS
+CREATE TABLE public.decisions (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  period_id     uuid NOT NULL REFERENCES public.periods(id) ON DELETE CASCADE,
+  team_id       uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
+  data          jsonb NOT NULL DEFAULT '{}',
+  submitted_at  timestamptz,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (period_id, team_id)
+);
+
+-- SIMULATION_RESULTS
+CREATE TABLE public.simulation_results (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  period_id       uuid NOT NULL REFERENCES public.periods(id) ON DELETE CASCADE,
+  team_id         uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
+  state_snapshot  jsonb NOT NULL DEFAULT '{}',
+  report          jsonb NOT NULL DEFAULT '{}',
+  trace           jsonb NOT NULL DEFAULT '{}',
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (period_id, team_id)
+);
+
+-- SIMULATION_JOBS
+CREATE TABLE public.simulation_jobs (
+  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  world_id      uuid NOT NULL REFERENCES public.worlds(id),
+  period_id     uuid NOT NULL REFERENCES public.periods(id),
+  seed          integer NOT NULL,
+  status        text NOT NULL DEFAULT 'queued',
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  started_at    timestamptz,
+  completed_at  timestamptz,
+  error         text
+);
+
+-- ============================================================
+-- 4. ENABLE RLS ON ALL TABLES
+-- ============================================================
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.worlds ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.periods ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.decisions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.simulation_results ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.simulation_jobs ENABLE ROW LEVEL SECURITY;
+
+-- ============================================================
+-- 5. RLS POLICIES (all tables exist now — no forward references)
+-- ============================================================
+
+-- PROFILES
 CREATE POLICY "Professors can manage own profiles"
   ON public.profiles FOR ALL
   USING (created_by = auth_uid())
@@ -35,19 +154,7 @@ CREATE POLICY "Profiles readable by authenticated"
   ON public.profiles FOR SELECT
   USING (auth.role() = 'authenticated');
 
--- ============================================================
 -- COURSES
--- ============================================================
-CREATE TABLE public.courses (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name          text NOT NULL,
-  professor_id  uuid NOT NULL REFERENCES auth.users(id),
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  updated_at    timestamptz NOT NULL DEFAULT now()
-);
-
-ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Professors manage own courses"
   ON public.courses FOR ALL
   USING (professor_id = auth_uid())
@@ -65,23 +172,7 @@ CREATE POLICY "Participants read courses they belong to"
     )
   );
 
--- ============================================================
--- WORLDS — each course has N worlds, each uses a profile
--- ============================================================
-CREATE TABLE public.worlds (
-  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  course_id       uuid NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
-  profile_id      uuid NOT NULL REFERENCES public.profiles(id),
-  name            text NOT NULL,
-  current_period  integer NOT NULL DEFAULT 7,
-  status          public.world_status NOT NULL DEFAULT 'setup',
-  seed            integer NOT NULL DEFAULT floor(random() * 2147483647)::integer,
-  created_at      timestamptz NOT NULL DEFAULT now(),
-  updated_at      timestamptz NOT NULL DEFAULT now()
-);
-
-ALTER TABLE public.worlds ENABLE ROW LEVEL SECURITY;
-
+-- WORLDS
 CREATE POLICY "Professors manage worlds of own courses"
   ON public.worlds FOR ALL
   USING (
@@ -108,19 +199,7 @@ CREATE POLICY "Participants read own world"
     )
   );
 
--- ============================================================
 -- TEAMS
--- ============================================================
-CREATE TABLE public.teams (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  world_id    uuid NOT NULL REFERENCES public.worlds(id) ON DELETE CASCADE,
-  name        text NOT NULL,
-  created_at  timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (world_id, name)
-);
-
-ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Professors manage teams"
   ON public.teams FOR ALL
   USING (
@@ -147,20 +226,7 @@ CREATE POLICY "Participants read own team"
     )
   );
 
--- ============================================================
--- TEAM_MEMBERS — links auth.users to teams
--- ============================================================
-CREATE TABLE public.team_members (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  team_id       uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
-  user_id       uuid NOT NULL REFERENCES auth.users(id),
-  role_in_team  text,
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (team_id, user_id)
-);
-
-ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
-
+-- TEAM_MEMBERS
 CREATE POLICY "Professors manage team members"
   ON public.team_members FOR ALL
   USING (
@@ -189,21 +255,7 @@ CREATE POLICY "Members update own role"
   USING (user_id = auth_uid())
   WITH CHECK (user_id = auth_uid());
 
--- ============================================================
 -- PERIODS
--- ============================================================
-CREATE TABLE public.periods (
-  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  world_id        uuid NOT NULL REFERENCES public.worlds(id) ON DELETE CASCADE,
-  period_number   integer NOT NULL,
-  status          public.period_status NOT NULL DEFAULT 'pending',
-  deadline        timestamptz,
-  created_at      timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (world_id, period_number)
-);
-
-ALTER TABLE public.periods ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Professors manage periods"
   ON public.periods FOR ALL
   USING (
@@ -231,22 +283,7 @@ CREATE POLICY "Participants read own world periods"
     )
   );
 
--- ============================================================
--- DECISIONS — JSONB per team per period
--- ============================================================
-CREATE TABLE public.decisions (
-  id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  period_id     uuid NOT NULL REFERENCES public.periods(id) ON DELETE CASCADE,
-  team_id       uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
-  data          jsonb NOT NULL DEFAULT '{}',
-  submitted_at  timestamptz,
-  created_at    timestamptz NOT NULL DEFAULT now(),
-  updated_at    timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (period_id, team_id)
-);
-
-ALTER TABLE public.decisions ENABLE ROW LEVEL SECURITY;
-
+-- DECISIONS
 CREATE POLICY "Professors read all decisions in own courses"
   ON public.decisions FOR SELECT
   USING (
@@ -273,22 +310,7 @@ CREATE POLICY "Team members manage own decisions"
     )
   );
 
--- ============================================================
--- SIMULATION_RESULTS — output per team per period
--- ============================================================
-CREATE TABLE public.simulation_results (
-  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  period_id       uuid NOT NULL REFERENCES public.periods(id) ON DELETE CASCADE,
-  team_id         uuid NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
-  state_snapshot  jsonb NOT NULL DEFAULT '{}',
-  report          jsonb NOT NULL DEFAULT '{}',
-  trace           jsonb NOT NULL DEFAULT '{}',
-  created_at      timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (period_id, team_id)
-);
-
-ALTER TABLE public.simulation_results ENABLE ROW LEVEL SECURITY;
-
+-- SIMULATION_RESULTS
 CREATE POLICY "Professors read all results in own courses"
   ON public.simulation_results FOR SELECT
   USING (
@@ -313,23 +335,7 @@ CREATE POLICY "Service role inserts results"
   ON public.simulation_results FOR INSERT
   WITH CHECK (true);
 
--- ============================================================
--- SIMULATION_JOBS — pg-boss compatible queue
--- ============================================================
-CREATE TABLE public.simulation_jobs (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  world_id    uuid NOT NULL REFERENCES public.worlds(id),
-  period_id   uuid NOT NULL REFERENCES public.periods(id),
-  seed        integer NOT NULL,
-  status      text NOT NULL DEFAULT 'queued',
-  created_at  timestamptz NOT NULL DEFAULT now(),
-  started_at  timestamptz,
-  completed_at timestamptz,
-  error       text
-);
-
-ALTER TABLE public.simulation_jobs ENABLE ROW LEVEL SECURITY;
-
+-- SIMULATION_JOBS
 CREATE POLICY "Professors read jobs in own courses"
   ON public.simulation_jobs FOR SELECT
   USING (
@@ -341,16 +347,8 @@ CREATE POLICY "Professors read jobs in own courses"
   );
 
 -- ============================================================
--- Updated_at trigger
+-- 6. TRIGGERS
 -- ============================================================
-CREATE OR REPLACE FUNCTION public.set_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE TRIGGER profiles_updated_at BEFORE UPDATE ON public.profiles
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
@@ -364,7 +362,7 @@ CREATE TRIGGER decisions_updated_at BEFORE UPDATE ON public.decisions
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- ============================================================
--- Indexes
+-- 7. INDEXES
 -- ============================================================
 CREATE INDEX idx_worlds_course ON public.worlds(course_id);
 CREATE INDEX idx_teams_world ON public.teams(world_id);
