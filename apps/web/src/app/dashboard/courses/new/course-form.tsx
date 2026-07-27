@@ -124,56 +124,56 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setError("Sesión expirada."); setSaving(false); return; }
 
-    const { data: course, error: courseError } = await supabase
+    const courseId = crypto.randomUUID();
+    const { error: courseError } = await supabase
       .from("courses")
       .insert({
+        id: courseId,
         name: name.trim(),
         professor_id: user.id,
-      })
-      .select("id")
-      .single();
+      });
 
-    if (courseError || !course) {
-      setError(courseError?.message ?? "Error al crear curso.");
+    if (courseError) {
+      setError(courseError.message);
       setSaving(false);
       return;
     }
 
-    const { data: world, error: worldError } = await supabase
+    const worldId = crypto.randomUUID();
+    const { error: worldError } = await supabase
       .from("worlds")
       .insert({
-        course_id: course.id,
+        id: worldId,
+        course_id: courseId,
         name: `${name.trim()} - Mundo 1`,
         profile_id: profileId,
-      })
-      .select("id")
-      .single();
+      });
 
-    if (worldError || !world) {
-      setError(worldError?.message ?? "Error al crear mundo.");
+    if (worldError) {
+      setError(worldError.message);
       setSaving(false);
       return;
     }
 
     const teams = generateTeamNames(teamCount);
     const teamInserts = teams.map((tName) => ({
-      world_id: world.id,
+      id: crypto.randomUUID(),
+      world_id: worldId,
       name: tName,
     }));
 
-    const { data: createdTeams, error: teamsError } = await supabase
+    const { error: teamsError } = await supabase
       .from("teams")
-      .insert(teamInserts)
-      .select("id, name");
+      .insert(teamInserts);
 
-    if (teamsError || !createdTeams) {
-      setError(teamsError?.message ?? "Error al crear equipos.");
+    if (teamsError) {
+      setError(teamsError.message);
       setSaving(false);
       return;
     }
 
     if (participants.length > 0) {
-      const teamMap = new Map(createdTeams.map((t: { id: string; name: string }) => [t.name, t.id]));
+      const teamMap = new Map(teamInserts.map((t) => [t.name, t.id]));
 
       const participantEmails = participants.map((p) => p.email);
       const uniqueEmails = [...new Set(participantEmails)];
@@ -223,7 +223,7 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
       }
     }
 
-    router.push(`/dashboard/courses/${course.id}`);
+    router.push(`/dashboard/courses/${courseId}`);
     router.refresh();
   }
 

@@ -1,5 +1,6 @@
 import { createSupabaseServer } from "@/lib/supabase/server";
 import Link from "next/link";
+import { CourseList } from "./course-list";
 
 export const dynamic = "force-dynamic";
 
@@ -54,24 +55,7 @@ export default async function CoursesPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
-            <Link
-              key={course.id}
-              href={`/dashboard/courses/${course.id}`}
-              className="group rounded-lg border border-ipade-border bg-ipade-surface p-5 transition-shadow hover:shadow-md"
-            >
-              <div className="mb-3">
-                <h3 className="font-semibold text-ipade-text group-hover:text-ipade-primary">{course.name}</h3>
-              </div>
-              <p className="text-xs text-ipade-text-muted">
-                Creado {new Date(course.created_at).toLocaleDateString("es-MX", {
-                  day: "numeric", month: "short", year: "numeric",
-                })}
-              </p>
-            </Link>
-          ))}
-        </div>
+        <CourseList courses={courses} />
       )}
     </div>
   );
