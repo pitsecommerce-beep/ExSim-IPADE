@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 interface Course {
   id: string;
   name: string;
+  status: string;
   created_at: string;
   updated_at: string;
 }
@@ -23,45 +24,63 @@ export default async function CoursesPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-ipade-text">Cursos</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-ipade-text">Cursos</h1>
+          <p className="mt-1 text-sm text-ipade-text-secondary">
+            Administra tus cursos de simulación y participantes.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/courses/new"
+          className="rounded-md bg-ipade-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover"
+        >
+          Nuevo Curso
+        </Link>
       </div>
 
       {courses.length === 0 ? (
         <div className="rounded-lg border-2 border-dashed border-ipade-border bg-ipade-surface p-12 text-center">
-          <p className="text-ipade-text-muted">No hay cursos creados.</p>
+          <svg className="mx-auto h-12 w-12 text-ipade-text-muted" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <p className="mt-4 text-ipade-text-muted">No hay cursos creados.</p>
           <p className="mt-1 text-sm text-ipade-text-muted">
-            Los cursos permiten organizar mundos de simulación y asignar participantes.
+            Crea tu primer curso para organizar simulaciones y asignar participantes.
           </p>
+          <Link
+            href="/dashboard/courses/new"
+            className="mt-4 inline-block rounded-md bg-ipade-accent px-4 py-2 text-sm font-medium text-white hover:bg-ipade-accent-hover"
+          >
+            Crear Primer Curso
+          </Link>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-ipade-border bg-ipade-surface">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-ipade-border bg-ipade-bg">
-                <th className="px-4 py-3 font-medium text-ipade-text-secondary">Nombre</th>
-                <th className="px-4 py-3 font-medium text-ipade-text-secondary">Creado</th>
-                <th className="w-20 px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map((course) => (
-                <tr key={course.id} className="border-b border-ipade-border last:border-0 hover:bg-ipade-bg/30">
-                  <td className="px-4 py-3 font-medium text-ipade-text">{course.name}</td>
-                  <td className="px-4 py-3 text-ipade-text-muted">
-                    {new Date(course.created_at).toLocaleDateString("es-MX")}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/dashboard/courses/${course.id}`}
-                      className="text-sm text-ipade-primary hover:underline"
-                    >
-                      Abrir
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {courses.map((course) => (
+            <Link
+              key={course.id}
+              href={`/dashboard/courses/${course.id}`}
+              className="group rounded-lg border border-ipade-border bg-ipade-surface p-5 transition-shadow hover:shadow-md"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <h3 className="font-semibold text-ipade-text group-hover:text-ipade-primary">{course.name}</h3>
+                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  course.status === "active"
+                    ? "bg-green-100 text-green-700"
+                    : course.status === "completed"
+                      ? "bg-gray-100 text-gray-600"
+                      : "bg-yellow-100 text-yellow-700"
+                }`}>
+                  {course.status === "active" ? "Activo" : course.status === "completed" ? "Finalizado" : "Configuración"}
+                </span>
+              </div>
+              <p className="text-xs text-ipade-text-muted">
+                Creado {new Date(course.created_at).toLocaleDateString("es-MX", {
+                  day: "numeric", month: "short", year: "numeric",
+                })}
+              </p>
+            </Link>
+          ))}
         </div>
       )}
     </div>
