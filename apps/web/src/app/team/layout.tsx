@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { LogoutButton } from "./logout-button";
 
 const IPADE_LOGO = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
 
@@ -37,14 +38,7 @@ export default async function TeamLayout({ children }: { children: React.ReactNo
               )}
             </div>
           </div>
-          <form action="/api/auth/signout" method="POST">
-            <button
-              type="submit"
-              className="text-sm text-ipade-text-muted hover:text-ipade-text"
-            >
-              Cerrar Sesión
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </header>
       <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>

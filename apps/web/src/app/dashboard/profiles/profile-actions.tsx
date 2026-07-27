@@ -9,8 +9,25 @@ interface SheetDef {
   sheet: string;
   table: string;
   type: "params" | "data";
-  columns: { key: string; header: string; type?: "text" | "number" | "decimal" | "boolean" }[];
+  columns: ColDef[];
   sample?: Record<string, unknown>;
+  required?: string[];
+}
+
+interface ColDef {
+  key: string;
+  header: string;
+  type?: "text" | "number" | "decimal" | "boolean";
+  required?: boolean;
+  allowedValues?: string[];
+}
+
+interface ValidationError {
+  sheet: string;
+  row: number;
+  column: string;
+  value: string;
+  expected: string;
 }
 
 const SHEET_DEFS: SheetDef[] = [
@@ -19,9 +36,10 @@ const SHEET_DEFS: SheetDef[] = [
     table: "profiles",
     type: "params",
     columns: [
-      { key: "name", header: "Nombre del perfil" },
+      { key: "name", header: "Nombre del perfil", required: true },
       { key: "description", header: "Descripción" },
     ],
+    required: ["name"],
     sample: { name: "Perfil Ejemplo", description: "Simulación de negocios ejecutivo" },
   },
   {
@@ -29,7 +47,7 @@ const SHEET_DEFS: SheetDef[] = [
     table: "profile_params",
     type: "params",
     columns: [
-      { key: "periodos", header: "Periodos", type: "number" },
+      { key: "periodos", header: "Periodos", type: "number", required: true },
       { key: "periodos_por_superperiodo", header: "Periodos por superperiodo", type: "number" },
       { key: "subperiodos_por_periodo", header: "Subperiodos por periodo", type: "number" },
       { key: "unidades_por_subperiodo", header: "Unidades por subperiodo", type: "number" },
@@ -61,8 +79,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "zones",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "active", header: "Activo", type: "boolean" },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
@@ -72,8 +90,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "segments",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
   },
@@ -82,8 +100,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "lifecycle_phases",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
   },
@@ -92,8 +110,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "product_dimensions",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "valor_inicial", header: "Valor inicial", type: "decimal" },
       { key: "valor_min", header: "Valor mín.", type: "decimal" },
       { key: "valor_max", header: "Valor máx.", type: "decimal" },
@@ -105,9 +123,9 @@ const SHEET_DEFS: SheetDef[] = [
     table: "channels",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
-      { key: "tipo", header: "Tipo" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
+      { key: "tipo", header: "Tipo", allowedValues: ["salespeople", "monetary"] },
       { key: "alfa", header: "Alfa", type: "decimal" },
       { key: "kappa", header: "Kappa", type: "decimal" },
       { key: "active", header: "Activo", type: "boolean" },
@@ -119,8 +137,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "media",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "costo_spot", header: "Costo spot", type: "decimal" },
       { key: "limite_spots", header: "Límite spots", type: "number" },
       { key: "active", header: "Activo", type: "boolean" },
@@ -148,8 +166,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "sections",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
   },
@@ -158,8 +176,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "machines",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "capacidad_hora", header: "Capacidad/hora", type: "decimal" },
       { key: "costo_compra", header: "Costo compra", type: "decimal" },
       { key: "costo_instalacion", header: "Costo instalación", type: "decimal" },
@@ -174,8 +192,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "materials",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "unidad", header: "Unidad" },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
@@ -185,8 +203,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "suppliers",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "plazo_pago", header: "Plazo pago", type: "number" },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
@@ -196,8 +214,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "supplier_materials",
     type: "data",
     columns: [
-      { key: "supplier_key", header: "Clave proveedor" },
-      { key: "material_key", header: "Clave material" },
+      { key: "supplier_key", header: "Clave proveedor", required: true },
+      { key: "material_key", header: "Clave material", required: true },
       { key: "precio", header: "Precio", type: "decimal" },
       { key: "lote_minimo", header: "Lote mínimo", type: "number" },
       { key: "plazo_entrega", header: "Plazo entrega", type: "number" },
@@ -238,9 +256,9 @@ const SHEET_DEFS: SheetDef[] = [
     table: "benefits",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
-      { key: "tipo_curva", header: "Tipo curva" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
+      { key: "tipo_curva", header: "Tipo curva", allowedValues: ["linear", "concave", "convex", "threshold"] },
       { key: "x_min", header: "X mín", type: "decimal" },
       { key: "x_max", header: "X máx", type: "decimal" },
       { key: "y_min", header: "Y mín", type: "decimal" },
@@ -285,8 +303,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "transport_modes",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "costo_por_ton_km", header: "Costo/ton·km", type: "decimal" },
       { key: "tiempo_periodos", header: "Tiempo (periodos)", type: "number" },
       { key: "co2_gr_ton_km", header: "CO₂ gr/ton·km", type: "decimal" },
@@ -299,8 +317,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "improvements",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "costo", header: "Costo", type: "decimal" },
       { key: "periodos_desarrollo", header: "Periodos desarrollo", type: "number" },
       { key: "activa", header: "Activa", type: "boolean" },
@@ -329,8 +347,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "esg_components",
     type: "data",
     columns: [
-      { key: "tipo", header: "Tipo" },
-      { key: "nombre", header: "Nombre" },
+      { key: "tipo", header: "Tipo", required: true, allowedValues: ["solar_panel", "green_energy", "tree", "co2_credit"] },
+      { key: "nombre", header: "Nombre", required: true },
       { key: "inversion_unitaria", header: "Inversión unitaria", type: "decimal" },
       { key: "vida_util_periodos", header: "Vida útil", type: "number" },
       { key: "costo_mantenimiento_pct", header: "Mant. %", type: "decimal" },
@@ -391,8 +409,8 @@ const SHEET_DEFS: SheetDef[] = [
     table: "report_types",
     type: "data",
     columns: [
-      { key: "key", header: "Clave" },
-      { key: "name", header: "Nombre" },
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
       { key: "costo", header: "Costo", type: "decimal" },
       { key: "active", header: "Activo", type: "boolean" },
       { key: "sort_order", header: "Orden", type: "number" },
@@ -400,38 +418,278 @@ const SHEET_DEFS: SheetDef[] = [
   },
 ];
 
+const BOOL_TRUE = new Set(["true", "1", "si", "sí", "yes", "verdadero"]);
+const BOOL_FALSE = new Set(["false", "0", "no", "", "falso"]);
+const BOOL_ALL = new Set([...BOOL_TRUE, ...BOOL_FALSE]);
+
+function isBooleanLike(s: string): boolean {
+  return BOOL_ALL.has(s.toLowerCase().trim());
+}
+
+function isIntegerLike(s: string): boolean {
+  return /^-?\d+$/.test(s.trim());
+}
+
+function isDecimalLike(s: string): boolean {
+  return /^-?\d+(\.\d+)?$/.test(s.trim());
+}
+
 function parseValue(raw: unknown, type?: string): unknown {
   const s = String(raw ?? "").trim();
   if (s === "") return type === "number" ? 0 : type === "decimal" ? 0 : type === "boolean" ? false : "";
   if (type === "number") return parseInt(s) || 0;
   if (type === "decimal") return parseFloat(s) || 0;
-  if (type === "boolean") return s === "true" || s === "1" || s.toLowerCase() === "si" || s.toLowerCase() === "sí" || s === "TRUE";
+  if (type === "boolean") return BOOL_TRUE.has(s.toLowerCase());
   return s;
 }
 
-function parseSheetRows(ws: XLSX.WorkSheet, def: SheetDef): Record<string, unknown>[] {
-  const rawRows = XLSX.utils.sheet_to_json<Record<string, string>>(ws);
-  const headerMap = new Map<string, typeof def.columns[number]>();
+function buildHeaderMap(def: SheetDef) {
+  const headerMap = new Map<string, ColDef>();
   for (const col of def.columns) {
     headerMap.set(col.header.toLowerCase(), col);
     headerMap.set(col.key.toLowerCase(), col);
   }
+  return headerMap;
+}
 
-  return rawRows.map((row) => {
+function validateSheet(
+  ws: XLSX.WorkSheet,
+  def: SheetDef,
+  supplierKeys?: Set<string>,
+  materialKeys?: Set<string>,
+): { rows: Record<string, unknown>[]; errors: ValidationError[] } {
+  const rawRows = XLSX.utils.sheet_to_json<Record<string, string>>(ws);
+  const headerMap = buildHeaderMap(def);
+  const errors: ValidationError[] = [];
+  const rows: Record<string, unknown>[] = [];
+
+  if (def.type === "data" && rawRows.length === 0) {
+    return { rows: [], errors: [] };
+  }
+
+  const seenKeys = new Set<string>();
+
+  for (let i = 0; i < rawRows.length; i++) {
+    const rawRow = rawRows[i]!;
+    const excelRow = i + 2;
     const parsed: Record<string, unknown> = {};
-    for (const [rawKey, rawVal] of Object.entries(row)) {
+    const matched = new Set<string>();
+
+    for (const [rawKey, rawVal] of Object.entries(rawRow)) {
       const col = headerMap.get(rawKey.toLowerCase());
       if (!col) continue;
+      matched.add(col.key);
+      const s = String(rawVal ?? "").trim();
+
+      if (col.required && s === "") {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: "(vacío)",
+          expected: "Valor requerido — no puede estar vacío",
+        });
+        continue;
+      }
+
+      if (s === "") {
+        parsed[col.key] = parseValue("", col.type);
+        continue;
+      }
+
+      if (col.type === "number" && !isIntegerLike(s)) {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: s,
+          expected: `Número entero (ej: 8, 12, 160)`,
+        });
+        continue;
+      }
+
+      if (col.type === "decimal" && !isDecimalLike(s)) {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: s,
+          expected: `Número decimal (ej: 0.85, 200000, 1.2)`,
+        });
+        continue;
+      }
+
+      if (col.type === "boolean" && !isBooleanLike(s)) {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: s,
+          expected: `Booleano: true/false, si/no, 1/0`,
+        });
+        continue;
+      }
+
+      if (col.allowedValues && !col.allowedValues.includes(s)) {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: s,
+          expected: `Uno de: ${col.allowedValues.join(", ")}`,
+        });
+        continue;
+      }
+
+      if (col.key === "key" && def.type === "data") {
+        if (seenKeys.has(s)) {
+          errors.push({
+            sheet: def.sheet,
+            row: excelRow,
+            column: col.header,
+            value: s,
+            expected: `Clave única — "${s}" ya existe en otra fila`,
+          });
+        }
+        seenKeys.add(s);
+      }
+
+      if (def.table === "supplier_materials") {
+        if (col.key === "supplier_key" && supplierKeys && !supplierKeys.has(s)) {
+          errors.push({
+            sheet: def.sheet,
+            row: excelRow,
+            column: col.header,
+            value: s,
+            expected: `Clave de proveedor que exista en la hoja "Proveedores"`,
+          });
+        }
+        if (col.key === "material_key" && materialKeys && !materialKeys.has(s)) {
+          errors.push({
+            sheet: def.sheet,
+            row: excelRow,
+            column: col.header,
+            value: s,
+            expected: `Clave de material que exista en la hoja "Materiales"`,
+          });
+        }
+      }
+
       parsed[col.key] = parseValue(rawVal, col.type);
     }
-    return parsed;
-  }).filter((r) => Object.keys(r).length > 0);
+
+    for (const col of def.columns) {
+      if (col.required && !matched.has(col.key)) {
+        errors.push({
+          sheet: def.sheet,
+          row: excelRow,
+          column: col.header,
+          value: "(no encontrado)",
+          expected: "Columna requerida faltante en la hoja",
+        });
+      }
+    }
+
+    if (Object.keys(parsed).length > 0) rows.push(parsed);
+  }
+
+  return { rows, errors };
+}
+
+function ValidationModal({
+  errors,
+  onClose,
+}: {
+  errors: ValidationError[];
+  onClose: () => void;
+}) {
+  const grouped = new Map<string, ValidationError[]>();
+  for (const e of errors) {
+    const list = grouped.get(e.sheet) || [];
+    list.push(e);
+    grouped.set(e.sheet, list);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-red-100 bg-red-50 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <svg className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+            <div>
+              <h3 className="font-semibold text-red-800">
+                {errors.length} {errors.length === 1 ? "error encontrado" : "errores encontrados"}
+              </h3>
+              <p className="text-sm text-red-600">Corrige los siguientes valores antes de importar.</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1 text-red-400 hover:bg-red-100 hover:text-red-600">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="max-h-[60vh] overflow-y-auto px-6 py-4">
+          {Array.from(grouped.entries()).map(([sheet, sheetErrors]) => (
+            <div key={sheet} className="mb-5 last:mb-0">
+              <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-ipade-text">
+                <svg className="h-4 w-4 text-ipade-text-muted" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+                Hoja: {sheet}
+                <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                  {sheetErrors.length}
+                </span>
+              </h4>
+              <div className="overflow-hidden rounded-lg border border-ipade-border">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-ipade-bg text-xs text-ipade-text-muted">
+                    <tr>
+                      <th className="px-3 py-2">Fila</th>
+                      <th className="px-3 py-2">Columna</th>
+                      <th className="px-3 py-2">Valor actual</th>
+                      <th className="px-3 py-2">Se espera</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-ipade-border">
+                    {sheetErrors.map((err, j) => (
+                      <tr key={j} className="hover:bg-red-50/50">
+                        <td className="whitespace-nowrap px-3 py-2 font-mono text-xs">{err.row}</td>
+                        <td className="px-3 py-2 font-medium text-ipade-text">{err.column}</td>
+                        <td className="px-3 py-2">
+                          <code className="rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-700">{err.value}</code>
+                        </td>
+                        <td className="px-3 py-2 text-xs text-ipade-text-muted">{err.expected}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-ipade-border bg-ipade-bg px-6 py-3">
+          <button
+            onClick={onClose}
+            className="w-full rounded-md bg-ipade-primary px-4 py-2 text-sm font-medium text-white hover:bg-ipade-primary/90"
+          >
+            Entendido — Corregir y volver a importar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function ProfileActions() {
   const [creating, setCreating] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const supabaseRef = useRef<ReturnType<typeof createSupabaseClient> | null>(null);
@@ -466,7 +724,17 @@ export function ProfileActions() {
 
     for (const def of SHEET_DEFS) {
       const headers = def.columns.map((c) => c.header);
-      const data: unknown[][] = [headers];
+      const typeHints = def.columns.map((c) => {
+        const parts: string[] = [];
+        if (c.required) parts.push("REQUERIDO");
+        if (c.type === "number") parts.push("entero");
+        else if (c.type === "decimal") parts.push("decimal");
+        else if (c.type === "boolean") parts.push("true/false");
+        else parts.push("texto");
+        if (c.allowedValues) parts.push(`(${c.allowedValues.join("|")})`);
+        return parts.join(" · ");
+      });
+      const data: unknown[][] = [headers, typeHints];
 
       if (def.type === "params" && def.sample) {
         data.push(def.columns.map((c) => {
@@ -492,6 +760,7 @@ export function ProfileActions() {
 
     setImporting(true);
     setImportError(null);
+    setValidationErrors([]);
 
     const supabase = getSupabase();
     const { data: { user } } = await supabase.auth.getUser();
@@ -501,11 +770,86 @@ export function ProfileActions() {
       const buffer = await file.arrayBuffer();
       const wb = XLSX.read(new Uint8Array(buffer), { type: "array" });
 
-      const profileDef = SHEET_DEFS.find((d) => d.table === "profiles")!;
-      const profileSheet = wb.Sheets[profileDef.sheet];
-      if (!profileSheet) throw new Error("Hoja 'Perfil' no encontrada en el archivo");
+      // --- PHASE 1: Validate ALL sheets before touching the database ---
+      const allErrors: ValidationError[] = [];
+      const parsedSheets = new Map<string, Record<string, unknown>[]>();
 
-      const profileRows = parseSheetRows(profileSheet, profileDef);
+      // Collect keys from data sheets for cross-reference validation
+      const supplierKeysFromSheet = new Set<string>();
+      const materialKeysFromSheet = new Set<string>();
+
+      // First pass: extract keys from suppliers/materials for FK validation
+      for (const def of SHEET_DEFS) {
+        const ws = wb.Sheets[def.sheet];
+        if (!ws || def.type !== "data") continue;
+        const rawRows = XLSX.utils.sheet_to_json<Record<string, string>>(ws);
+        // Skip row 2 (type hints row from template)
+        const filteredRows = rawRows.filter((row) => {
+          const firstVal = String(Object.values(row)[0] ?? "").toLowerCase().trim();
+          return !firstVal.startsWith("requerido") && !firstVal.startsWith("entero") &&
+                 !firstVal.startsWith("decimal") && !firstVal.startsWith("texto") &&
+                 !firstVal.startsWith("true/false");
+        });
+        if (def.table === "suppliers") {
+          for (const row of filteredRows) {
+            const k = String(row["Clave"] ?? row["key"] ?? "").trim();
+            if (k) supplierKeysFromSheet.add(k);
+          }
+        }
+        if (def.table === "materials") {
+          for (const row of filteredRows) {
+            const k = String(row["Clave"] ?? row["key"] ?? "").trim();
+            if (k) materialKeysFromSheet.add(k);
+          }
+        }
+      }
+
+      for (const def of SHEET_DEFS) {
+        const ws = wb.Sheets[def.sheet];
+        if (!ws) {
+          if (def.table === "profiles") {
+            allErrors.push({
+              sheet: def.sheet,
+              row: 0,
+              column: "-",
+              value: "(hoja no encontrada)",
+              expected: `La hoja "${def.sheet}" es obligatoria`,
+            });
+          }
+          continue;
+        }
+
+        // Filter out the type-hints row added by the template
+        const rawAll = XLSX.utils.sheet_to_json<Record<string, string>>(ws);
+        const filtered = rawAll.filter((row) => {
+          const firstVal = String(Object.values(row)[0] ?? "").toLowerCase().trim();
+          return !firstVal.startsWith("requerido") && !firstVal.startsWith("entero") &&
+                 !firstVal.startsWith("decimal") && !firstVal.startsWith("texto") &&
+                 !firstVal.startsWith("true/false");
+        });
+
+        // Re-create worksheet from filtered rows for validation
+        const filteredWs = XLSX.utils.json_to_sheet(filtered);
+
+        const { rows, errors } = validateSheet(
+          filteredWs,
+          def,
+          def.table === "supplier_materials" ? supplierKeysFromSheet : undefined,
+          def.table === "supplier_materials" ? materialKeysFromSheet : undefined,
+        );
+        allErrors.push(...errors);
+        parsedSheets.set(def.table, rows);
+      }
+
+      if (allErrors.length > 0) {
+        setValidationErrors(allErrors);
+        setImporting(false);
+        if (fileRef.current) fileRef.current.value = "";
+        return;
+      }
+
+      // --- PHASE 2: All validated — now create records ---
+      const profileRows = parsedSheets.get("profiles") || [];
       const profileName = String(profileRows[0]?.name || "Perfil Importado").trim();
       const profileDesc = String(profileRows[0]?.description || "").trim();
 
@@ -523,11 +867,8 @@ export function ProfileActions() {
       for (const def of SHEET_DEFS) {
         if (def.table === "profiles") continue;
 
-        const ws = wb.Sheets[def.sheet];
-        if (!ws) continue;
-
-        const rows = parseSheetRows(ws, def);
-        if (rows.length === 0) continue;
+        const rows = parsedSheets.get(def.table);
+        if (!rows || rows.length === 0) continue;
 
         if (def.type === "params") {
           const payload: Record<string, unknown> = { profile_id: profileId };
@@ -538,15 +879,15 @@ export function ProfileActions() {
           const { error } = await supabase.from(def.table).upsert(payload, { onConflict: "profile_id" });
           if (error) console.error(`Error upserting ${def.table}:`, error.message);
         } else if (def.table === "supplier_materials") {
-          const supplierKeys = keyMaps["suppliers"];
-          const materialKeys = keyMaps["materials"];
-          if (!supplierKeys || !materialKeys) continue;
+          const supplierKeyMap = keyMaps["suppliers"];
+          const materialKeyMap = keyMaps["materials"];
+          if (!supplierKeyMap || !materialKeyMap) continue;
 
           for (const row of rows) {
             const suppKey = String(row["supplier_key"] || "").trim();
             const matKey = String(row["material_key"] || "").trim();
-            const suppId = supplierKeys.get(suppKey);
-            const matId = materialKeys.get(matKey);
+            const suppId = supplierKeyMap.get(suppKey);
+            const matId = materialKeyMap.get(matKey);
             if (!suppId || !matId) continue;
 
             const payload: Record<string, unknown> = {
@@ -623,53 +964,61 @@ export function ProfileActions() {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      {importError && (
-        <div className="mr-2 rounded-md bg-red-50 px-3 py-1.5 text-sm text-red-600">
-          {importError}
-          <button onClick={() => setImportError(null)} className="ml-2 font-medium underline">×</button>
-        </div>
+    <>
+      {validationErrors.length > 0 && (
+        <ValidationModal
+          errors={validationErrors}
+          onClose={() => setValidationErrors([])}
+        />
       )}
-      <button
-        onClick={handleDownloadTemplate}
-        className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg"
-        title="Descargar plantilla Excel completa"
-      >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-        </svg>
-      </button>
-      <button
-        onClick={() => fileRef.current?.click()}
-        disabled={importing}
-        className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg disabled:opacity-50"
-        title="Importar perfil desde Excel"
-      >
-        {importing ? (
-          <span className="text-xs">Importando...</span>
-        ) : (
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-          </svg>
+      <div className="flex items-center gap-2">
+        {importError && (
+          <div className="mr-2 rounded-md bg-red-50 px-3 py-1.5 text-sm text-red-600">
+            {importError}
+            <button onClick={() => setImportError(null)} className="ml-2 font-medium underline">x</button>
+          </div>
         )}
-      </button>
-      <input ref={fileRef} type="file" accept=".xlsx,.xls" onChange={handleImport} className="hidden" />
-      <button
-        onClick={handleExport}
-        className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg"
-        title="Exportar listado de perfiles"
-      >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-        </svg>
-      </button>
-      <button
-        onClick={handleCreate}
-        disabled={creating}
-        className="rounded-md bg-ipade-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover disabled:opacity-50"
-      >
-        {creating ? "Creando..." : "Nuevo Perfil"}
-      </button>
-    </div>
+        <button
+          onClick={handleDownloadTemplate}
+          className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg"
+          title="Descargar plantilla Excel completa"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+        </button>
+        <button
+          onClick={() => fileRef.current?.click()}
+          disabled={importing}
+          className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg disabled:opacity-50"
+          title="Importar perfil desde Excel"
+        >
+          {importing ? (
+            <span className="text-xs">Importando...</span>
+          ) : (
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+          )}
+        </button>
+        <input ref={fileRef} type="file" accept=".xlsx,.xls" onChange={handleImport} className="hidden" />
+        <button
+          onClick={handleExport}
+          className="rounded-md border border-ipade-border px-3 py-2 text-sm text-ipade-text-secondary hover:bg-ipade-bg"
+          title="Exportar listado de perfiles"
+        >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+          </svg>
+        </button>
+        <button
+          onClick={handleCreate}
+          disabled={creating}
+          className="rounded-md bg-ipade-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover disabled:opacity-50"
+        >
+          {creating ? "Creando..." : "Nuevo Perfil"}
+        </button>
+      </div>
+    </>
   );
 }
