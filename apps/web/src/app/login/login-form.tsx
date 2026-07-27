@@ -22,9 +22,9 @@ export function LoginForm() {
           <img
             src={IPADE_LOGO_WHITE}
             alt="IPADE Business School"
-            width={200}
-            height={50}
-            className="h-12 object-contain"
+            width={347}
+            height={80}
+            className="w-full max-w-[320px] object-contain"
           />
         </div>
         <div>
@@ -45,7 +45,7 @@ export function LoginForm() {
       <div className="flex flex-1 flex-col items-center justify-center bg-ipade-bg px-4 py-12">
         {/* Mobile logo */}
         <div className="mb-8 flex flex-col items-center gap-2 lg:hidden">
-          <img src={IPADE_LOGO_COLOR} alt="IPADE" width={48} height={48} className="h-12 w-12 object-contain" />
+          <img src={IPADE_LOGO_COLOR} alt="IPADE" width={72} height={72} className="h-[72px] w-[72px] object-contain" />
           <h1 className="font-display text-2xl font-bold text-ipade-primary">ExSim</h1>
           <p className="text-xs text-ipade-text-muted">IPADE Business School</p>
         </div>
