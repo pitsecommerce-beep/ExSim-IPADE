@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -19,6 +19,7 @@ export function Sidebar({ user }: { user: User }) {
   const pathname = usePathname();
   const router = useRouter();
   const supabaseRef = useRef<ReturnType<typeof createSupabaseClient> | null>(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   function getSupabase() {
     if (!supabaseRef.current) {
@@ -36,48 +37,81 @@ export function Sidebar({ user }: { user: User }) {
   const displayName = user.user_metadata?.full_name || user.email;
 
   return (
-    <aside className="flex w-64 flex-col bg-ipade-sidebar text-white">
-      <div className="border-b border-white/10 p-6">
-        <div className="flex items-center gap-3">
-          <img src={IPADE_LOGO} alt="IPADE" width={32} height={32} className="h-8 w-8 object-contain" />
-          <div>
-            <h2 className="text-sm font-bold leading-tight">ExSim</h2>
-            <p className="text-[10px] uppercase tracking-wider text-white/50">IPADE Business School</p>
+    <>
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+                <svg className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-ipade-text">Cerrar Sesión</h3>
+                <p className="text-sm text-ipade-text-muted">Esta acción cerrará tu sesión actual.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 rounded-md border border-ipade-border px-4 py-2 text-sm font-medium text-ipade-text transition-colors hover:bg-ipade-bg"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex-1 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      <aside className="flex w-64 flex-col bg-ipade-sidebar text-white">
+        <div className="border-b border-white/10 p-6">
+          <div className="flex items-center gap-3">
+            <img src={IPADE_LOGO} alt="IPADE" width={32} height={32} className="h-8 w-8 object-contain" />
+            <div>
+              <h2 className="text-sm font-bold leading-tight">ExSim</h2>
+              <p className="text-[10px] uppercase tracking-wider text-white/50">IPADE Business School</p>
+            </div>
+          </div>
+        </div>
 
-      <nav className="mt-4 flex flex-1 flex-col gap-1 px-3">
-        {navItems.map((item) => {
-          const isActive = item.href === "/dashboard"
-            ? pathname === "/dashboard"
-            : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? "bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-              </svg>
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+        <nav className="mt-4 flex flex-1 flex-col gap-1 px-3">
+          {navItems.map((item) => {
+            const isActive = item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive ? "bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-      <div className="border-t border-white/10 p-4">
-        <p className="truncate text-xs text-white/60">{displayName}</p>
-        <button
-          onClick={handleLogout}
-          className="mt-2 w-full rounded-md px-3 py-1.5 text-left text-xs text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-        >
-          Cerrar Sesión
-        </button>
-      </div>
-    </aside>
+        <div className="border-t border-white/10 p-4">
+          <p className="truncate text-xs text-white/60">{displayName}</p>
+          <button
+            onClick={() => setShowLogoutConfirm(true)}
+            className="mt-2 w-full rounded-md px-3 py-1.5 text-left text-xs text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
