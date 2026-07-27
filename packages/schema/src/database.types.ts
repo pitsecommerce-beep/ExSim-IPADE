@@ -13,8 +13,20 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["profiles"]["Row"], "id" | "created_at" | "updated_at">;
-        Update: Partial<Database["public"]["Tables"]["profiles"]["Insert"]>;
+        Insert: {
+          id?: string;
+          name: string;
+          config?: Record<string, unknown>;
+          created_by: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          config?: Record<string, unknown>;
+          created_by?: string;
+        };
+        Relationships: [];
       };
       courses: {
         Row: {
@@ -24,8 +36,18 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["courses"]["Row"], "id" | "created_at" | "updated_at">;
-        Update: Partial<Database["public"]["Tables"]["courses"]["Insert"]>;
+        Insert: {
+          id?: string;
+          name: string;
+          professor_id: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          professor_id?: string;
+        };
+        Relationships: [];
       };
       worlds: {
         Row: {
@@ -35,11 +57,27 @@ export interface Database {
           name: string;
           current_period: number;
           status: "setup" | "active" | "paused" | "completed";
+          seed: number;
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["worlds"]["Row"], "id" | "created_at" | "updated_at">;
-        Update: Partial<Database["public"]["Tables"]["worlds"]["Insert"]>;
+        Insert: {
+          id?: string;
+          course_id: string;
+          profile_id: string;
+          name: string;
+          current_period?: number;
+          status?: "setup" | "active" | "paused" | "completed";
+          seed?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          name?: string;
+          current_period?: number;
+          status?: "setup" | "active" | "paused" | "completed";
+        };
+        Relationships: [];
       };
       teams: {
         Row: {
@@ -48,8 +86,16 @@ export interface Database {
           name: string;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["teams"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["teams"]["Insert"]>;
+        Insert: {
+          id?: string;
+          world_id: string;
+          name: string;
+          created_at?: string;
+        };
+        Update: {
+          name?: string;
+        };
+        Relationships: [];
       };
       team_members: {
         Row: {
@@ -59,8 +105,17 @@ export interface Database {
           role_in_team: string | null;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["team_members"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["team_members"]["Insert"]>;
+        Insert: {
+          id?: string;
+          team_id: string;
+          user_id: string;
+          role_in_team?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          role_in_team?: string | null;
+        };
+        Relationships: [];
       };
       periods: {
         Row: {
@@ -71,8 +126,20 @@ export interface Database {
           deadline: string | null;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["periods"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["periods"]["Insert"]>;
+        Insert: {
+          id?: string;
+          world_id: string;
+          period_number: number;
+          status?: "pending" | "decisions_open" | "processing" | "completed";
+          deadline?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          period_number?: number;
+          status?: "pending" | "decisions_open" | "processing" | "completed";
+          deadline?: string | null;
+        };
+        Relationships: [];
       };
       decisions: {
         Row: {
@@ -84,8 +151,20 @@ export interface Database {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["decisions"]["Row"], "id" | "created_at" | "updated_at">;
-        Update: Partial<Database["public"]["Tables"]["decisions"]["Insert"]>;
+        Insert: {
+          id?: string;
+          period_id: string;
+          team_id: string;
+          data?: Record<string, unknown>;
+          submitted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          data?: Record<string, unknown>;
+          submitted_at?: string | null;
+        };
+        Relationships: [];
       };
       simulation_results: {
         Row: {
@@ -97,8 +176,52 @@ export interface Database {
           trace: Record<string, unknown>;
           created_at: string;
         };
-        Insert: Omit<Database["public"]["Tables"]["simulation_results"]["Row"], "id" | "created_at">;
-        Update: Partial<Database["public"]["Tables"]["simulation_results"]["Insert"]>;
+        Insert: {
+          id?: string;
+          period_id: string;
+          team_id: string;
+          state_snapshot?: Record<string, unknown>;
+          report?: Record<string, unknown>;
+          trace?: Record<string, unknown>;
+          created_at?: string;
+        };
+        Update: {
+          state_snapshot?: Record<string, unknown>;
+          report?: Record<string, unknown>;
+          trace?: Record<string, unknown>;
+        };
+        Relationships: [];
+      };
+      simulation_jobs: {
+        Row: {
+          id: string;
+          world_id: string;
+          period_id: string;
+          seed: number;
+          status: string;
+          created_at: string;
+          started_at: string | null;
+          completed_at: string | null;
+          error: string | null;
+        };
+        Insert: {
+          id?: string;
+          world_id: string;
+          period_id: string;
+          seed: number;
+          status?: string;
+          created_at?: string;
+          started_at?: string | null;
+          completed_at?: string | null;
+          error?: string | null;
+        };
+        Update: {
+          status?: string;
+          started_at?: string | null;
+          completed_at?: string | null;
+          error?: string | null;
+        };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
