@@ -141,6 +141,7 @@ const SHEET_DEFS: SheetDef[] = [
       { key: "name", header: "Nombre", required: true },
       { key: "costo_spot", header: "Costo spot", type: "decimal" },
       { key: "limite_spots", header: "Límite spots", type: "number" },
+      { key: "alcance", header: "Alcance", allowedValues: ["nacional", "regional"] },
       { key: "active", header: "Activo", type: "boolean" },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
@@ -219,6 +220,10 @@ const SHEET_DEFS: SheetDef[] = [
       { key: "precio", header: "Precio", type: "decimal" },
       { key: "lote_minimo", header: "Lote mínimo", type: "number" },
       { key: "plazo_entrega", header: "Plazo entrega", type: "number" },
+      { key: "descuento_pct", header: "Descuento %", type: "decimal" },
+      { key: "umbral_descuento", header: "Umbral descuento (u)", type: "number" },
+      { key: "prob_incumplimiento", header: "Prob. incumplimiento", type: "decimal" },
+      { key: "flete_arancel_unitario", header: "Flete/arancel por u", type: "decimal" },
       { key: "active", header: "Activo", type: "boolean" },
     ],
   },
@@ -321,6 +326,8 @@ const SHEET_DEFS: SheetDef[] = [
       { key: "name", header: "Nombre", required: true },
       { key: "costo", header: "Costo", type: "decimal" },
       { key: "periodos_desarrollo", header: "Periodos desarrollo", type: "number" },
+      { key: "costo_variable_unitario", header: "Costo variable/u", type: "decimal" },
+      { key: "periodos_amortizacion", header: "Periodos amort.", type: "number" },
       { key: "activa", header: "Activa", type: "boolean" },
       { key: "sort_order", header: "Orden", type: "number" },
     ],
@@ -414,6 +421,69 @@ const SHEET_DEFS: SheetDef[] = [
       { key: "costo", header: "Costo", type: "decimal" },
       { key: "active", header: "Activo", type: "boolean" },
       { key: "sort_order", header: "Orden", type: "number" },
+    ],
+  },
+  {
+    sheet: "Planes Pago",
+    table: "payment_plans",
+    type: "data",
+    columns: [
+      { key: "key", header: "Clave", required: true },
+      { key: "name", header: "Nombre", required: true },
+      { key: "plazo_subperiodos", header: "Plazo (subperiodos)", type: "number" },
+      { key: "descuento_pct", header: "Descuento %", type: "decimal" },
+      { key: "sort_order", header: "Orden", type: "number" },
+    ],
+  },
+  {
+    sheet: "Estado Inicial",
+    table: "initial_state",
+    type: "params",
+    columns: [
+      { key: "efectivo", header: "Efectivo", type: "decimal" },
+      { key: "cuentas_por_cobrar", header: "Cuentas por cobrar", type: "decimal" },
+      { key: "inventario", header: "Inventario", type: "decimal" },
+      { key: "activo_fijo_planta", header: "Activo fijo planta", type: "decimal" },
+      { key: "activo_fijo_equipo_neto", header: "Activo fijo equipo neto", type: "decimal" },
+      { key: "intangibles_neto", header: "Intangibles neto", type: "decimal" },
+      { key: "cuentas_por_pagar", header: "Cuentas por pagar", type: "decimal" },
+      { key: "impuestos_por_pagar", header: "Impuestos por pagar", type: "decimal" },
+      { key: "linea_credito", header: "Línea de crédito", type: "decimal" },
+      { key: "hipoteca", header: "Hipoteca", type: "decimal" },
+      { key: "prestamo_emergencia", header: "Préstamo emergencia", type: "decimal" },
+      { key: "capital_emitido", header: "Capital emitido", type: "decimal" },
+      { key: "utilidades_retenidas", header: "Utilidades retenidas", type: "decimal" },
+      { key: "resultado_periodo", header: "Resultado del periodo", type: "decimal" },
+      { key: "depositos_corto_plazo", header: "Depósitos corto plazo", type: "decimal" },
+    ],
+    sample: {
+      efectivo: 0, cuentas_por_cobrar: 0, inventario: 0,
+      activo_fijo_planta: 0, activo_fijo_equipo_neto: 0, intangibles_neto: 0,
+      cuentas_por_pagar: 0, impuestos_por_pagar: 0, linea_credito: 0,
+      hipoteca: 0, prestamo_emergencia: 0, capital_emitido: 0,
+      utilidades_retenidas: 0, resultado_periodo: 0, depositos_corto_plazo: 0,
+    },
+  },
+  {
+    sheet: "Estado Inicial Zonas",
+    table: "initial_state_zones",
+    type: "data",
+    columns: [
+      { key: "zone_key", header: "Clave zona", required: true },
+      { key: "modulos_almacen", header: "Módulos almacén", type: "number" },
+      { key: "precio", header: "Precio", type: "decimal" },
+      { key: "plan_pago_key", header: "Plan pago" },
+      { key: "vendedores", header: "Vendedores", type: "number" },
+    ],
+  },
+  {
+    sheet: "Estado Inicial Máquinas",
+    table: "initial_state_machines",
+    type: "data",
+    columns: [
+      { key: "machine_key", header: "Clave máquina", required: true },
+      { key: "section_key", header: "Clave sección", required: true },
+      { key: "cantidad", header: "Cantidad", type: "number" },
     ],
   },
 ];
@@ -923,6 +993,52 @@ export function ProfileActions() {
             };
             for (const col of def.columns) {
               if (col.key !== "supplier_key" && col.key !== "material_key" && row[col.key] !== undefined) {
+                payload[col.key] = row[col.key];
+              }
+            }
+            const { error } = await supabase.from(def.table).insert(payload);
+            if (error) console.error(`Error inserting ${def.table}:`, error.message);
+          }
+        } else if (def.table === "initial_state_zones") {
+          const zoneKeyMap = keyMaps["zones"];
+          if (!zoneKeyMap) continue;
+
+          for (const row of rows) {
+            const zoneKey = String(row["zone_key"] || "").trim();
+            const zoneId = zoneKeyMap.get(zoneKey);
+            if (!zoneId) continue;
+
+            const payload: Record<string, unknown> = {
+              profile_id: profileId,
+              zone_id: zoneId,
+            };
+            for (const col of def.columns) {
+              if (col.key !== "zone_key" && row[col.key] !== undefined) {
+                payload[col.key] = row[col.key];
+              }
+            }
+            const { error } = await supabase.from(def.table).insert(payload);
+            if (error) console.error(`Error inserting ${def.table}:`, error.message);
+          }
+        } else if (def.table === "initial_state_machines") {
+          const machineKeyMap = keyMaps["machines"];
+          const sectionKeyMap = keyMaps["sections"];
+          if (!machineKeyMap || !sectionKeyMap) continue;
+
+          for (const row of rows) {
+            const machineKey = String(row["machine_key"] || "").trim();
+            const sectionKey = String(row["section_key"] || "").trim();
+            const machineId = machineKeyMap.get(machineKey);
+            const sectionId = sectionKeyMap.get(sectionKey);
+            if (!machineId || !sectionId) continue;
+
+            const payload: Record<string, unknown> = {
+              profile_id: profileId,
+              machine_id: machineId,
+              section_id: sectionId,
+            };
+            for (const col of def.columns) {
+              if (col.key !== "machine_key" && col.key !== "section_key" && row[col.key] !== undefined) {
                 payload[col.key] = row[col.key];
               }
             }

@@ -23,6 +23,10 @@ const supplierMaterialsColumns: ColumnDef[] = [
   { key: "precio", label: "Precio", type: "decimal" },
   { key: "lote_minimo", label: "Lote mínimo", type: "number" },
   { key: "plazo_entrega", label: "Plazo entrega", type: "number" },
+  { key: "descuento_pct", label: "Descuento %", type: "decimal", width: "110px" },
+  { key: "umbral_descuento", label: "Umbral descuento (u)", type: "number", width: "150px" },
+  { key: "prob_incumplimiento", label: "Prob. incumplimiento", type: "decimal", width: "150px" },
+  { key: "flete_arancel_unitario", label: "Flete/arancel por u", type: "decimal", width: "140px" },
   { key: "active", label: "Activo", type: "boolean" },
 ];
 

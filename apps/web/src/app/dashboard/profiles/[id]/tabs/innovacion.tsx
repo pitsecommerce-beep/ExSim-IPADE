@@ -8,6 +8,8 @@ const improvementsColumns: ColumnDef[] = [
   { key: "name", label: "Nombre" },
   { key: "costo", label: "Costo", type: "decimal", width: "120px" },
   { key: "periodos_desarrollo", label: "Periodos desarrollo", type: "number", width: "150px" },
+  { key: "costo_variable_unitario", label: "Costo variable/u", type: "decimal", width: "130px" },
+  { key: "periodos_amortizacion", label: "Periodos amort.", type: "number", width: "120px" },
   { key: "activa", label: "Activa", type: "boolean", width: "80px" },
   { key: "sort_order", label: "Orden", type: "number", width: "80px" },
 ];

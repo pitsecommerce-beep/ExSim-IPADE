@@ -15,6 +15,7 @@ import { VisibilidadTab } from "./tabs/visibilidad";
 import { MarcasTab } from "./tabs/marcas";
 import { InformesTab } from "./tabs/informes";
 import { NegociacionesTab } from "./tabs/negociaciones";
+import { EstadoInicialTab } from "./tabs/estado-inicial";
 
 const tabs = [
   { key: "principal", label: "Principal" },
@@ -30,6 +31,7 @@ const tabs = [
   { key: "esg", label: "ESG" },
   { key: "negociaciones", label: "Negociaciones" },
   { key: "informes", label: "Informes" },
+  { key: "estado_inicial", label: "Estado Inicial" },
 ] as const;
 
 interface Props {
@@ -52,6 +54,7 @@ const tabComponents: Record<string, React.ComponentType<{ profileId: string; sub
   marcas: MarcasTab,
   informes: InformesTab,
   negociaciones: NegociacionesTab,
+  estado_inicial: EstadoInicialTab,
 };
 
 export function ProfileTabs({ profileId, activeTab, activeSubtab }: Props) {

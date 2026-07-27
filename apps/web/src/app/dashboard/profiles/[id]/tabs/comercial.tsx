@@ -33,6 +33,10 @@ const mediaColumns: ColumnDef[] = [
   { key: "name", label: "Nombre" },
   { key: "costo_spot", label: "Costo/spot", type: "decimal", width: "120px" },
   { key: "limite_spots", label: "Límite spots", type: "number", width: "120px" },
+  { key: "alcance", label: "Alcance", type: "select", width: "120px", options: [
+    { value: "nacional", label: "Nacional" },
+    { value: "regional", label: "Regional" },
+  ]},
   { key: "active", label: "Activo", type: "boolean", width: "80px" },
 ];
 
