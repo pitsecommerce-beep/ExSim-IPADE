@@ -128,9 +128,7 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
       .from("courses")
       .insert({
         name: name.trim(),
-        profile_id: profileId,
-        created_by: user.id,
-        status: "draft",
+        professor_id: user.id,
       })
       .select("id")
       .single();
@@ -147,7 +145,6 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
         course_id: course.id,
         name: `${name.trim()} - Mundo 1`,
         profile_id: profileId,
-        created_by: user.id,
       })
       .select("id")
       .single();

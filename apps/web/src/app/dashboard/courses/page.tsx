@@ -6,7 +6,6 @@ export const dynamic = "force-dynamic";
 interface Course {
   id: string;
   name: string;
-  status: string;
   created_at: string;
   updated_at: string;
 }
@@ -62,17 +61,8 @@ export default async function CoursesPage() {
               href={`/dashboard/courses/${course.id}`}
               className="group rounded-lg border border-ipade-border bg-ipade-surface p-5 transition-shadow hover:shadow-md"
             >
-              <div className="mb-3 flex items-start justify-between">
+              <div className="mb-3">
                 <h3 className="font-semibold text-ipade-text group-hover:text-ipade-primary">{course.name}</h3>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                  course.status === "active"
-                    ? "bg-green-100 text-green-700"
-                    : course.status === "completed"
-                      ? "bg-gray-100 text-gray-600"
-                      : "bg-yellow-100 text-yellow-700"
-                }`}>
-                  {course.status === "active" ? "Activo" : course.status === "completed" ? "Finalizado" : "Configuración"}
-                </span>
               </div>
               <p className="text-xs text-ipade-text-muted">
                 Creado {new Date(course.created_at).toLocaleDateString("es-MX", {
