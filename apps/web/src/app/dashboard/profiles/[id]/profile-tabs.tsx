@@ -12,10 +12,14 @@ import { InnovacionTab } from "./tabs/innovacion";
 import { FinanzasTab } from "./tabs/finanzas";
 import { EsgTab } from "./tabs/esg";
 import { VisibilidadTab } from "./tabs/visibilidad";
+import { MarcasTab } from "./tabs/marcas";
+import { InformesTab } from "./tabs/informes";
+import { NegociacionesTab } from "./tabs/negociaciones";
 
 const tabs = [
   { key: "principal", label: "Principal" },
   { key: "visibilidad", label: "Visibilidad" },
+  { key: "marcas", label: "Marcas" },
   { key: "compras", label: "Compras" },
   { key: "produccion", label: "Producción" },
   { key: "comercial", label: "Comercial" },
@@ -45,21 +49,16 @@ const tabComponents: Record<string, React.ComponentType<{ profileId: string; sub
   finanzas: FinanzasTab,
   esg: EsgTab,
   visibilidad: VisibilidadTab,
+  marcas: MarcasTab,
+  informes: InformesTab,
+  negociaciones: NegociacionesTab,
 };
-
-function PlaceholderTab({ profileId: _profileId }: { profileId: string }) {
-  return (
-    <div className="rounded-lg border border-dashed border-ipade-border bg-ipade-surface p-12 text-center">
-      <p className="text-ipade-text-muted">Configuración en desarrollo.</p>
-    </div>
-  );
-}
 
 export function ProfileTabs({ profileId, activeTab, activeSubtab }: Props) {
   const searchParams = useSearchParams();
   const currentTab = searchParams.get("tab") || activeTab;
 
-  const TabComponent = tabComponents[currentTab] ?? PlaceholderTab;
+  const TabComponent = tabComponents[currentTab];
 
   return (
     <div>
@@ -85,7 +84,13 @@ export function ProfileTabs({ profileId, activeTab, activeSubtab }: Props) {
       </div>
 
       <div className="mt-6">
-        <TabComponent profileId={profileId} subtab={activeSubtab} />
+        {TabComponent ? (
+          <TabComponent profileId={profileId} subtab={activeSubtab} />
+        ) : (
+          <div className="rounded-lg border border-dashed border-ipade-border bg-ipade-surface p-12 text-center">
+            <p className="text-ipade-text-muted">Configuración en desarrollo.</p>
+          </div>
+        )}
       </div>
     </div>
   );
