@@ -8,10 +8,13 @@ export interface ProfileConfig {
   readonly machines: ReadonlyArray<MachineConfig>;
   readonly improvements: ReadonlyArray<ImprovementConfig>;
   readonly laborBenefits: ReadonlyArray<LaborBenefitConfig>;
+  readonly supplierMaterials: ReadonlyArray<SupplierMaterialConfig>;
+  readonly paymentPlans: ReadonlyArray<PaymentPlanConfig>;
   readonly financialInstruments: FinancialInstrumentsConfig;
   readonly esg: ESGConfig;
   readonly demandParams: DemandParams;
   readonly fprParams: FPRParams;
+  readonly initialState?: InitialStateConfig;
 }
 
 export interface ZoneConfig {
@@ -50,6 +53,17 @@ export interface MaterialConfig {
   readonly lotSize: number;
 }
 
+export interface SupplierMaterialConfig {
+  readonly supplierId: string;
+  readonly materialId: string;
+  readonly costPerUnitCents: number;
+  readonly lotSize: number;
+  readonly descuentoPct: number;
+  readonly umbralDescuento: number;
+  readonly probIncumplimiento: number;
+  readonly fleteArancelUnitario: number;
+}
+
 export interface MachineConfig {
   readonly machineTypeId: string;
   readonly name: string;
@@ -61,6 +75,7 @@ export interface ImprovementConfig {
   readonly name: string;
   readonly rdCostCents: number;
   readonly variableCostCents: number;
+  readonly amortizationPeriods: number;
   readonly dimensions: Record<string, number>;
 }
 
@@ -71,6 +86,31 @@ export interface LaborBenefitConfig {
   readonly curveType: "linear" | "concave" | "convex" | "threshold";
   readonly xMin: number;
   readonly xMax: number;
+}
+
+export interface PaymentPlanConfig {
+  readonly planId: string;
+  readonly key: string;
+  readonly plazoSubperiodos: number;
+  readonly descuentoPct: number;
+}
+
+export interface InitialStateConfig {
+  readonly efectivo: number;
+  readonly cuentasPorCobrar: number;
+  readonly inventario: number;
+  readonly activoFijoPlanta: number;
+  readonly activoFijoEquipoNeto: number;
+  readonly intangiblesNeto: number;
+  readonly cuentasPorPagar: number;
+  readonly impuestosPorPagar: number;
+  readonly lineaCredito: number;
+  readonly hipoteca: number;
+  readonly prestamoEmergencia: number;
+  readonly capitalEmitido: number;
+  readonly utilidadesRetenidas: number;
+  readonly resultadoPeriodo: number;
+  readonly depositosCortoPlazo: number;
 }
 
 export interface FinancialInstrumentsConfig {
