@@ -9,3 +9,41 @@ body {
   background-color: var(--ipade-bg);
   color: var(--ipade-text);
 }
+
+* {
+  transition-property: background-color, border-color, color, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input, textarea, select {
+  transition-property: border-color, box-shadow;
+  transition-duration: 200ms;
+}
+
+button, a {
+  transition-property: background-color, border-color, color, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.4s ease-out both;
+}

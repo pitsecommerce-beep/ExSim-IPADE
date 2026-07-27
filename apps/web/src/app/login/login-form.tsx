@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const IPADE_LOGO = "https://upload.wikimedia.org/wikipedia/commons/b/b5/Escudo_IPADE.png";
+const IPADE_LOGO_WHITE = "https://www.ipade.mx/wp-content/uploads/2022/11/logo-ipade-color-white.svg?w=347";
+const IPADE_LOGO_COLOR = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
 
 type AuthTab = "login" | "signup" | "participant";
 
@@ -16,18 +17,15 @@ export function LoginForm() {
   return (
     <div className="flex min-h-screen">
       {/* Left panel — IPADE branding */}
-      <div className="hidden flex-col justify-between bg-ipade-primary p-12 text-white lg:flex lg:w-[480px]">
+      <div className="hidden flex-col justify-between bg-ipade-primary p-12 text-white lg:flex lg:w-[480px] animate-slide-in">
         <div>
-          <div className="flex items-center gap-3">
-            <img
-              src={IPADE_LOGO}
-              alt="IPADE"
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain"
-            />
-            <span className="font-display text-xl font-bold">ExSim</span>
-          </div>
+          <img
+            src={IPADE_LOGO_WHITE}
+            alt="IPADE Business School"
+            width={200}
+            height={50}
+            className="h-12 object-contain"
+          />
         </div>
         <div>
           <h2 className="font-display text-3xl font-bold leading-tight">
@@ -47,7 +45,7 @@ export function LoginForm() {
       <div className="flex flex-1 flex-col items-center justify-center bg-ipade-bg px-4 py-12">
         {/* Mobile logo */}
         <div className="mb-8 flex flex-col items-center gap-2 lg:hidden">
-          <img src={IPADE_LOGO} alt="IPADE" width={48} height={48} className="h-12 w-12 object-contain" />
+          <img src={IPADE_LOGO_COLOR} alt="IPADE" width={48} height={48} className="h-12 w-12 object-contain" />
           <h1 className="font-display text-2xl font-bold text-ipade-primary">ExSim</h1>
           <p className="text-xs text-ipade-text-muted">IPADE Business School</p>
         </div>
@@ -87,7 +85,7 @@ export function LoginForm() {
             </button>
           </div>
 
-          <div className="rounded-lg border border-ipade-border bg-ipade-surface p-8 shadow-sm">
+          <div key={tab} className="animate-fade-in rounded-lg border border-ipade-border bg-ipade-surface p-8 shadow-sm">
             {tab === "login" && <LoginTab onSwitchTab={setTab} />}
             {tab === "signup" && <SignupTab onSwitchTab={setTab} />}
             {tab === "participant" && <ParticipantTab />}
