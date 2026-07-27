@@ -23,11 +23,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     .select("*, teams(*, team_members(*))")
     .eq("course_id", id);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id, name")
-    .eq("id", (course as Record<string, unknown>).profile_id)
-    .maybeSingle();
+  const firstWorld = (worlds ?? [])[0] as Record<string, unknown> | undefined;
+  const profileId = firstWorld?.profile_id as string | undefined;
+
+  const { data: profile } = profileId
+    ? await supabase.from("profiles").select("id, name").eq("id", profileId).maybeSingle()
+    : { data: null };
 
   return (
     <CourseDetail

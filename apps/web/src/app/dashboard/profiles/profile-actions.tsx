@@ -690,6 +690,7 @@ export function ProfileActions() {
   const [importing, setImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const [importProgress, setImportProgress] = useState<{ step: number; total: number; label: string } | null>(null);
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const supabaseRef = useRef<ReturnType<typeof createSupabaseClient> | null>(null);
@@ -761,6 +762,8 @@ export function ProfileActions() {
     setImporting(true);
     setImportError(null);
     setValidationErrors([]);
+    const totalSteps = SHEET_DEFS.length + 2;
+    setImportProgress({ step: 0, total: totalSteps, label: "Leyendo archivo..." });
 
     const supabase = getSupabase();
     const { data: { user } } = await supabase.auth.getUser();
@@ -844,9 +847,13 @@ export function ProfileActions() {
       if (allErrors.length > 0) {
         setValidationErrors(allErrors);
         setImporting(false);
+        setImportProgress(null);
         if (fileRef.current) fileRef.current.value = "";
         return;
       }
+
+      setImportProgress({ step: 1, total: totalSteps, label: "Validación completada" });
+      await new Promise((r) => setTimeout(r, 0));
 
       // --- PHASE 2: All validated — now create records ---
       const profileRows = parsedSheets.get("profiles") || [];
@@ -874,13 +881,20 @@ export function ProfileActions() {
       if (profileError) throw new Error(`Error creando perfil: ${profileError.message}`);
       const profileId = profile.id;
 
+      setImportProgress({ step: 2, total: totalSteps, label: "Perfil creado" });
+      await new Promise((r) => setTimeout(r, 0));
+
       const keyMaps: Record<string, Map<string, string>> = {};
+      let stepIndex = 3;
 
       for (const def of SHEET_DEFS) {
         if (def.table === "profiles") continue;
 
         const rows = parsedSheets.get(def.table);
-        if (!rows || rows.length === 0) continue;
+        if (!rows || rows.length === 0) { stepIndex++; continue; }
+
+        setImportProgress({ step: stepIndex, total: totalSteps, label: def.sheet });
+        await new Promise((r) => setTimeout(r, 0));
 
         if (def.type === "params") {
           const payload: Record<string, unknown> = { profile_id: profileId };
@@ -940,13 +954,16 @@ export function ProfileActions() {
             keyMaps[def.table] = map;
           }
         }
+        stepIndex++;
       }
 
+      setImportProgress({ step: totalSteps, total: totalSteps, label: "Completado" });
       router.push(`/dashboard/profiles/${profileId}`);
     } catch (err) {
       setImportError(err instanceof Error ? err.message : "Error al importar");
     } finally {
       setImporting(false);
+      setImportProgress(null);
       if (fileRef.current) fileRef.current.value = "";
     }
   }
@@ -977,6 +994,33 @@ export function ProfileActions() {
 
   return (
     <>
+      {importProgress && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ipade-primary/10">
+                <svg className="h-5 w-5 animate-spin text-ipade-primary" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-ipade-text">Importando perfil</h3>
+                <p className="text-sm text-ipade-text-muted">{importProgress.label}</p>
+              </div>
+            </div>
+            <div className="mb-2 h-3 overflow-hidden rounded-full bg-ipade-bg">
+              <div
+                className="h-full rounded-full bg-ipade-primary transition-all duration-300 ease-out"
+                style={{ width: `${Math.round((importProgress.step / importProgress.total) * 100)}%` }}
+              />
+            </div>
+            <p className="text-right text-xs text-ipade-text-muted">
+              {importProgress.step} / {importProgress.total} pasos
+            </p>
+          </div>
+        </div>
+      )}
       {validationErrors.length > 0 && (
         <ValidationModal
           errors={validationErrors}
