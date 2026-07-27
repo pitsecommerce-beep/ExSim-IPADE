@@ -5,7 +5,7 @@ const IPADE_LOGO = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=51
 
 export const metadata: Metadata = {
   title: "ExSim — IPADE Business School",
-  description: "Simulador de negocios competitivo para IPADE Business School",
+  description: "Simulador de negocios ejecutivo para IPADE Business School",
   icons: {
     icon: IPADE_LOGO,
     apple: IPADE_LOGO,
