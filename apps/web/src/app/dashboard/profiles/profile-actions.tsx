@@ -855,9 +855,21 @@ export function ProfileActions() {
 
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .insert({ name: profileName, description: profileDesc, created_by: user.id })
+        .insert({ name: profileName, created_by: user.id })
         .select("id")
         .single();
+
+      if (!profileError && profileDesc) {
+        const textsRows = parsedSheets.get("profile_texts") || [];
+        const existingDesc = String(textsRows[0]?.descripcion || "").trim();
+        if (!existingDesc) {
+          if (textsRows.length > 0) {
+            textsRows[0]!.descripcion = profileDesc;
+          } else {
+            parsedSheets.set("profile_texts", [{ descripcion: profileDesc }]);
+          }
+        }
+      }
 
       if (profileError) throw new Error(`Error creando perfil: ${profileError.message}`);
       const profileId = profile.id;
