@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
+import * as XLSX from "xlsx";
 
 export interface ColumnDef<T = Record<string, unknown>> {
   key: string;
@@ -270,14 +271,35 @@ export function ProfileDataTable({
         </table>
       </div>
 
-      {canCreate && (
-        <button
-          onClick={handleCreate}
-          className="mt-3 rounded-md border border-dashed border-ipade-border px-4 py-2 text-sm text-ipade-text-muted transition-colors hover:border-ipade-primary hover:text-ipade-primary"
-        >
-          + Agregar registro
-        </button>
-      )}
+      <div className="mt-3 flex items-center gap-2">
+        {canCreate && (
+          <button
+            onClick={handleCreate}
+            className="rounded-md border border-dashed border-ipade-border px-4 py-2 text-sm text-ipade-text-muted transition-colors hover:border-ipade-primary hover:text-ipade-primary"
+          >
+            + Agregar registro
+          </button>
+        )}
+        {rows.length > 0 && (
+          <button
+            onClick={() => {
+              const data: unknown[][] = [columns.map((c) => c.label)];
+              for (const row of rows) {
+                data.push(columns.map((c) => row[c.key] ?? ""));
+              }
+              const ws = XLSX.utils.aoa_to_sheet(data);
+              ws["!cols"] = columns.map(() => ({ wch: 18 }));
+              const wb = XLSX.utils.book_new();
+              XLSX.utils.book_append_sheet(wb, ws, table);
+              XLSX.writeFile(wb, `${table}.xlsx`);
+            }}
+            className="rounded-md border border-ipade-border px-3 py-2 text-xs text-ipade-text-muted hover:text-ipade-primary"
+            title="Exportar a Excel"
+          >
+            Exportar Excel
+          </button>
+        )}
+      </div>
     </div>
   );
 }

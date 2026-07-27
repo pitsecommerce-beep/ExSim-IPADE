@@ -1,7 +1,5 @@
-import { SignupForm } from "./signup-form";
-
-export const dynamic = "force-dynamic";
+import { redirect } from "next/navigation";
 
 export default function SignupPage() {
-  return <SignupForm />;
+  redirect("/login?tab=signup");
 }
