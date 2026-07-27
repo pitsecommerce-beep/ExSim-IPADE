@@ -22,7 +22,13 @@ const esgComponentsColumns: ColumnDef[] = [
   { key: "nombre", label: "Nombre" },
   { key: "inversion_unitaria", label: "Inversión unit.", type: "decimal", width: "120px" },
   { key: "vida_util_periodos", label: "Vida útil", type: "number", width: "100px" },
+  { key: "costo_mantenimiento_pct", label: "Mant. %", type: "decimal", width: "100px" },
+  { key: "costo_mantenimiento_fijo", label: "Mant. fijo", type: "decimal", width: "110px" },
+  { key: "kwh_generados_periodo", label: "kWh/per.", type: "decimal", width: "100px" },
   { key: "co2_offset_periodo", label: "CO₂ offset/per.", type: "decimal", width: "130px" },
+  { key: "sobrecosto_energia_pct", label: "Sobrecosto %", type: "decimal", width: "110px" },
+  { key: "horizonte_credito", label: "Horizonte", type: "number", width: "100px" },
+  { key: "arboles_por_lote", label: "Árboles/lote", type: "number", width: "110px" },
   { key: "activo", label: "Activo", type: "boolean", width: "80px" },
 ];
 
