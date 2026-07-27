@@ -4,13 +4,13 @@ import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const IPADE_LOGO = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
+const IPADE_LOGO = "https://upload.wikimedia.org/wikipedia/commons/b/b5/Escudo_IPADE.png";
 
 type AuthTab = "login" | "signup" | "participant";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as AuthTab) || "login";
+  const initialTab = (searchParams.get("tab") as AuthTab) || "participant";
   const [tab, setTab] = useState<AuthTab>(initialTab);
 
   return (
@@ -31,7 +31,7 @@ export function LoginForm() {
         </div>
         <div>
           <h2 className="font-display text-3xl font-bold leading-tight">
-            Simulador de Negocios Competitivo
+            Simulador de Negocios Ejecutivo
           </h2>
           <div className="mt-4 h-1 w-16 rounded bg-ipade-gold" />
           <p className="mt-6 text-sm leading-relaxed text-white/70">
@@ -429,7 +429,7 @@ function ParticipantTab() {
     <>
       <h2 className="mb-1 text-lg font-semibold text-ipade-text">Acceso Participante</h2>
       <p className="mb-6 text-sm text-ipade-text-muted">
-        Ingresa con el correo registrado por tu profesor. Te enviaremos un código de acceso.
+        Ingresa con tu correo IPADE. Te enviaremos un código de acceso.
       </p>
       <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
         <div>
