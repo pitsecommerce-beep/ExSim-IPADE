@@ -11,6 +11,7 @@ import { PersonasTab } from "./tabs/personas";
 import { InnovacionTab } from "./tabs/innovacion";
 import { FinanzasTab } from "./tabs/finanzas";
 import { EsgTab } from "./tabs/esg";
+import { VisibilidadTab } from "./tabs/visibilidad";
 
 const tabs = [
   { key: "principal", label: "Principal" },
@@ -43,6 +44,7 @@ const tabComponents: Record<string, React.ComponentType<{ profileId: string; sub
   innovacion: InnovacionTab,
   finanzas: FinanzasTab,
   esg: EsgTab,
+  visibilidad: VisibilidadTab,
 };
 
 function PlaceholderTab({ profileId: _profileId }: { profileId: string }) {
