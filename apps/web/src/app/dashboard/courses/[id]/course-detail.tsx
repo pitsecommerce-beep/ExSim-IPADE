@@ -1,6 +1,9 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createSupabaseClient } from "@/lib/supabase/client";
 
 interface Props {
   course: Record<string, unknown>;
@@ -10,6 +13,32 @@ interface Props {
 
 export function CourseDetail({ course, worlds, profile }: Props) {
   const status = course.status as string;
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
+  const supabaseRef = useRef<ReturnType<typeof createSupabaseClient> | null>(null);
+
+  function getSupabase() {
+    if (!supabaseRef.current) supabaseRef.current = createSupabaseClient();
+    return supabaseRef.current;
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    const supabase = getSupabase();
+    const { error } = await supabase
+      .from("courses")
+      .delete()
+      .eq("id", course.id as string);
+    if (error) {
+      alert(`Error al eliminar: ${error.message}`);
+      setDeleting(false);
+      setConfirmDelete(false);
+      return;
+    }
+    router.push("/dashboard/courses");
+    router.refresh();
+  }
 
   return (
     <div>
@@ -27,15 +56,41 @@ export function CourseDetail({ course, worlds, profile }: Props) {
             </p>
           )}
         </div>
-        <span className={`rounded-full px-3 py-1 text-xs font-medium ${
-          status === "active"
-            ? "bg-green-100 text-green-700"
-            : status === "completed"
-              ? "bg-gray-100 text-gray-600"
-              : "bg-yellow-100 text-yellow-700"
-        }`}>
-          {status === "active" ? "Activo" : status === "completed" ? "Finalizado" : "Configuración"}
-        </span>
+        <div className="flex items-center gap-3">
+          {!confirmDelete ? (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+            >
+              Eliminar
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setConfirmDelete(false)}
+                className="rounded-md border border-ipade-border px-3 py-1.5 text-xs font-medium text-ipade-text hover:bg-ipade-bg"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
+              >
+                {deleting ? "Eliminando..." : "Confirmar"}
+              </button>
+            </div>
+          )}
+          <span className={`rounded-full px-3 py-1 text-xs font-medium ${
+            status === "active"
+              ? "bg-green-100 text-green-700"
+              : status === "completed"
+                ? "bg-gray-100 text-gray-600"
+                : "bg-yellow-100 text-yellow-700"
+          }`}>
+            {status === "active" ? "Activo" : status === "completed" ? "Finalizado" : "Configuración"}
+          </span>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
