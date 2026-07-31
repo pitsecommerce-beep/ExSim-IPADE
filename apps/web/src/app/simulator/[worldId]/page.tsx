@@ -32,25 +32,26 @@ export default function WorldPage() {
   const [simulating, setSimulating] = useState(false);
   const [activeTab, setActiveTab] = useState<"decisiones" | "resultados">("decisiones");
   const [selectedZona, setSelectedZona] = useState<string>("");
+  const [cloneSource, setCloneSource] = useState<string | null>(null);
 
   const loadWorld = useCallback(async () => {
-    const res = await fetch(`/api/worlds`);
+    const res = await fetch(`/api/worlds/${params.worldId}`);
     if (!res.ok) return;
-    const worlds: WorldData[] = await res.json();
-    const w = worlds.find((w) => w.id === params.worldId);
-    if (w) {
-      setWorld(w);
-      if (!selectedZona && w.zonas.length > 0) {
-        setSelectedZona(w.zonas[0]!.id);
-      }
+    const w: WorldData = await res.json();
+    setWorld(w);
+    if (!selectedZona && w.zonas.length > 0) {
+      setSelectedZona(w.zonas[0]!.id);
+    }
+    setDecisions((prev) => {
+      if (prev.length > 0) return prev;
       const decs: DecRow[] = [];
       for (const emp of w.empresas) {
         for (const zona of w.zonas) {
           decs.push(defaultDecision(emp.id, zona.id));
         }
       }
-      setDecisions(decs);
-    }
+      return decs;
+    });
   }, [params.worldId, selectedZona]);
 
   useEffect(() => { void loadWorld(); }, [loadWorld]);
@@ -63,6 +64,19 @@ export default function WorldPage() {
           : d,
       ),
     );
+  }
+
+  function cloneDecisions(sourceEmpresaId: string) {
+    const sourceDecs = decisions.filter((d) => d.empresaId === sourceEmpresaId);
+    setDecisions((prev) =>
+      prev.map((d) => {
+        if (d.empresaId === sourceEmpresaId) return d;
+        const srcForZone = sourceDecs.find((s) => s.zonaId === d.zonaId);
+        if (!srcForZone) return d;
+        return { ...srcForZone, empresaId: d.empresaId };
+      }),
+    );
+    setCloneSource(null);
   }
 
   async function runSimulation() {
@@ -114,13 +128,47 @@ export default function WorldPage() {
             Periodo {world.currentPeriod} — {world.empresas.length} empresas — {world.zonas.length} zonas
           </p>
         </div>
-        <button
-          onClick={runSimulation}
-          disabled={simulating}
-          className="rounded-md bg-ipade-accent px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {simulating ? "Simulando..." : "Correr cuatrimestre"}
-        </button>
+        <div className="flex gap-3">
+          {activeTab === "decisiones" && (
+            <div className="relative">
+              <button
+                onClick={() => setCloneSource(cloneSource ? null : world.empresas[0]?.id ?? null)}
+                className="rounded-md border border-ipade-border px-4 py-2 text-sm text-ipade-text-muted hover:bg-ipade-bg"
+                title="Copiar decisiones de una empresa a todas las demas"
+              >
+                Clonar decisiones
+              </button>
+              {cloneSource && (
+                <div className="absolute right-0 top-full z-10 mt-1 w-56 rounded-lg border border-ipade-border bg-white p-3 shadow-lg">
+                  <p className="mb-2 text-xs text-ipade-text-muted">Copiar decisiones de:</p>
+                  {world.empresas.map((emp) => (
+                    <button
+                      key={emp.id}
+                      onClick={() => cloneDecisions(emp.id)}
+                      className="block w-full rounded px-3 py-1.5 text-left text-sm text-ipade-text hover:bg-ipade-bg"
+                    >
+                      {emp.nombre}
+                    </button>
+                  ))}
+                  <hr className="my-2 border-ipade-border" />
+                  <button
+                    onClick={() => setCloneSource(null)}
+                    className="block w-full text-center text-xs text-ipade-text-muted hover:text-ipade-text"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          <button
+            onClick={runSimulation}
+            disabled={simulating}
+            className="rounded-md bg-ipade-accent px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            {simulating ? "Simulando..." : "Correr cuatrimestre"}
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-1 border-b border-ipade-border">

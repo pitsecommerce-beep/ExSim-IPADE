@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { WorldData } from "@/lib/storage/types";
+import OnboardingWizard from "./components/OnboardingWizard";
 
 const ESCENARIO_P7 = {
   name: "Escenario Periodo 7 (curso real)",
@@ -31,9 +32,9 @@ const ESCENARIO_P7 = {
 
 export default function SimulatorPage() {
   const [worlds, setWorlds] = useState<WorldData[]>([]);
-  const [creating, setCreating] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [numEmpresas, setNumEmpresas] = useState(5);
+  const [showWizard, setShowWizard] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const loadWorlds = useCallback(async () => {
     const res = await fetch("/api/worlds");
@@ -42,33 +43,30 @@ export default function SimulatorPage() {
 
   useEffect(() => { void loadWorlds(); }, [loadWorlds]);
 
-  async function crearMundo() {
-    const empresas = Array.from({ length: numEmpresas }, (_, i) => ({
-      id: `empresa-${i + 1}`,
-      nombre: `Empresa ${i + 1}`,
-    }));
-
+  async function createWorld(data: {
+    name: string;
+    currentPeriod: number;
+    empresas: { id: string; nombre: string }[];
+    zonas: { id: string; nombre: string; fase: string; distribuidores: number; limitePrecioAlto: number; limitePrecioBajo: number; demandaAlto: number; demandaBajo: number }[];
+    config: { kappaPrecioAlto: number; kappaPrecioBajo: number; canalAlfa: number; canalKappa: number; valorInicialDimension: number };
+  }) {
     const res = await fetch("/api/worlds", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: newName || "Nuevo Mundo",
-        currentPeriod: 7,
-        empresas,
-        zonas: ESCENARIO_P7.zonas,
-        config: ESCENARIO_P7.config,
+        ...data,
         periodos: [],
       }),
     });
 
     if (res.ok) {
-      setCreating(false);
-      setNewName("");
+      setShowWizard(false);
       await loadWorlds();
     }
   }
 
   async function cargarEscenarioP7() {
+    setLoading(true);
     const res = await fetch("/api/worlds", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,6 +79,16 @@ export default function SimulatorPage() {
     if (res.ok) {
       await loadWorlds();
     }
+    setLoading(false);
+  }
+
+  async function deleteWorld(id: string) {
+    setDeleting(id);
+    const res = await fetch(`/api/worlds/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      await loadWorlds();
+    }
+    setDeleting(null);
   }
 
   return (
@@ -95,12 +103,13 @@ export default function SimulatorPage() {
         <div className="flex gap-3">
           <button
             onClick={cargarEscenarioP7}
-            className="rounded-md border border-ipade-accent px-4 py-2 text-sm font-medium text-ipade-accent hover:bg-ipade-accent/5"
+            disabled={loading}
+            className="rounded-md border border-ipade-accent px-4 py-2 text-sm font-medium text-ipade-accent hover:bg-ipade-accent/5 disabled:opacity-50"
           >
-            Cargar escenario P7
+            {loading ? "Cargando..." : "Cargar escenario P7"}
           </button>
           <button
-            onClick={() => setCreating(true)}
+            onClick={() => setShowWizard(true)}
             className="rounded-md bg-ipade-primary px-4 py-2 text-sm font-medium text-white hover:bg-ipade-primary-dark"
           >
             Nuevo mundo
@@ -108,50 +117,14 @@ export default function SimulatorPage() {
         </div>
       </div>
 
-      {creating && (
-        <div className="rounded-xl border border-ipade-border bg-white p-6 shadow-sm">
-          <h3 className="mb-4 font-semibold text-ipade-text">Crear mundo</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="mb-1 block text-sm text-ipade-text-muted">Nombre</label>
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Mi simulacion"
-                className="w-full rounded-md border border-ipade-border px-3 py-2 text-sm"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm text-ipade-text-muted">Empresas</label>
-              <input
-                type="number"
-                min={2}
-                max={8}
-                value={numEmpresas}
-                onChange={(e) => setNumEmpresas(parseInt(e.target.value) || 5)}
-                className="w-full rounded-md border border-ipade-border px-3 py-2 text-sm"
-              />
-            </div>
-          </div>
-          <div className="mt-4 flex gap-3">
-            <button
-              onClick={() => setCreating(false)}
-              className="rounded-md border border-ipade-border px-4 py-2 text-sm text-ipade-text-muted hover:bg-ipade-bg"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={crearMundo}
-              className="rounded-md bg-ipade-primary px-4 py-2 text-sm font-medium text-white hover:bg-ipade-primary-dark"
-            >
-              Crear
-            </button>
-          </div>
-        </div>
+      {showWizard && (
+        <OnboardingWizard
+          onComplete={(data) => void createWorld(data)}
+          onCancel={() => setShowWizard(false)}
+        />
       )}
 
-      {worlds.length === 0 && !creating ? (
+      {worlds.length === 0 && !showWizard ? (
         <div className="rounded-xl border border-dashed border-ipade-border bg-white p-12 text-center">
           <p className="text-ipade-text-muted">No hay mundos creados.</p>
           <p className="mt-2 text-sm text-ipade-text-muted">
@@ -161,18 +134,40 @@ export default function SimulatorPage() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {worlds.map((w) => (
-            <a
+            <div
               key={w.id}
-              href={`/simulator/${w.id}`}
-              className="rounded-xl border border-ipade-border bg-white p-6 shadow-sm hover:border-ipade-accent hover:shadow-md"
+              className="group relative rounded-xl border border-ipade-border bg-white p-6 shadow-sm hover:border-ipade-accent hover:shadow-md"
             >
-              <h3 className="font-semibold text-ipade-text">{w.name}</h3>
-              <div className="mt-2 flex gap-4 text-xs text-ipade-text-muted">
-                <span>{w.empresas.length} empresas</span>
-                <span>{w.zonas.length} zonas</span>
-                <span>Periodo {w.currentPeriod}</span>
-              </div>
-            </a>
+              <a href={`/simulator/${w.id}`} className="block">
+                <h3 className="font-semibold text-ipade-text">{w.name}</h3>
+                <div className="mt-2 flex gap-4 text-xs text-ipade-text-muted">
+                  <span>{w.empresas.length} empresas</span>
+                  <span>{w.zonas.length} zonas</span>
+                  <span>Periodo {w.currentPeriod}</span>
+                </div>
+                {w.periodos.length > 0 && (
+                  <div className="mt-2 text-xs text-ipade-accent">
+                    {w.periodos.length} periodo{w.periodos.length > 1 ? "s" : ""} simulado{w.periodos.length > 1 ? "s" : ""}
+                  </div>
+                )}
+              </a>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (confirm(`Eliminar "${w.name}"?`)) {
+                    void deleteWorld(w.id);
+                  }
+                }}
+                disabled={deleting === w.id}
+                className="absolute right-3 top-3 rounded p-1 text-ipade-text-muted opacity-0 hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                title="Eliminar mundo"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
           ))}
         </div>
       )}
