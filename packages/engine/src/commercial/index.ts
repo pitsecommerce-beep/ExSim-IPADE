@@ -1,3 +1,4 @@
+export { simulateCommercialPeriod } from "./simulate.js";
 export { calcularUPrecio, calcularPromedioPrecios } from "./precio.js";
 export { calcularUPresupuesto } from "./presupuesto.js";
 export { calcularUCanal } from "./canal.js";
