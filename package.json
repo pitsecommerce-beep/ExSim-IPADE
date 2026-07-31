@@ -6,6 +6,7 @@
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
+    "test": "turbo run test",
     "db:generate": "pnpm --filter @exsim/schema generate",
     "db:migrate": "supabase db push"
   },

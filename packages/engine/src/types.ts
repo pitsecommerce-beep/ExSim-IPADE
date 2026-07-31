@@ -131,9 +131,10 @@ export interface ESGConfig {
 export interface DemandParams {
   readonly priceModel: "LINEAR";
   readonly kappaPriceBySegment: Record<string, number>;
-  readonly priceRefType: "AVG_MENOS_STDDEV";
+  readonly priceRefType: "AVG_SIMPLE";
   readonly channelAlpha: number;
   readonly channelKappa: number;
+  readonly budgetExponent: number;
   readonly mediaSaturationK: number;
   readonly mediaSaturationLambda: number;
 }

@@ -35,115 +35,110 @@ Para zonas nuevas (Oriente/Sur), la fase puede arrancar automaticamente cuando l
 
 ## 2. Formas funcionales del modelo de demanda
 
-### f_precio — Modelo Lineal
+> **NOTA:** Esta seccion fue reescrita tras el analisis empirico documentado en
+> `Motor_Comercial_Mezquite.md`. La version anterior contenia hipotesis que no
+> se sostuvieron contra los datos reales de tres periodos. Ver el historial de
+> cambios al final de este documento (Apendice A).
 
-**Evidencia:**
-- La captura dice literalmente `modelo_precio = 'LINEAL'`.
-- `kappa_precio` = 0.2 (Alto) / 0.15 (Bajo).
-- `tipo_precio = 'AVG_MENOS_STDDEV'` — el precio de referencia se calcula como Avg - StdDev.
-- El caso dice: "el segmento alto suele ser menos sensible al precio" — coherente con que w_precio(Alto)=0.5 vs w_precio(Bajo)=2.0 en las capturas. La sensibilidad se controla por el PESO, no por kappa.
-- `limite_precio` existe y decrece ~0.36/periodo — un techo absoluto.
+El motor comercial tiene **cinco** atributos, todos en escala 0 a 100, que se
+agregan multiplicativamente. La seccion anterior identificaba solo cuatro.
 
-**Forma funcional:**
+### u_precio — Precio relativo al mercado (VERIFICADO, 138/138 obs.)
+
 ```
-precio_ref = avg(precios_mercado) - stddev(precios_mercado)
-f_precio(i) = max(epsilon, 1 + kappa * (precio_ref - precio_i) / precio_ref)
-```
-
-Logica: si tu precio = referencia, f_precio = 1. Si tu precio < referencia, f_precio > 1 (eres mas atractivo). Si > referencia, f_precio < 1. Kappa controla cuanto cambia por unidad de desviacion porcentual. El epsilon (0.01) evita negativos.
-
-Si `precio_i > limite_precio`: f_precio = 0 (los distribuidores suspenden pedidos, como dice el caso).
-
-Los pesos w_precio por segmento (0.5 Alto, 2.0 Bajo) amplifican: `f_precio ^ (w_seg * w_fase)`.
-
-### f_canal — Esfuerzo relativo con rendimientos decrecientes
-
-**Evidencia:**
-- El caso: "El tamano de la fuerza de ventas que comprometas, en comparacion con la de tus competidores, influira en el esfuerzo de tu distribuidor."
-- Tipo `salespeople`: el esfuerzo se mide en personas.
-- Parametros: alfa (rendimiento decreciente) y kappa (escala).
-- La nota docente: "asignacion de fuerza de ventas y publicidad interactuan con las decisiones de los competidores."
-
-**Forma funcional:**
-```
-esfuerzo_i = vendedores_i (para tipo salespeople) o inversion_i (para tipo monetary)
-f_canal(i) = kappa * (esfuerzo_i ^ alfa)
+u_precio(i,z,s) = 50 × [ 1 − (P_i / P̄_z − 1) / κ_s ]
 ```
 
-Con alfa < 1 (rendimientos decrecientes) y kappa como factor de escala. Esto produce que duplicar vendedores no duplica atractivo — coherente con el caso que dice "es posible que los distribuidores no requieran tanta supervision" cuando ya estas bien posicionado.
+- `P̄_z` = **promedio simple** de los precios de las empresas presentes (precio > 0).
+- `κ_s` = Kappa de Precio, hoja Segmentos: **Alto 0.20, Bajo 0.15**.
+- Centrada en **50** cuando `P_i = P̄_z`.
+- Puede volverse negativa; no tiene clamp.
+- Las empresas ausentes (precio = 0) se excluyen del promedio y obtienen u = 0.
 
-No hacemos share-of-effort aqui porque la utilidad ya se normaliza via cuota: `Cuota(i) = U(i) / sum(U(j))`.
+**Correcciones respecto a la version anterior:**
+1. La referencia es el **promedio simple**, no `avg - stddev`.
+2. La formula es `50 × [1 − (P/P̄ − 1)/κ]`, donde **κ divide**; antes se tenia κ multiplicando.
+3. La escala esta centrada en **50**, no en 1.
+4. El limite de precio NO es un corte duro de u_precio; es un **atributo separado** (u_presupuesto).
 
-### f_producto — Distancia al ideal ponderada por dimension
+### u_presupuesto — Asequibilidad (VERIFICADO, exponente 15)
 
-**Evidencia:**
-- 5 dimensiones: Sostenibilidad, Conveniencia, Rendimiento, Funcionalidades, Eficiencia.
-- Cada segmento tiene `desired_value` y `propension` por dimension y por fase.
-- El caso: "los diferentes segmentos del mercado podrian dar mas importancia a unas dimensiones que a otras y estas preferencias podrian evolucionar en el tiempo."
-- Valor inicial = 0.2 para todas las dimensiones. Las mejoras de I+D suman deltas.
-
-**Forma funcional:**
 ```
-Para cada dimension d:
-  ofrecido_d = valor_inicial + sum(deltas de mejoras activas para d)
-  ofrecido_d = clamp(ofrecido_d, valor_min, valor_max)
-  similitud_d = 1 - |ofrecido_d - desired_value[seg,fase,d]|
-
-f_producto = product(similitud_d ^ propension[seg,fase,d]) para d = 1..D
+u_presupuesto(i,z,s) = 100 × exp( −(P_i / L_{z,s})^15 )
 ```
 
-La propension actua como peso exponencial: propension alta (0.9) amplifica la importancia de esa dimension para ese segmento. Propension baja (0.3) la atenua.
+- `L_{z,s}` = Limite de Precio de la hoja Demanda, por zona y segmento.
+- El exponente 15 se estimo por regresion log-log; rango 14.82 a 15.08.
+- **Cada zona tiene dos limites**, uno por segmento, con diferencia constante ≈ 20.6.
+- El castigo es despreciable hasta ~80% del limite y abrupto despues.
 
-Esto produce comportamientos reales: el segmento Bajo con propension 0.9 a Eficiencia y desired_value 0.7 penaliza fuertemente a empresas que ignoren esa dimension.
+**Este atributo no existia en la version anterior**, que modelaba el limite
+como un corte duro en u_precio.
 
-### Curva de saturacion de medios
+### u_canal — Vendedores, Weibull CDA (VERIFICADO, 75/75 obs.)
 
-**Evidencia:**
-- Parametros: `lambda`, `k`, `qlim_max`, `m_inf`, `m_sup`, `forma`, `valor_min`.
-- TV: limite 20 spots, coste $3,000/spot = saturacion rapida y cara.
-- Radio: limite 200 spots, coste $300/spot = saturacion lenta y barata.
-- El caso: "efecto por saturacion de informacion si la publicidad resulta excesiva, por lo que podrias observar un retorno decreciente."
-- `max_alcanzable`: TV llega al 80% del Alto, 50% del Bajo. Radio 90% Bajo, 80% Alto.
-
-**Forma funcional (Hill function):**
 ```
-Si forma = 'hill' (default):
-  saturacion(spots) = valor_min + (qlim_max - valor_min) * spots^k / (spots^k + lambda^k)
-  resultado = clamp(saturacion, m_inf, m_sup)
+x_i     = v_i / d_z
+u_canal = 100 × [ 1 − exp( −(x_i / α)^κ ) ]
 ```
 
-La Hill function (Modelo de Hill) es el estandar en ciencias del marketing para respuesta publicitaria:
-- lambda = punto de semi-saturacion (donde alcanzas 50% del efecto maximo)
-- k = pendiente de la curva (k=1: hiperbola, k>1: sigmoide con umbral)
-- qlim_max = techo de efecto
-- valor_min = efecto base (0 si no hay publicidad)
-- m_inf/m_sup = limites duros de salida
+- `d_z` = distribuidores de la zona: Centro 10, Oeste 10, Norte 8, Este 7, Sur 7.
+- α = 1 (escala), κ = 2 (forma). Hoja Canales de Distribucion.
+- **No depende de los competidores.** Es funcion absoluta de la razon de cobertura propia.
+- **No tiene memoria.** Los mismos v/d dan el mismo valor siempre.
+- `v = 0` da `u = 0`, lo que anula toda la atraccion (la agregacion es multiplicativa).
 
-Para TV con limite 20: lambda~10, k~1.5 produce saturacion visible a 15 spots.
-Para Radio con limite 200: lambda~100, k~1.2 produce saturacion mas gradual.
+**Correcciones respecto a la version anterior:**
+1. La forma es una **Weibull CDA**, no `κ × esfuerzo^α`.
+2. El denominador son los **distribuidores de la zona**, no existia antes.
+3. La escala es 0 a 100, no absoluta.
 
-### Combinacion de alcances de multiples medios
+### u_publicidad — Conocimiento de marca, stock (ESTRUCTURA RESUELTA, TV pendiente)
 
-**Evidencia:**
-- `exclusivo[m,s]`: fraccion del segmento alcanzable SOLO por ese medio.
-- Radio tiene exclusivo=0.5 en segmento Bajo.
-
-**Forma funcional (independencia probabilistica con exclusividad):**
 ```
-Para segmento s:
-  // Parte exclusiva de cada medio (no se solapa)
-  alcance_exclusivo = sum_m(exclusivo[m,s] * alcance_bruto[m,s])
-
-  // Parte compartida de cada medio
-  shared[m] = alcance_bruto[m,s] * (1 - exclusivo[m,s])
-
-  // Combinacion por independencia probabilistica (evita doble conteo)
-  alcance_compartido = 1 - product_m(1 - shared[m] / max_alcanzable[m,s])
-
-  alcance_total(s) = min(1, alcance_exclusivo + alcance_compartido)
+Conoc(t) = Conoc(t−1) · (1 − rotacion_f)
+         + adquisicion_f · g(spots_genéricos) · (1 − Conoc(t−1))
 ```
 
-Esto reproduce exactamente el patron descrito: la mitad del segmento Bajo solo se alcanza por radio (exclusivo=0.5). La otra mitad se puede alcanzar por TV o radio, y ambos medios se combinan sin doble conteo via independencia probabilistica.
+- Es un **stock acumulado**, no una respuesta instantanea.
+- Solo la fraccion **generica** de la publicidad alimenta el conocimiento.
+- TV y radio entran de forma **aditivamente separable** con coeficientes distintos por segmento.
+- Radio: 0.072 puntos/spot generico en Alto, 0.133 en Bajo.
+- TV: fuertemente concava, calibrada con Hill contra 4 puntos medidos (CALIBRADO_NO_DERIVADO).
+
+**Correcciones respecto a la version anterior:**
+1. Es un **stock**, no un flujo instantaneo (Hill sobre spots del periodo).
+2. Solo la fraccion **generica** cuenta, no los spots totales.
+3. TV y radio son **aditivos**, no combinados por independencia probabilistica con exclusividad.
+
+### u_producto — Atractivo percibido, punto ideal (ESTRUCTURA CONFIRMADA, forma pendiente)
+
+Dos capas: aditiva sobre 5 dimensiones, luego punto ideal contra DesiredValue ponderado
+por Propension. Conserva la estructura de producto de similitudes de la version anterior.
+La forma exacta de h queda pendiente de validacion.
+
+### Agregacion multiplicativa (ABIERTO, error 1.5-3%)
+
+```
+A_i = correccionUtilidad[s] × Π_k( (u_k / 100) ^ (pesoSegmento[k][s] × multFase[k][fase]) )
+```
+
+Pesos en dos capas: segmento × fase. Un factor en cero anula el puntaje.
+
+### Normalizacion, cuota y lealtad (VERIFICADO)
+
+- `F_i` = `A_i` normalizado a media 100 entre empresas activas.
+- `share_i = F_i / Σ F_j`.
+- `θ_i = Loyalty × θ_prev + (1 − Loyalty) × share_i`.
+- En zonas sin historia: `θ_i = share_i`.
+- Loyalty Growth-Alto: 0.50; Roll-out-Alto: 0.25; Growth/Roll-out-Bajo: 0.25.
+
+### Conversion a ventas
+
+```
+vendidas_i(z,q) = MIN(demandaGenerada/4, productoTerminado, prevision/4)
+```
+en quincenas pares (2, 4, 6, 8). La prevision actua como tope duro no documentado en el caso.
 
 ---
 
@@ -437,3 +432,34 @@ El caso no menciona informes con costo, pero la columna existe en v2. **Implemen
 
 ### Conocimiento: por empresa-zona-segmento
 **Deduccion:** Debe ser por empresa-zona-segmento, no solo empresa-zona. Razon: los medios tienen impacto diferente por segmento (TV alcanza 80% de Alto y 50% de Bajo). Si el conocimiento fuera por empresa-zona, ambos segmentos estarian igualmente "concientes" de una empresa que solo anuncia en TV, lo cual contradice el modelo.
+
+---
+
+## Apendice A. Historial de cambios — Seccion 2
+
+**Fecha:** Julio 2026
+**Motivo:** Analisis empirico documentado en `Motor_Comercial_Mezquite.md`, basado en los
+informes de mercado del instructor (9A) de los periodos 7, 8 y 9 de un curso real con cinco
+empresas y cinco zonas, mas corridas controladas en un pais de pruebas.
+
+Las hipotesis de la seccion 2 original fueron formuladas a partir del caso y las capturas de
+parametros, sin acceso a los datos de salida del simulador. El analisis empirico revelo
+discrepancias fundamentales. Cada cambio se resuelve a favor de la evidencia empirica.
+
+| Tema | Version anterior | Version corregida | Evidencia |
+|---|---|---|---|
+| Referencia de precio | `avg - stddev` de los precios del mercado | **Promedio simple** de las empresas presentes (precio > 0) | 138/138 observaciones reproducidas con error < 0.006 |
+| Forma de f_precio | `1 + κ × (ref − P) / ref`, κ multiplica | `50 × [1 − (P/P̄ − 1) / κ]`, **κ divide** | Identica evidencia, formula cerrada |
+| Escala de f_precio | Centrada en 1 | Centrada en **50** | Escala 0-100 del informe |
+| Limite de precio | Corte duro: f_precio = 0 si P > limite | **Atributo separado y continuo**: `100 × exp(−(P/L)^15)` | Exponente estimado 14.82-15.08 por regresion |
+| Limites por segmento | Uno solo por zona | **Dos**, diferencia constante ≈ 20.6 entre Alto y Bajo | 4 zonas, 3 periodos |
+| f_canal | `κ × esfuerzo^α`, absoluto | **Weibull CDA**: `100 × [1 − exp(−(v/d)^κ)]`, α=1, κ=2 | 75/75 observaciones, error < 0.006 |
+| Denominador del canal | No existia | **Distribuidores de la zona** (Centro 10, Oeste 10, Norte 8, Este 7, Sur 7) | Confirmado en 3 periodos |
+| Publicidad | Hill instantanea sobre spots totales | **Stock acumulado** alimentado solo por la fraccion **generica** | Decaimiento verificado; separabilidad TV/radio confirmada |
+| Separabilidad de medios | Independencia probabilistica con exclusividad | **Aditiva y separable**: TV y radio suman contribuciones | Pares con TV identico y radio variable |
+| Numero de atributos | 4 (precio, canal, producto, medios) | **5**: se anade u_presupuesto | Funcion distinta verificada independientemente |
+| Inercia de cuota | No especificada | **Mezcla con cuota asignada previa**: Loyalty Growth-Alto 0.50, demas 0.25 | 2 transiciones, error < 1.6 pp |
+
+La seccion de producto (f_producto) conserva la misma forma funcional (producto de similitudes
+elevadas a la propension), que es consistente con la evidencia. Solo se anade la capa 2 de
+punto ideal contra DesiredValue por fase, verificada por la particion de ECO-KLIN en 3 periodos.
