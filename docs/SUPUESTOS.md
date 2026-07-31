@@ -1,0 +1,17 @@
+# Supuestos del motor comercial ExSim-IPADE
+
+Cada fila registra un supuesto activo. Columnas: que se asumio, por que, evidencia, como se
+verificaria, y que se rompe si es falso.
+
+---
+
+| # | Supuesto | Razon | Evidencia | Verificacion | Impacto si falso |
+|---|---|---|---|---|---|
+| S1 | La respuesta de TV es una Hill con parametros vMax=48, k=3.8, lambda=7.5 (Alto) y vMax=32, k=3.2, lambda=9.0 (Bajo) | Curva calibrada para pasar por 4 puntos medidos en zona nueva. La forma real no se identifica con los niveles observados (§4.2 Motor Comercial) | 4 puntos: TV generico 5→7.70, 6→19.52, 7→28.79, 15→40.07 en Alto | Corrida con empresas identicas salvo numero de spots de TV, con enfoque generico fijo, en una zona nueva | El conocimiento de marca seria incorrecto, afectando cuotas de todas las empresas. Marcado como CALIBRADO_NO_DERIVADO |
+| S2 | Los coeficientes de radio son 0.072 (Alto) y 0.133 (Bajo) puntos por spot generico | Medidos empiricamente con pares que comparten TV generico (§4.2c Motor Comercial) | Rango 0.071-0.079 Alto, 0.129-0.138 Bajo en 3 comparaciones | Corrida adicional con mas niveles de radio, TV fijo | El conocimiento de marca en zonas con radio alto seria impreciso |
+| S3 | La forma de u_producto es un producto de similitudes elevadas a la propension | Propuesta en ARCHITECTURAL-DECISIONS.md, consistente con la particion por fase observada (§4.3) | ECO-KLIN da valores distintos en Growth vs Roll-out con las mismas mejoras. La particion es correcta | Corrida con empresas identicas salvo el conjunto de mejoras, comparando contra atractivo reportado | Si la forma es distinta, el atractivo de producto seria incorrecto. Exponentes abiertos |
+| S4 | La agregacion es Cobb-Douglas: A = correccionUtilidad × Π(u_k/100)^(peso×mult) | Mejor ajuste conocido: error medio 1.5-3% (§5.1 Motor Comercial). Forma alternativas probadas ajustan peor | Cobb-Douglas libre reproduce 3 periodos. Un factor en cero anula el puntaje | Solicitar especificacion a Eureka Simulations, o corrida con >5 empresas en una misma fase | Cuotas con error >3%. Los exponentes configurables permiten recalibrar |
+| S5 | El Loyalty del segmento Bajo es 0.25 en todas las fases | El curso analizado se comporta como 0.25, no como el 0.40 de la tabla de parametros (§5.4) | Ajuste por minimos cuadrados: error <1.6 pp con 0.25 vs >3 pp con 0.40 | Usar la tabla de parametros del caso especifico del instructor | La inercia de cuota del segmento Bajo seria incorrecta |
+| S6 | El Error Base (Fase) = 10 de la hoja Fases no introduce perturbacion aleatoria | No se observo varianza en corridas identicas (§4.2d Motor Comercial) | Determinismo verificado: mismas entradas → mismas salidas | Repetir la misma corrida dos veces y comparar resultados | Si introduce ruido, el motor seria no determinista y los tests de fixture no aplicarian |
+| S7 | El umbral de consideracion no es un filtro absoluto | En corrida controlada con publicidad cero, se genero demanda (§5.5 Motor Comercial) | Una empresa con conocimiento 0 y umbral Growth=10 vendio unidades | Corrida con conocimiento justo debajo del umbral y competencia presente | Si fuera filtro duro, empresas nuevas sin publicidad no generarian demanda |
+| S8 | La prevision de demanda actua como tope duro de ventas | Verificado experimentalmente: prevision 3000, demanda 5701, ventas = 3000 (§6.3) | Corrida controlada | No requiere verificacion adicional — es un hecho observado | No documentar este efecto causa ventas perdidas silenciosas |
