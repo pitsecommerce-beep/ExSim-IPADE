@@ -31,8 +31,10 @@ export async function updateSession(request: NextRequest) {
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const isPublicPage = pathname === "/" || pathname.startsWith("/auth/");
   const isTeamPage = pathname.startsWith("/team");
+  const isSimulatorPage = pathname.startsWith("/simulator");
+  const isApiRoute = pathname.startsWith("/api/");
 
-  if (!user && !isAuthPage && !isPublicPage) {
+  if (!user && !isAuthPage && !isPublicPage && !isSimulatorPage && !isApiRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

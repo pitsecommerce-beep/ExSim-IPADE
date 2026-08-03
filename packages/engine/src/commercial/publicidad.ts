@@ -1,37 +1,51 @@
 /**
- * Conocimiento de marca (stock) — Motor Comercial Mezquite §4.2
+ * Conocimiento de marca (stock) -- Motor Comercial Mezquite §4.2
  *
- * Conoc(t) = Conoc(t−1) · (1 − rotación_f) + adquisición_f · g(spots_t) · (1 − Conoc(t−1))
+ * Conoc(t) = Conoc(t-1) * (1 - rotacion_f) + adquisicion_f * g(spots_t) * (1 - Conoc(t-1))
  *
- * g es aditivamente separable: g = gTV(tvGenérico) + coefRadio[s] × radioGenérico
+ * g es aditivamente separable: g = gTV(tvGenerico) + coefRadio[s] * radioGenerico
  *
- * CALIBRADO_NO_DERIVADO: la respuesta de TV es una Hill calibrada contra 4 puntos medidos.
- * Los coeficientes de radio están medidos empíricamente:
- *   Alto: 0.072 puntos por spot genérico
- *   Bajo: 0.133 puntos por spot genérico
+ * REFUTADO: la forma dinamica (Nerlove-Arrow con saturacion, aditiva con retencion) no
+ * generaliza entre periodos. Ambas estiman una retencion > 1, que es imposible. En zonas
+ * nuevas el modelo si reproduce el conocimiento con error < 0.25 porque el stock previo
+ * es cero. La ruta calculada NO debe usarse para propagar el stock entre periodos hasta
+ * que la forma dinamica se identifique. Se expone un modo donde el conocimiento se
+ * inyecta como dato (rotacion=0, adquisicion=0 preserva el stock previo).
+ *
+ * Los coeficientes de radio estan medidos empiricamente:
+ *   Alto: 0.072 puntos por spot generico
+ *   Bajo: 0.133 puntos por spot generico
  */
 
-// §4.2(c): coeficientes de radio medidos empíricamente
 const COEF_RADIO_ALTO = 0.072;
 const COEF_RADIO_BAJO = 0.133;
 
-// §7.2: Hill calibrada para pasar por los 4 puntos medidos en zona nueva, segmento Alto,
-// con contribución del radio ya restada:
-// TV genérico 5.0 → 7.70, 6.0 → 19.52, 7.0 → 28.79, 15.0 → 40.07
-// Segmento Bajo: 5.0 → 4.89, 6.0 → 8.72, 7.0 → 12.09, 15.0 → 23.57
-interface HillParams {
-  readonly vMax: number;
-  readonly k: number;
-  readonly lambda: number;
-}
+// §7.2: respuesta de TV por interpolacion lineal sobre puntos medidos.
+// Los tres primeros tramos son MEDIDOS (VERIFICADO). Los puntos 40 y 200 son EXTRAPOLACION.
+// [x_spots, base_alto, base_bajo]
+const CURVA_TV: ReadonlyArray<readonly [number, number, number]> = [
+  [0,   0.00,  0.00],
+  [5,   7.70,  4.89],
+  [6,  19.52,  8.72],
+  [7,  28.79, 12.09],
+  [15, 40.07, 23.57],
+  [40, 55.00, 35.00],  // EXTRAPOLADO
+  [200,70.00, 45.00],  // EXTRAPOLADO
+];
 
-const HILL_TV_ALTO: HillParams = { vMax: 48.0, k: 3.8, lambda: 7.5 };
-const HILL_TV_BAJO: HillParams = { vMax: 32.0, k: 3.2, lambda: 9.0 };
-
-function hillResponse(spots: number, params: HillParams): number {
+function interpolarTV(spots: number, segmento: "alto" | "bajo"): number {
   if (spots <= 0) return 0;
-  const { vMax, k, lambda } = params;
-  return vMax * Math.pow(spots, k) / (Math.pow(lambda, k) + Math.pow(spots, k));
+  const col = segmento === "alto" ? 1 : 2;
+  for (let i = 1; i < CURVA_TV.length; i++) {
+    const [x0, ...y0] = CURVA_TV[i - 1]!;
+    const [x1, ...y1] = CURVA_TV[i]!;
+    if (spots <= x1!) {
+      const t = (spots - x0!) / (x1! - x0!);
+      return y0[col - 1]! + t * (y1[col - 1]! - y0[col - 1]!);
+    }
+  }
+  const last = CURVA_TV[CURVA_TV.length - 1]!;
+  return last[col]!;
 }
 
 export function calcularGPublicidad(
@@ -39,12 +53,11 @@ export function calcularGPublicidad(
   radioGenerico: number,
   segmento: "alto" | "bajo",
 ): number {
-  const hillParams = segmento === "alto" ? HILL_TV_ALTO : HILL_TV_BAJO;
   const coefRadio = segmento === "alto" ? COEF_RADIO_ALTO : COEF_RADIO_BAJO;
-  return hillResponse(tvGenerico, hillParams) + coefRadio * radioGenerico;
+  return interpolarTV(tvGenerico, segmento) + coefRadio * radioGenerico;
 }
 
-// §4.2(a): stock de conocimiento con decaimiento y adquisición
+// §4.2(a): stock de conocimiento con decaimiento y adquisicion
 export function calcularConocimiento(
   conocimientoPrevio: number,
   rotacion: number,
@@ -58,12 +71,4 @@ export function calcularConocimiento(
   const decaimiento = conocimientoPrevioNorm * (1 - rotacion);
   const nuevaAdquisicion = adquisicion * (g / 100) * (1 - conocimientoPrevioNorm);
   return Math.max(0, Math.min(100, (decaimiento + nuevaAdquisicion) * 100));
-}
-
-export function getHillParamsAlto(): HillParams {
-  return HILL_TV_ALTO;
-}
-
-export function getHillParamsBajo(): HillParams {
-  return HILL_TV_BAJO;
 }

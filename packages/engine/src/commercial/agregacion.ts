@@ -24,7 +24,7 @@ export function calcularAtraccion(
     { u: uPublicidad, pesoSeg: pesos.publicidad, pesoFase: multFase.publicidad },
     { u: uProducto, pesoSeg: pesos.producto, pesoFase: multFase.producto },
     { u: uCanal, pesoSeg: pesos.canal, pesoFase: multFase.canal },
-    { u: uPresupuesto, pesoSeg: pesos.generico, pesoFase: multFase.generico },
+    { u: uPresupuesto, pesoSeg: pesos.presupuesto, pesoFase: multFase.presupuesto },
   ];
 
   let producto = pesos.correccionUtilidad;

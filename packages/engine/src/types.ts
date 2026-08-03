@@ -1,3 +1,14 @@
+import type {
+  Phase,
+  MultFaseByPhase,
+  LoyaltyByPhase,
+  KappaPrecio,
+  LimitePrecio,
+  UmbralConsideracion,
+} from "./commercial/types.js";
+
+export type { Phase } from "./commercial/types.js";
+
 export interface ProfileConfig {
   readonly profileId: string;
   readonly zones: ReadonlyArray<ZoneConfig>;
@@ -21,6 +32,8 @@ export interface ZoneConfig {
   readonly zoneId: string;
   readonly name: string;
   readonly populationBySegment: Record<string, number>;
+  readonly phase: Phase;
+  readonly distributorsByChannel: Record<string, number>;
 }
 
 export interface SegmentConfig {
@@ -30,12 +43,17 @@ export interface SegmentConfig {
   readonly channelWeight: number;
   readonly productWeight: number;
   readonly mediaWeight: number;
+  readonly budgetWeight: number;
 }
 
 export interface ChannelConfig {
   readonly channelId: string;
   readonly name: string;
   readonly active: boolean;
+  readonly alfa: number;
+  readonly kappa: number;
+  readonly setupCostCents: number;
+  readonly variableCostCents: number;
 }
 
 export interface MediaConfig {
@@ -130,13 +148,18 @@ export interface ESGConfig {
 
 export interface DemandParams {
   readonly priceModel: "LINEAR";
-  readonly kappaPriceBySegment: Record<string, number>;
+  readonly kappaPriceBySegment: KappaPrecio;
   readonly priceRefType: "AVG_SIMPLE";
   readonly channelAlpha: number;
   readonly channelKappa: number;
   readonly budgetExponent: number;
   readonly mediaSaturationK: number;
   readonly mediaSaturationLambda: number;
+  readonly priceLimitsByZone: Record<string, LimitePrecio>;
+  readonly loyalty: LoyaltyByPhase;
+  readonly multFase: MultFaseByPhase;
+  readonly demandQuantityByZoneSegment: Record<string, { alto: number; bajo: number }>;
+  readonly umbralConsideracion?: UmbralConsideracion;
 }
 
 export interface FPRParams {
@@ -158,6 +181,8 @@ export interface TeamState {
   readonly workers: Record<string, number>;
   readonly modules: Record<string, { plant: number; warehouse: number }>;
   readonly knowledgeByZoneSegment: Record<string, Record<string, number>>;
+  readonly assignedShareByZoneSegment: Record<string, Record<string, { alto: number; bajo: number }>>;
+  readonly hasHistoryByZone: Record<string, boolean>;
   readonly brandEquity: number;
   readonly accumulatedCO2Kg: number;
 }
@@ -181,7 +206,11 @@ export interface ProductionDecisions {
 export interface MarketingDecisions {
   readonly mediaSpots: Record<string, Record<string, number>>;
   readonly salesforceByZone: Record<string, number>;
-  readonly genericVsBrandSplit: number;
+  readonly brandFocusByMediumZone: {
+    readonly tv: { readonly enfoqueMarca: number };
+    readonly radio: Record<string, { readonly enfoqueMarca: number }>;
+  };
+  readonly demandForecastByZone: Record<string, number>;
 }
 
 export interface HRDecisions {
@@ -220,11 +249,29 @@ export interface SimulationInput {
   readonly seed: number;
 }
 
+export interface AssignedShareEntry {
+  readonly cuotaAsignada: number;
+  readonly participacionVentas: number;
+}
+
+export interface MarketShareReport {
+  readonly assignedShare: Record<string, Record<string, { alto: AssignedShareEntry; bajo: AssignedShareEntry }>>;
+  readonly salesShare: Record<string, Record<string, { alto: AssignedShareEntry; bajo: AssignedShareEntry }>>;
+  readonly faltante: Record<string, Record<string, { alto: number; bajo: number }>>;
+  readonly atributos: Record<string, Record<string, Record<string, {
+    uPrecio: number;
+    uPresupuesto: number;
+    uCanal: number;
+    uPublicidad: number;
+    uProducto: number;
+  }>>>;
+}
+
 export interface PeriodReport {
   readonly teamId: string;
   readonly incomeStatement: Record<string, bigint>;
   readonly balanceSheet: Record<string, bigint>;
-  readonly marketShare: Record<string, Record<string, number>>;
+  readonly marketShareReport: MarketShareReport;
   readonly esgScore: number;
   readonly fpr: number;
 }

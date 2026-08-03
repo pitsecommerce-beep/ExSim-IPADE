@@ -45,6 +45,7 @@ export interface PesoSegmento {
   readonly producto: number;
   readonly canal: number;
   readonly publicidad: number;
+  readonly presupuesto: number;
   readonly generico: number;
   readonly caracteristicasMarca: number;
   readonly correccionUtilidad: number;
@@ -55,6 +56,7 @@ export interface MultFase {
   readonly producto: number;
   readonly canal: number;
   readonly publicidad: number;
+  readonly presupuesto: number;
   readonly generico: number;
   readonly caracteristicasMarca: number;
 }
@@ -111,6 +113,23 @@ export interface DemandaZonaSegmento {
   readonly cantidadPorEmpresa: number;
 }
 
+// TODO: el umbral de consideracion (hoja Segmentos-Fases, columna "Umbral") no funciona
+// como filtro absoluto. En una corrida controlada con conocimiento cero se genero demanda
+// de todos modos (supuesto S7). Se deja inerte por defecto hasta identificar su rol real.
+export interface UmbralConsideracion {
+  readonly rollout: { readonly alto: number; readonly bajo: number };
+  readonly growth: { readonly alto: number; readonly bajo: number };
+  readonly maturity: { readonly alto: number; readonly bajo: number };
+  readonly hypermaturity: { readonly alto: number; readonly bajo: number };
+}
+
+export const UMBRAL_DEFAULT: UmbralConsideracion = {
+  rollout: { alto: 0, bajo: 0 },
+  growth: { alto: 10, bajo: 10 },
+  maturity: { alto: 55, bajo: 40 },
+  hypermaturity: { alto: 60, bajo: 50 },
+};
+
 export interface CommercialInput {
   readonly periodo: number;
   readonly empresas: ReadonlyArray<EmpresaInput>;
@@ -124,6 +143,7 @@ export interface CommercialInput {
   readonly desiredValues: DesiredValueByPhaseSegment;
   readonly valorInicialDimension: number;
   readonly improvements: ReadonlyArray<ImprovementDimensions>;
+  readonly umbralConsideracion?: UmbralConsideracion;
 }
 
 export interface EmpresaInput {
@@ -143,6 +163,8 @@ export interface EmpresaZonaInput {
   readonly enfoqueMarcaRadio: number;
   readonly productoTerminado: number;
   readonly previsionDemanda: number;
+  readonly uPublicidadOverride?: { alto: number; bajo: number };
+  readonly uProductoOverride?: { alto: number; bajo: number };
 }
 
 export interface ZonaInput {

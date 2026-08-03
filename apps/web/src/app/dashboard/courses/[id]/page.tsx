@@ -20,7 +20,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
   const { data: worlds } = await supabase
     .from("worlds")
-    .select("*, teams(*, team_members(*))")
+    .select("*, teams(id, name, team_members(id, user_id))")
     .eq("course_id", id);
 
   const firstWorld = (worlds ?? [])[0] as Record<string, unknown> | undefined;

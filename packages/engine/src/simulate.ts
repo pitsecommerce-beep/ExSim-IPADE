@@ -46,7 +46,12 @@ export function simulatePeriod(input: SimulationInput): SimulationOutput {
       teamId: d.teamId,
       incomeStatement: {},
       balanceSheet: {},
-      marketShare: {},
+      marketShareReport: {
+        assignedShare: {},
+        salesShare: {},
+        faltante: {},
+        atributos: {},
+      },
       esgScore: 0,
       fpr: 1,
     })),

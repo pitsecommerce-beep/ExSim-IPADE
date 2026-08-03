@@ -36,4 +36,18 @@ describe("conversión a ventas — §6.3", () => {
     expect(ventas).toBe(0);
     expect(faltante).toBe(0);
   });
+
+  it("restriccion de abasto es por zona: demanda 600+400, inv 500 → ventas 300+200 (defecto 2.1)", () => {
+    const demandaTotal = 1000;
+    const productoTerminado = 500;
+    const prevision = 999999;
+    const { ventas, faltante } = calcularVentasPeriodo(demandaTotal, productoTerminado, prevision);
+    expect(ventas).toBe(500);
+    expect(faltante).toBe(500);
+
+    const propAlto = 600 / 1000;
+    const propBajo = 400 / 1000;
+    expect(Math.round(ventas * propAlto)).toBe(300);
+    expect(Math.round(ventas * propBajo)).toBe(200);
+  });
 });
