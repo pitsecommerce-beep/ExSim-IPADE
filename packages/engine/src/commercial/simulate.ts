@@ -1,10 +1,10 @@
 /**
- * Motor comercial completo — Motor Comercial Mezquite §6.6
+ * Motor comercial completo -- Motor Comercial Mezquite §6.6
  *
- * Orquesta los 5 atributos, agregación, normalización, lealtad,
- * demanda generada y conversión a ventas.
+ * Orquesta los 5 atributos, agregacion, normalizacion, lealtad,
+ * demanda generada y conversion a ventas.
  *
- * Función pura: simulateCommercialPeriod(input, estadoPrevio) => output
+ * Funcion pura: simulateCommercialPeriod(input, estadoPrevio) => output
  */
 
 import type {
@@ -30,6 +30,25 @@ import {
 type Segmento = "alto" | "bajo";
 const SEGMENTOS: ReadonlyArray<Segmento> = ["alto", "bajo"];
 
+interface SegmentoResult {
+  empresaId: string;
+  segmento: Segmento;
+  atributos: {
+    uPrecio: number;
+    uPresupuesto: number;
+    uCanal: number;
+    uPublicidad: number;
+    uProducto: number;
+  };
+  total: number;
+  final: number;
+  shareAtraccion: number;
+  cuotaAsignada: number;
+  demandaGenerada: number;
+  productoTerminado: number;
+  previsionDemanda: number;
+}
+
 export function simulateCommercialPeriod(
   input: CommercialInput,
   estadoPrevio?: EstadoPrevio,
@@ -52,17 +71,21 @@ export function simulateCommercialPeriod(
 
     const pbar = calcularPromedioPrecios(preciosPresentes);
 
-    const tieneHistoria =
-      estadoPrevio !== undefined &&
-      Object.keys(estadoPrevio.cuotaAsignada).length > 0;
+    const tieneHistoriaZona = (segmento: Segmento): boolean => {
+      if (!estadoPrevio) return false;
+      return Object.values(estadoPrevio.cuotaAsignada).some(
+        (empData) => empData[zona.zonaId]?.[segmento] !== undefined,
+      );
+    };
+
+    const segmentoResults: SegmentoResult[] = [];
 
     for (const segmento of SEGMENTOS) {
       const loyalty = getLoyalty(zona.fase, segmento, input.loyalty);
       const pesos = segmento === "alto" ? input.pesosSegmento.alto : input.pesosSegmento.bajo;
       const multFase = input.multFase[zona.fase];
 
-      const desiredConfig =
-        input.desiredValues[zona.fase][segmento];
+      const desiredConfig = input.desiredValues[zona.fase][segmento];
 
       const limitePrecio = segmento === "alto"
         ? zona.limitePrecio.alto
@@ -90,11 +113,7 @@ export function simulateCommercialPeriod(
         if (precio === 0) {
           atributosPorEmpresa.push({
             empresaId: empresa.empresaId,
-            uPrecio: 0,
-            uPresupuesto: 0,
-            uCanal: 0,
-            uPublicidad: 0,
-            uProducto: 0,
+            uPrecio: 0, uPresupuesto: 0, uCanal: 0, uPublicidad: 0, uProducto: 0,
             total: 0,
             productoTerminado: dec.productoTerminado,
             previsionDemanda: dec.previsionDemanda,
@@ -109,10 +128,8 @@ export function simulateCommercialPeriod(
         const uPresupuesto = calcularUPresupuesto(precio, limitePrecio);
 
         const uCanal = calcularUCanal(
-          dec.vendedores,
-          zona.distribuidores,
-          input.canalParams.alfa,
-          input.canalParams.kappa,
+          dec.vendedores, zona.distribuidores,
+          input.canalParams.alfa, input.canalParams.kappa,
         );
 
         const tvGenerico = empresa.spotsTV * (1 - empresa.enfoqueMarcaTV);
@@ -122,26 +139,32 @@ export function simulateCommercialPeriod(
           estadoPrevio, empresa.empresaId, zona.zonaId, segmento,
         );
 
-        const rotAdq = input.rotacionAdquisicion[zona.fase];
-        const uPublicidad = calcularConocimiento(
-          conocPrevio,
-          rotAdq.rotacion,
-          rotAdq.adquisicion,
-          tvGenerico,
-          radioGenerico,
-          segmento,
-        );
+        const pubOverride = dec.uPublicidadOverride?.[segmento];
+        let uPublicidad: number;
+        if (pubOverride !== undefined) {
+          uPublicidad = pubOverride;
+        } else {
+          const rotAdq = input.rotacionAdquisicion[zona.fase];
+          uPublicidad = calcularConocimiento(
+            conocPrevio, rotAdq.rotacion, rotAdq.adquisicion,
+            tvGenerico, radioGenerico, segmento,
+          );
+        }
 
         setConocimiento(
           conocimientoNuevo, empresa.empresaId, zona.zonaId, segmento, uPublicidad,
         );
 
-        const vectorProducto = calcularVectorProducto(
-          empresa.mejorasActivas,
-          input.improvements,
-          input.valorInicialDimension,
-        );
-        const uProducto = calcularUProducto(vectorProducto, desiredConfig);
+        const prodOverride = dec.uProductoOverride?.[segmento];
+        let uProducto: number;
+        if (prodOverride !== undefined) {
+          uProducto = prodOverride;
+        } else {
+          const vectorProducto = calcularVectorProducto(
+            empresa.mejorasActivas, input.improvements, input.valorInicialDimension,
+          );
+          uProducto = calcularUProducto(vectorProducto, desiredConfig);
+        }
 
         const total = calcularAtraccion(
           uPrecio, uPublicidad, uProducto, uCanal, uPresupuesto,
@@ -150,20 +173,14 @@ export function simulateCommercialPeriod(
 
         atributosPorEmpresa.push({
           empresaId: empresa.empresaId,
-          uPrecio,
-          uPresupuesto,
-          uCanal,
-          uPublicidad,
-          uProducto,
-          total,
+          uPrecio, uPresupuesto, uCanal, uPublicidad, uProducto, total,
           productoTerminado: dec.productoTerminado,
           previsionDemanda: dec.previsionDemanda,
         });
       }
 
       const totalesParaNorm = atributosPorEmpresa.map((a) => ({
-        empresaId: a.empresaId,
-        total: a.total,
+        empresaId: a.empresaId, total: a.total,
       }));
       const finales = normalizarAMedia100(totalesParaNorm);
       const shares = calcularShareAtraccion(finales);
@@ -172,7 +189,7 @@ export function simulateCommercialPeriod(
         const finalVal = finales.find((f) => f.empresaId === atr.empresaId)?.final ?? 0;
         const shareVal = shares.find((s) => s.empresaId === atr.empresaId)?.share ?? 0;
 
-        const cuotaPrev = tieneHistoria
+        const cuotaPrev = tieneHistoriaZona(segmento)
           ? getCuotaPrevia(estadoPrevio!, atr.empresaId, zona.zonaId, segmento)
           : undefined;
 
@@ -185,28 +202,56 @@ export function simulateCommercialPeriod(
         );
 
         const demandaGenerada = cuotaAsignada * demandaTotal;
-        const { ventas, faltante } = calcularVentasPeriodo(
-          demandaGenerada,
-          atr.productoTerminado,
-          atr.previsionDemanda,
-        );
 
-        resultados.push({
+        segmentoResults.push({
           empresaId: atr.empresaId,
-          zonaId: zona.zonaId,
           segmento,
           atributos: {
-            uPrecio: atr.uPrecio,
-            uPresupuesto: atr.uPresupuesto,
-            uCanal: atr.uCanal,
-            uPublicidad: atr.uPublicidad,
-            uProducto: atr.uProducto,
+            uPrecio: atr.uPrecio, uPresupuesto: atr.uPresupuesto,
+            uCanal: atr.uCanal, uPublicidad: atr.uPublicidad, uProducto: atr.uProducto,
           },
-          total: atr.total,
-          final: finalVal,
-          shareAtraccion: shareVal,
-          cuotaAsignada,
-          demandaGenerada,
+          total: atr.total, final: finalVal, shareAtraccion: shareVal,
+          cuotaAsignada, demandaGenerada,
+          productoTerminado: atr.productoTerminado,
+          previsionDemanda: atr.previsionDemanda,
+        });
+      }
+    }
+
+    // §6.3: inventory constraint is per zone, not per segment.
+    // Aggregate demand across segments, apply min(inventory, forecast) at zone level,
+    // then split sales back to segments in proportion to demand.
+    const empresaIds = [...new Set(segmentoResults.map((r) => r.empresaId))];
+    for (const empId of empresaIds) {
+      const empSegs = segmentoResults.filter((r) => r.empresaId === empId);
+      const demandaAlto = empSegs.find((r) => r.segmento === "alto")?.demandaGenerada ?? 0;
+      const demandaBajo = empSegs.find((r) => r.segmento === "bajo")?.demandaGenerada ?? 0;
+      const demandaZonaTotal = demandaAlto + demandaBajo;
+
+      const empFirst = empSegs[0]!;
+      const { ventas: ventasZona, faltante: faltanteZona } = calcularVentasPeriodo(
+        demandaZonaTotal,
+        empFirst.productoTerminado,
+        empFirst.previsionDemanda,
+      );
+
+      for (const sr of empSegs) {
+        const proporcion = demandaZonaTotal > 0
+          ? sr.demandaGenerada / demandaZonaTotal
+          : 0;
+        const ventas = Math.round(ventasZona * proporcion);
+        const faltante = Math.round(faltanteZona * proporcion);
+
+        resultados.push({
+          empresaId: sr.empresaId,
+          zonaId: zona.zonaId,
+          segmento: sr.segmento,
+          atributos: sr.atributos,
+          total: sr.total,
+          final: sr.final,
+          shareAtraccion: sr.shareAtraccion,
+          cuotaAsignada: sr.cuotaAsignada,
+          demandaGenerada: sr.demandaGenerada,
           ventas,
           faltante,
         });
@@ -241,8 +286,8 @@ function getCuotaPrevia(
   empresaId: string,
   zonaId: string,
   segmento: Segmento,
-): number {
-  return estado.cuotaAsignada[empresaId]?.[zonaId]?.[segmento] ?? 0;
+): number | undefined {
+  return estado.cuotaAsignada[empresaId]?.[zonaId]?.[segmento];
 }
 
 function setConocimiento(

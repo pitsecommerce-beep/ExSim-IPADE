@@ -54,4 +54,11 @@ describe("u_presupuesto — §4.5", () => {
     const rBajo = calcularUPresupuesto(83.50, LIMITES_P9.centro.bajo);
     expect(rBajo).toBeLessThan(rAlto);
   });
+
+  it("Centro P7, precio 77: Alto = 99.63, Bajo = 92.48 (fixture §1.1)", () => {
+    const rAlto = calcularUPresupuesto(77, 111.85);
+    const rBajo = calcularUPresupuesto(77, 91.25);
+    expect(Math.abs(rAlto - 99.63)).toBeLessThan(0.015 + 0.01);
+    expect(Math.abs(rBajo - 92.48)).toBeLessThan(0.015 + 0.01);
+  });
 });

@@ -12,11 +12,14 @@ const KAPPA = 2;
 const TOL = 0.006;
 
 const CASOS: Array<[vendedores: number, distribuidores: number, esperado: number]> = [
-  // §8.1: muestra obligatoria
+  // §8.1: muestra obligatoria — 25 casos
   [3, 7, 16.78],
   [6, 7, 52.03],
+  [10, 7, 87.01],
   [11, 7, 91.54],
   [12, 7, 94.71],
+  [17, 7, 99.73],
+  [18, 7, 99.87],
   [13, 10, 81.55],
   [14, 10, 85.91],
   [17, 10, 94.44],
@@ -25,15 +28,15 @@ const CASOS: Array<[vendedores: number, distribuidores: number, esperado: number
   [22, 10, 99.21],
   [25, 10, 99.81],
   [26, 10, 99.88],
-  [28, 8, 100.00],
   [30, 10, 99.99],
-  [40, 8, 100.00],
   [46, 10, 100.00],
   [13, 8, 92.87],
   [14, 8, 95.32],
   [15, 8, 97.03],
   [17, 8, 98.91],
-  // §4.4: puntos representativos de validación
+  [25, 8, 99.99],
+  [28, 8, 100.00],
+  [40, 8, 100.00],
   [0, 7, 0.00],
 ];
 

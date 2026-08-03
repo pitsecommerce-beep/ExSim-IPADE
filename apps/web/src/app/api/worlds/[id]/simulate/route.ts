@@ -84,20 +84,20 @@ function buildCommercialInput(
     pesosSegmento: {
       alto: {
         precio: 0.5, producto: 2.0, canal: 1.0,
-        publicidad: 2.0, generico: 1.0, caracteristicasMarca: 1.0,
+        publicidad: 2.0, presupuesto: 1.0, generico: 1.0, caracteristicasMarca: 1.0,
         correccionUtilidad: 1.0,
       },
       bajo: {
         precio: 2.0, producto: 1.4, canal: 1.0,
-        publicidad: 1.8, generico: 1.0, caracteristicasMarca: 1.0,
+        publicidad: 1.8, presupuesto: 1.0, generico: 1.0, caracteristicasMarca: 1.0,
         correccionUtilidad: 1.7,
       },
     },
     multFase: {
-      rollout: { precio: 1.12, producto: 1, canal: 0.25, publicidad: 2.20, generico: 3.00, caracteristicasMarca: 1 },
-      growth: { precio: 1.40, producto: 1, canal: 0.225, publicidad: 1.80, generico: 2.00, caracteristicasMarca: 1 },
-      maturity: { precio: 1.50, producto: 1, canal: 0.16, publicidad: 1.10, generico: 0.85, caracteristicasMarca: 1 },
-      hypermaturity: { precio: 1.80, producto: 1, canal: 0.08, publicidad: 0.70, generico: 0.40, caracteristicasMarca: 1 },
+      rollout: { precio: 1.12, producto: 1, canal: 0.25, publicidad: 2.20, presupuesto: 1.0, generico: 3.00, caracteristicasMarca: 1 },
+      growth: { precio: 1.40, producto: 1, canal: 0.225, publicidad: 1.80, presupuesto: 1.0, generico: 2.00, caracteristicasMarca: 1 },
+      maturity: { precio: 1.50, producto: 1, canal: 0.16, publicidad: 1.10, presupuesto: 1.0, generico: 0.85, caracteristicasMarca: 1 },
+      hypermaturity: { precio: 1.80, producto: 1, canal: 0.08, publicidad: 0.70, presupuesto: 1.0, generico: 0.40, caracteristicasMarca: 1 },
     },
     rotacionAdquisicion: {
       rollout: { rotacion: 0.45, adquisicion: 0.55 },
