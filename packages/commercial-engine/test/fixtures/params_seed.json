@@ -1,0 +1,3497 @@
+{
+ "meta": {
+  "perfil": "MEZQUITE IPADE",
+  "fuente": "Ingenieria inversa de reportes comerciales P6-P12",
+  "nota": "Todos los valores provienen de las pestanas de la plataforma oficial salvo los marcados como estimados"
+ },
+ "comercial_parametros": {
+  "prevision_demanda": true,
+  "calidad_contenido": false,
+  "modelo_demanda": "Producto * Conocimiento",
+  "modelo_precio": "Lineal",
+  "actualizacion_instantanea_percepcion": true,
+  "dopaje_base100": 105,
+  "nota_dopaje": "105 en periodos 7-11, 110 en periodo 12; el clone actual trae 110"
+ },
+ "innovacion_parametros": {
+  "granular": false
+ },
+ "segmentos": [
+  {
+   "nombre_en": "High",
+   "nombre_es": "Alto",
+   "precio": 0.5,
+   "producto": 2.0,
+   "canales_distribucion": 1.0,
+   "publicidad": 2.0,
+   "generico": 1.0,
+   "caracteristicas_marca": 1.0,
+   "kappa_precio": 0.2,
+   "correccion_utilidad": 1.0,
+   "activo": true
+  },
+  {
+   "nombre_en": "Low",
+   "nombre_es": "Bajo",
+   "precio": 2.0,
+   "producto": 1.4,
+   "canales_distribucion": 1.0,
+   "publicidad": 1.8,
+   "generico": 1.0,
+   "caracteristicas_marca": 1.0,
+   "kappa_precio": 0.15,
+   "correccion_utilidad": 1.7,
+   "activo": true
+  }
+ ],
+ "fases": [
+  {
+   "fase": "1.Roll-out",
+   "precio": 1.12,
+   "producto": 1,
+   "canales_distribucion": 0.25,
+   "publicidad": 2.2,
+   "generico": 3.0,
+   "caracteristicas_marca": 1,
+   "correccion_utilidad": 1,
+   "rotacion_conocimiento": 0.45,
+   "adquisicion_conocimiento": 0.55,
+   "error_base": 10.0
+  },
+  {
+   "fase": "2.Growth",
+   "precio": 1.4,
+   "producto": 1,
+   "canales_distribucion": 0.225,
+   "publicidad": 1.8,
+   "generico": 2.0,
+   "caracteristicas_marca": 1,
+   "correccion_utilidad": 1,
+   "rotacion_conocimiento": 0.4,
+   "adquisicion_conocimiento": 0.5,
+   "error_base": 10.0
+  },
+  {
+   "fase": "3.Maturity",
+   "precio": 1.5,
+   "producto": 1,
+   "canales_distribucion": 0.16,
+   "publicidad": 1.1,
+   "generico": 0.85,
+   "caracteristicas_marca": 1,
+   "correccion_utilidad": 1,
+   "rotacion_conocimiento": 0.25,
+   "adquisicion_conocimiento": 0.4,
+   "error_base": 10.0
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "precio": 1.8,
+   "producto": 1,
+   "canales_distribucion": 0.08,
+   "publicidad": 0.7,
+   "generico": 0.4,
+   "caracteristicas_marca": 1,
+   "correccion_utilidad": 1,
+   "rotacion_conocimiento": 0.15,
+   "adquisicion_conocimiento": 0.3,
+   "error_base": 10.0
+  }
+ ],
+ "segmentos_fases": [
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "compra_espontanea": 0,
+   "umbral": 0,
+   "rotacion_base": 0,
+   "loyalty": 0.25,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "compra_espontanea": 0,
+   "umbral": 0,
+   "rotacion_base": 0,
+   "loyalty": 0.25,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "compra_espontanea": 0,
+   "umbral": 10,
+   "rotacion_base": 0,
+   "loyalty": 0.5,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "compra_espontanea": 0,
+   "umbral": 10,
+   "rotacion_base": 0,
+   "loyalty": 0.4,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "compra_espontanea": 0,
+   "umbral": 55,
+   "rotacion_base": 0,
+   "loyalty": 0.55,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "compra_espontanea": 0,
+   "umbral": 40,
+   "rotacion_base": 0,
+   "loyalty": 0.3,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "compra_espontanea": 0,
+   "umbral": 60,
+   "rotacion_base": 0,
+   "loyalty": 0.4,
+   "actualizacion_percepcion": 1
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "compra_espontanea": 0,
+   "umbral": 50,
+   "rotacion_base": 0,
+   "loyalty": 0.2,
+   "actualizacion_percepcion": 1
+  }
+ ],
+ "segmentos_dimensiones": [
+  {
+   "segmento": "Alto",
+   "dimension": "sostenibilidad",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Alto",
+   "dimension": "conveniencia",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Alto",
+   "dimension": "rendimiento",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Alto",
+   "dimension": "funcionalidades_extra",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Alto",
+   "dimension": "eficiencia",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Bajo",
+   "dimension": "sostenibilidad",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Bajo",
+   "dimension": "conveniencia",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Bajo",
+   "dimension": "rendimiento",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Bajo",
+   "dimension": "funcionalidades_extra",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  },
+  {
+   "segmento": "Bajo",
+   "dimension": "eficiencia",
+   "valor_inicial": 0.2,
+   "valor_medio": 1,
+   "valor_final": 1
+  }
+ ],
+ "segmentos_dimensiones_fases": [
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.3,
+   "propension": 0.3
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.3,
+   "propension": 0.2
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "dimension": "conveniencia",
+   "desired_value": 0.4,
+   "propension": 0.6
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "dimension": "conveniencia",
+   "desired_value": 0.5,
+   "propension": 0.8
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "dimension": "rendimiento",
+   "desired_value": 0.5,
+   "propension": 0.8
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "dimension": "rendimiento",
+   "desired_value": 0.3,
+   "propension": 0.4
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.4,
+   "propension": 0.7
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.3,
+   "propension": 0.3
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Alto",
+   "dimension": "eficiencia",
+   "desired_value": 0.2,
+   "propension": 0.3
+  },
+  {
+   "fase": "1.Roll-out",
+   "segmento": "Bajo",
+   "dimension": "eficiencia",
+   "desired_value": 0.7,
+   "propension": 0.9
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.4,
+   "propension": 0.3
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.4,
+   "propension": 0.2
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "dimension": "conveniencia",
+   "desired_value": 0.5,
+   "propension": 0.6
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "dimension": "conveniencia",
+   "desired_value": 0.6,
+   "propension": 0.8
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "dimension": "rendimiento",
+   "desired_value": 0.7,
+   "propension": 0.8
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "dimension": "rendimiento",
+   "desired_value": 0.35,
+   "propension": 0.4
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.6,
+   "propension": 0.7
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.4,
+   "propension": 0.6
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Alto",
+   "dimension": "eficiencia",
+   "desired_value": 0.4,
+   "propension": 0.3
+  },
+  {
+   "fase": "2.Growth",
+   "segmento": "Bajo",
+   "dimension": "eficiencia",
+   "desired_value": 0.75,
+   "propension": 0.9
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.6,
+   "propension": 0.8
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.5,
+   "propension": 0.5
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "dimension": "conveniencia",
+   "desired_value": 0.7,
+   "propension": 0.5
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "dimension": "conveniencia",
+   "desired_value": 0.7,
+   "propension": 0.8
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "dimension": "rendimiento",
+   "desired_value": 0.8,
+   "propension": 0.9
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "dimension": "rendimiento",
+   "desired_value": 0.4,
+   "propension": 0.4
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.8,
+   "propension": 0.9
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.4,
+   "propension": 0.7
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Alto",
+   "dimension": "eficiencia",
+   "desired_value": 0.5,
+   "propension": 0.3
+  },
+  {
+   "fase": "3.Maturity",
+   "segmento": "Bajo",
+   "dimension": "eficiencia",
+   "desired_value": 0.85,
+   "propension": 0.9
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.8,
+   "propension": 0.8
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "dimension": "sostenibilidad",
+   "desired_value": 0.6,
+   "propension": 0.5
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "dimension": "conveniencia",
+   "desired_value": 0.8,
+   "propension": 0.5
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "dimension": "conveniencia",
+   "desired_value": 0.8,
+   "propension": 0.8
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "dimension": "rendimiento",
+   "desired_value": 0.8,
+   "propension": 0.9
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "dimension": "rendimiento",
+   "desired_value": 0.5,
+   "propension": 0.4
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.9,
+   "propension": 0.9
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "dimension": "funcionalidades_extra",
+   "desired_value": 0.5,
+   "propension": 0.7
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Alto",
+   "dimension": "eficiencia",
+   "desired_value": 0.7,
+   "propension": 0.3
+  },
+  {
+   "fase": "4.Hypermaturity",
+   "segmento": "Bajo",
+   "dimension": "eficiencia",
+   "desired_value": 0.9,
+   "propension": 0.9
+  }
+ ],
+ "dimensiones_producto": [
+  {
+   "id": 1,
+   "nombre_en": "Eco-friendliness",
+   "clave": "sostenibilidad",
+   "activo": true
+  },
+  {
+   "id": 2,
+   "nombre_en": "Convenience",
+   "clave": "conveniencia",
+   "activo": true
+  },
+  {
+   "id": 3,
+   "nombre_en": "Performance",
+   "clave": "rendimiento",
+   "activo": true
+  },
+  {
+   "id": 4,
+   "nombre_en": "Extra features",
+   "clave": "funcionalidades_extra",
+   "activo": true
+  },
+  {
+   "id": 5,
+   "nombre_en": "Efficiency",
+   "clave": "eficiencia",
+   "activo": true
+  }
+ ],
+ "canales_distribucion": [
+  {
+   "canal_en": "Distributors",
+   "canal_es": "Distribuidores",
+   "tipo": "Salespeople",
+   "coste_configuracion": 1000,
+   "coste_variable": 93.75,
+   "coste_cancelacion": 0,
+   "alfa": 1.0,
+   "kappa": 2.0,
+   "activo": true
+  },
+  {
+   "canal_en": "Big department stores",
+   "canal_es": "Grandes Almacenes",
+   "tipo": "Salespeople",
+   "coste_configuracion": 1000,
+   "coste_variable": 93.75,
+   "coste_cancelacion": 0,
+   "alfa": 1.2,
+   "kappa": 2.5,
+   "activo": false
+  },
+  {
+   "canal_en": "E-commerce",
+   "canal_es": "Tienda en Linea",
+   "tipo": "Monetary",
+   "coste_configuracion": 0,
+   "coste_variable": 1,
+   "coste_cancelacion": 0,
+   "alfa": 1.2,
+   "kappa": 2.5,
+   "activo": false
+  }
+ ],
+ "canales_distribucion_zona": [
+  {
+   "zona": "Centro",
+   "distribuidores": 10,
+   "grandes_almacenes": 10,
+   "tienda_en_linea": 10
+  },
+  {
+   "zona": "Oeste",
+   "distribuidores": 10,
+   "grandes_almacenes": 10,
+   "tienda_en_linea": 10
+  },
+  {
+   "zona": "Norte",
+   "distribuidores": 8,
+   "grandes_almacenes": 10,
+   "tienda_en_linea": 10
+  },
+  {
+   "zona": "Este",
+   "distribuidores": 7,
+   "grandes_almacenes": 10,
+   "tienda_en_linea": 10
+  },
+  {
+   "zona": "Sur",
+   "distribuidores": 7,
+   "grandes_almacenes": 10,
+   "tienda_en_linea": 10
+  }
+ ],
+ "propension_a_comprar": [
+  {
+   "canal": "Distribuidores",
+   "segmento": "Alto",
+   "propension_pct": 100
+  },
+  {
+   "canal": "Distribuidores",
+   "segmento": "Bajo",
+   "propension_pct": 100
+  },
+  {
+   "canal": "Grandes Almacenes",
+   "segmento": "Alto",
+   "propension_pct": 0
+  },
+  {
+   "canal": "Grandes Almacenes",
+   "segmento": "Bajo",
+   "propension_pct": 0
+  },
+  {
+   "canal": "Tienda en Linea",
+   "segmento": "Alto",
+   "propension_pct": 0
+  },
+  {
+   "canal": "Tienda en Linea",
+   "segmento": "Bajo",
+   "propension_pct": 0
+  }
+ ],
+ "condiciones_pago": [
+  {
+   "nombre": "A",
+   "zona": "Todos",
+   "plazo_quincenas": 0,
+   "descuento": 0.13,
+   "activo": true
+  },
+  {
+   "nombre": "B",
+   "zona": "Todos",
+   "plazo_quincenas": 2,
+   "descuento": 0.075,
+   "activo": true
+  },
+  {
+   "nombre": "C",
+   "zona": "Todos",
+   "plazo_quincenas": 4,
+   "descuento": 0.025,
+   "activo": true
+  },
+  {
+   "nombre": "D",
+   "zona": "Todos",
+   "plazo_quincenas": 8,
+   "descuento": 0.0,
+   "activo": true
+  }
+ ],
+ "medio": [
+  {
+   "nombre_en": "TV",
+   "nombre_es": "TV",
+   "alcance": "Global",
+   "coste": 3000,
+   "unidad": "spots",
+   "id_max": 15000,
+   "val_min": 0.6,
+   "lambda_": 1,
+   "k": 1,
+   "qlim_max": 0.3,
+   "minf": 0.75,
+   "msup": 1,
+   "activo": true
+  },
+  {
+   "nombre_en": "Radio",
+   "nombre_es": "Radio",
+   "alcance": "Local",
+   "coste": 300,
+   "unidad": "spots",
+   "id_max": 5000,
+   "val_min": 0.8,
+   "lambda_": 1,
+   "k": 1,
+   "qlim_max": 0.3,
+   "minf": 0.8,
+   "msup": 1,
+   "activo": true
+  },
+  {
+   "nombre_en": "Out-of-home",
+   "nombre_es": "Exterior",
+   "alcance": "Local",
+   "coste": 1500,
+   "unidad": "colocaciones",
+   "id_max": 10000,
+   "val_min": 0.5,
+   "lambda_": 1,
+   "k": 1,
+   "qlim_max": 0.2,
+   "minf": 0.7,
+   "msup": 1,
+   "activo": false
+  },
+  {
+   "nombre_en": "Digital",
+   "nombre_es": "Digital",
+   "alcance": "Global",
+   "coste": 1,
+   "unidad": "clics",
+   "id_max": 15000,
+   "val_min": 0.4,
+   "lambda_": 1,
+   "k": 1,
+   "qlim_max": 0.1,
+   "minf": 0.9,
+   "msup": 1,
+   "activo": false
+  }
+ ],
+ "medio_segmentos": [
+  {
+   "medio": "TV",
+   "segmento": "Alto",
+   "impacto_generico": 0.33,
+   "impacto_branding": 1.0,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.8,
+   "exclusivo": 0.2
+  },
+  {
+   "medio": "TV",
+   "segmento": "Bajo",
+   "impacto_generico": 1.0,
+   "impacto_branding": 0.66,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.5,
+   "exclusivo": 0.1
+  },
+  {
+   "medio": "Radio",
+   "segmento": "Alto",
+   "impacto_generico": 0.33,
+   "impacto_branding": 1.0,
+   "limite_generico": 200,
+   "limite_branding": 200,
+   "forma": 0,
+   "max_alcanzable": 0.8,
+   "exclusivo": 0.2
+  },
+  {
+   "medio": "Radio",
+   "segmento": "Bajo",
+   "impacto_generico": 1.0,
+   "impacto_branding": 0.8,
+   "limite_generico": 200,
+   "limite_branding": 200,
+   "forma": 0,
+   "max_alcanzable": 0.9,
+   "exclusivo": 0.5
+  },
+  {
+   "medio": "Exterior",
+   "segmento": "Alto",
+   "impacto_generico": 0.5,
+   "impacto_branding": 0.5,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.7,
+   "exclusivo": 0.1
+  },
+  {
+   "medio": "Exterior",
+   "segmento": "Bajo",
+   "impacto_generico": 0.5,
+   "impacto_branding": 0.5,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.55,
+   "exclusivo": 0.05
+  },
+  {
+   "medio": "Digital",
+   "segmento": "Alto",
+   "impacto_generico": 0.5,
+   "impacto_branding": 0.5,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.75,
+   "exclusivo": 0.1
+  },
+  {
+   "medio": "Digital",
+   "segmento": "Bajo",
+   "impacto_generico": 0.5,
+   "impacto_branding": 0.5,
+   "limite_generico": 20,
+   "limite_branding": 20,
+   "forma": 0,
+   "max_alcanzable": 0.7,
+   "exclusivo": 0.1
+  }
+ ],
+ "mejoras": [
+  {
+   "id": 1,
+   "nombre_en": "STAINLESS MATERIAL",
+   "nombre_es": "MATERIAL INOXIDABLE",
+   "costo_id": 15000,
+   "costo_variable": 0.15,
+   "co2": -0.025,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 1,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 1
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 2,
+   "nombre_en": "RECYCLABLE MATERIALS",
+   "nombre_es": "MATERIALES RECICLABLES",
+   "costo_id": 30000,
+   "costo_variable": 0.15,
+   "co2": 0.023,
+   "D": {
+    "sostenibilidad": 2,
+    "conveniencia": 0,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 3,
+   "nombre_en": "ENERGY EFFICIENCY",
+   "nombre_es": "CONSUMO ELECTRICO REDUCIDO",
+   "costo_id": 30000,
+   "costo_variable": 0.15,
+   "co2": -0.025,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 0,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 1
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 4,
+   "nombre_en": "LIGHTER AND MORE COMPACT",
+   "nombre_es": "MAS LIGERO Y MAS COMPACTO",
+   "costo_id": 30000,
+   "costo_variable": 0.3,
+   "co2": 0.045,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 1,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 1
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 5,
+   "nombre_en": "IMPACT RESISTANCE",
+   "nombre_es": "RESISTENCIA A IMPACTOS",
+   "costo_id": 30000,
+   "costo_variable": 0.3,
+   "co2": -0.05,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 1,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 1
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 6,
+   "nombre_en": "NOISE REDUCTION",
+   "nombre_es": "REDUCCION DE RUIDOS",
+   "costo_id": 45000,
+   "costo_variable": 0.3,
+   "co2": 0.045,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 2,
+    "rendimiento": 0,
+    "funcionalidades_extra": 0,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 7,
+   "nombre_en": "IMPROVED BATTERY CAPACITY",
+   "nombre_es": "MAYOR CAPACIDAD DE BATERIA",
+   "costo_id": 45000,
+   "costo_variable": 0.45,
+   "co2": -0.075,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 1,
+    "rendimiento": 1,
+    "funcionalidades_extra": 0,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 8,
+   "nombre_en": "SELF-CLEANING",
+   "nombre_es": "AUTOLIMPIEZA",
+   "costo_id": 45000,
+   "costo_variable": 0.45,
+   "co2": 0.068,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 1,
+    "rendimiento": 1,
+    "funcionalidades_extra": 0,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 9,
+   "nombre_en": "SPEED SETTINGS",
+   "nombre_es": "AJUSTES DE VELOCIDAD",
+   "costo_id": 45000,
+   "costo_variable": 0.45,
+   "co2": 0.068,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 0,
+    "rendimiento": 1,
+    "funcionalidades_extra": 2,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 10,
+   "nombre_en": "DIGITAL CONTROLS",
+   "nombre_es": "CONTROLES DIGITALES",
+   "costo_id": 45000,
+   "costo_variable": 0.45,
+   "co2": -0.075,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 2,
+    "rendimiento": 2,
+    "funcionalidades_extra": 2,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 11,
+   "nombre_en": "VOICE ASSISTANCE INTEGRATION",
+   "nombre_es": "INTEGRACION DE ASISTENCIA POR VOZ",
+   "costo_id": 45000,
+   "costo_variable": 0.75,
+   "co2": 0.107,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 3,
+    "rendimiento": 0,
+    "funcionalidades_extra": 3,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 12,
+   "nombre_en": "AUTOMATION AND PROGRAMMABILITY",
+   "nombre_es": "AUTOMATIZACION Y PROGRAMABILIDAD",
+   "costo_id": 45000,
+   "costo_variable": 0.75,
+   "co2": 0.107,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 3,
+    "rendimiento": 0,
+    "funcionalidades_extra": 4,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 13,
+   "nombre_en": "MULTIFUNCTIONAL ACCESSORIES",
+   "nombre_es": "ACCESORIOS MULTIFUNCIONALES",
+   "costo_id": 100000,
+   "costo_variable": 1.0,
+   "co2": 0.143,
+   "D": {
+    "sostenibilidad": 0,
+    "conveniencia": 3,
+    "rendimiento": 3,
+    "funcionalidades_extra": 4,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  },
+  {
+   "id": 14,
+   "nombre_en": "MAPPING TECHNOLOGY",
+   "nombre_es": "TECNOLOGIA DE MAPEO",
+   "costo_id": 100000,
+   "costo_variable": 1.0,
+   "co2": 0.143,
+   "D": {
+    "sostenibilidad": 1,
+    "conveniencia": 2,
+    "rendimiento": 3,
+    "funcionalidades_extra": 2,
+    "eficiencia": 0
+   },
+   "valor_min": 0,
+   "valor_max": 1,
+   "forma": 0,
+   "lambda_": 0,
+   "k": 0,
+   "activo": true,
+   "precedente": null
+  }
+ ],
+ "demanda": [
+  {
+   "periodo": 1,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2300,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 111.28,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 1800,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.92,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 3200,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.56,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2300,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.2,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 1800,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.84,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2700,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.48,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2400,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 1400,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2100,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 1400,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 107.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2400,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 107.32,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2100,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 106.96,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 1400,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 106.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2500,
+   "poblacion": 35200,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 106.24,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 3000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Centro",
+   "segmento": "Alto",
+   "cantidad": 2500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 1800,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 91.28,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 1800,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.92,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3400,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.56,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3700,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.2,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3300,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.84,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 6200,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.48,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 5100,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 4200,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 7200,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 5500,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 4200,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 87.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 6600,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 87.32,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 4900,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 86.96,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3500,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 86.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 5800,
+   "poblacion": 74800,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 86.24,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 2500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 3000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 1500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Centro",
+   "segmento": "Bajo",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 900,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 111.53,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1300,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 111.22,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1600,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.91,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1100,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1000,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 110.28,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1200,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.97,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1200,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.66,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1100,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.51,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1600,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 109.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1200,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1500,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 2200,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 108.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 2400,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 107.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 1600,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 107.48,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 2400,
+   "poblacion": 24000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 107.16,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 3500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 3500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 3000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Oeste",
+   "segmento": "Alto",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 900,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 91.53,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 600,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 91.22,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 1100,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.91,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 1700,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 1900,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 90.28,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 2828,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.97,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 2550,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.66,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 3200,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.51,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 5300,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 89.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 3400,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 4300,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 6300,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 88.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 5600,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 87.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 3300,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 87.48,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 5100,
+   "poblacion": 51000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 87.16,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 5000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 6000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 4500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Oeste",
+   "segmento": "Bajo",
+   "cantidad": 5000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 300,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 140.36,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 400,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 140.01,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 800,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 139.66,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 900,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 139.31,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 900,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 138.95,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1600,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 138.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1300,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 138.25,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1600,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 138.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1400,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 137.53,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1100,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 137.21,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1000,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 137.01,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1200,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 136.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 900,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 136.14,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 700,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 135.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 1100,
+   "poblacion": 19600,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 135.43,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 4800,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 5500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 4200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 3800,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Norte",
+   "segmento": "Alto",
+   "cantidad": 4500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 400,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 120.36,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 120.01,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 1800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 119.66,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 1800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 119.31,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 1800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 118.95,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 2800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 118.6,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 2500,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 118.25,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 2800,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 118.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 3200,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 118.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 3100,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 117.21,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 2900,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 117.01,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 3600,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 116.49,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 3100,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 116.14,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 2500,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 115.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 4700,
+   "poblacion": 50400,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 65,
+   "limite_precio": 115.43,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 4800,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 5500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 4200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 3800,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Norte",
+   "segmento": "Bajo",
+   "cantidad": 4500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 190.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 188.05,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 185.22,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 182.38,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 179.55,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 176.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 200,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 173.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 300,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 173.61,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 500,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 172.93,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 400,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 165.07,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 500,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 162.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 800,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 159.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 700,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 156.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 800,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 154.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 800,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 151.21,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 3700,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 5200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 4500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 4200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Este",
+   "segmento": "Alto",
+   "cantidad": 6000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 170.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 168.05,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 165.22,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 162.38,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 159.55,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 156.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 600,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 153.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 800,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 153.61,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 1700,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 152.93,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 1500,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 145.07,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 2200,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 142.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 3200,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 139.71,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 3100,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 136.88,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 3400,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 134.04,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 3700,
+   "poblacion": 32000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 131.21,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 3700,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 5200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 4500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 4200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Este",
+   "segmento": "Bajo",
+   "cantidad": 6000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 171.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 170.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 168.45,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 166.78,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 165.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 0,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 163.45,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 300,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 161.78,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 300,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 161.73,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 500,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 160.91,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 500,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 160.54,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 600,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 160.29,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 600,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 153.44,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 400,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 151.77,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 800,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 150.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 1100,
+   "poblacion": 8000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 148.44,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 2200,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 2000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 3000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 2500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 2400,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Sur",
+   "segmento": "Alto",
+   "cantidad": 3500,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 1,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 151.79,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 2,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 150.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 3,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 148.45,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 4,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 146.78,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 5,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 145.12,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 6,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 0,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 143.45,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 7,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 310,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 141.78,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 8,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 500,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 141.73,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 9,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 700,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 141.73,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 10,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 900,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 140.54,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 11,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 1100,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 140.29,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 12,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 1600,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 133.44,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 13,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 1400,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 131.77,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 14,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 1100,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 130.1,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 15,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 2600,
+   "poblacion": 17000,
+   "tipo_precio": "Avg - StdDev",
+   "precio": 75,
+   "limite_precio": 128.44,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 16,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 4400,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 17,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 4000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 18,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 6000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 19,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 5000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 20,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 4800,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  },
+  {
+   "periodo": 21,
+   "zona": "Sur",
+   "segmento": "Bajo",
+   "cantidad": 7000,
+   "poblacion": 10000,
+   "tipo_precio": "Reference",
+   "precio": 60,
+   "limite_precio": 100,
+   "utilidad_base": 0
+  }
+ ],
+ "coeficientes_estimados": {
+  "nota": "NO aparecen como columna en la plataforma. Estimados por ingenieria inversa. Deben quedar configurables.",
+  "precio_a": {
+   "Alto": 9.911,
+   "Bajo": 12.633
+  },
+  "precio_b": {
+   "Alto": 113.6,
+   "Bajo": 410.8
+  },
+  "presupuesto_c": 18.716,
+  "producto_base_beta": 0.078,
+  "producto_max_por_dimension": {
+   "sostenibilidad": 9,
+   "conveniencia": 20,
+   "rendimiento": 11,
+   "funcionalidades_extra": 17,
+   "eficiencia": 4
+  },
+  "publicidad_peso_marca_theta": 0.375,
+  "publicidad_tv_alto": {
+   "M": 64.8,
+   "L": 27.9,
+   "k": 2.15
+  },
+  "publicidad_radio_alto": {
+   "M": 8.2,
+   "L": 40.0,
+   "k": 1.2
+  },
+  "exponentes_escala_global": 0.25,
+  "ruido_error_base_pct": 10.0
+ }
+}
