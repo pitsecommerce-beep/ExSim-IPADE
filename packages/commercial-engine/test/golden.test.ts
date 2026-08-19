@@ -6,7 +6,6 @@ import type {
   CompanyZoneDecision,
   MarketState,
   EngineOptions,
-  CommercialConfig,
 } from "../src/types.js";
 import {
   MEZQUITE_CONFIG,
@@ -46,7 +45,6 @@ interface PeriodExpected {
 
 function buildDecisions(
   periodDec: PeriodDecisions,
-  period: number,
 ): CompanyDecisions[] {
   return COMPANIES.map((companyId, idx) => {
     const zones: CompanyZoneDecision[] = ZONES.map((zoneKey) => {
@@ -99,8 +97,6 @@ const TOLERANCES = {
   Promocion: 0.01,
   Publicidad: { Alto: 0.30, AltoRollout: 1.50, Bajo: 5.50 },
   Producto: 4.10,
-  Final: 0.01,
-  Total: 0.12,
   Share: { Alto: 0.50, AltoRollout: 9.00, Bajo: 3.50, BajoRollout: 6.00 },
 };
 
@@ -115,12 +111,30 @@ function getResult(
   );
 }
 
+function shareTolerance(zone: string, segment: string, period: number): number {
+  if (ROLLOUT_ZONES.has(zone) && period <= 8) {
+    return segment === "Alto" ? TOLERANCES.Share.AltoRollout : TOLERANCES.Share.BajoRollout;
+  }
+  return segment === "Alto" ? TOLERANCES.Share.Alto : TOLERANCES.Share.Bajo;
+}
+
+function pubTolerance(zone: string, segment: string): number {
+  if (segment === "Bajo") return TOLERANCES.Publicidad.Bajo;
+  if (ROLLOUT_ZONES.has(zone)) return TOLERANCES.Publicidad.AltoRollout;
+  return TOLERANCES.Publicidad.Alto;
+}
+
+const periodData = (goldenData as Record<string, unknown>).periodos as Record<
+  string,
+  { decisiones: PeriodDecisions; esperado: PeriodExpected }
+>;
+
+// --- P7 full golden test (all factors + shares) ---
+
 describe("Golden tests - Period 7", () => {
   const period = 7;
-  const periodData = (goldenData as Record<string, unknown>).periodos as Record<string, { decisiones: PeriodDecisions; esperado: PeriodExpected }>;
   const p7 = periodData["7"]!;
-
-  const decisions = buildDecisions(p7.decisiones, period);
+  const decisions = buildDecisions(p7.decisiones);
 
   const state: MarketState = {
     awareness: P6_AWARENESS,
@@ -185,11 +199,7 @@ describe("Golden tests - Period 7", () => {
             expect(
               Math.abs((r?.factorPublicidad ?? 0) - expected.Publicidad[i]!),
               `${COMPANIES[i]} Publicidad: got ${r?.factorPublicidad?.toFixed(2)}, expected ${expected.Publicidad[i]}`,
-            ).toBeLessThan(
-              segment === "Bajo" ? TOLERANCES.Publicidad.Bajo
-              : ROLLOUT_ZONES.has(zone) ? TOLERANCES.Publicidad.AltoRollout
-              : TOLERANCES.Publicidad.Alto,
-            );
+            ).toBeLessThan(pubTolerance(zone, segment));
           }
         });
 
@@ -211,11 +221,7 @@ describe("Golden tests - Period 7", () => {
             expect(
               Math.abs((r?.cuotaAsignada ?? 0) - expected.Share[i]!),
               `${COMPANIES[i]} Share: got ${r?.cuotaAsignada?.toFixed(2)}, expected ${expected.Share[i]}`,
-            ).toBeLessThan(
-              ROLLOUT_ZONES.has(zone)
-                ? (segment === "Alto" ? TOLERANCES.Share.AltoRollout : TOLERANCES.Share.BajoRollout)
-                : (segment === "Alto" ? TOLERANCES.Share.Alto : TOLERANCES.Share.Bajo),
-            );
+            ).toBeLessThan(shareTolerance(zone, segment, period));
           }
         });
       });
@@ -238,3 +244,89 @@ describe("Golden tests - Period 7", () => {
     }
   });
 });
+
+// --- P8-P12: decision-only factors (Precio, Presupuesto, Promocion) ---
+// Producto/Publicidad/Share require per-period improvement lists that are
+// not yet in the golden fixture. Only decision-driven factors can be
+// validated across chained periods without that data.
+
+for (let period = 8; period <= 12; period++) {
+  describe(`Golden tests - Period ${period} (decision factors)`, () => {
+    const pData = periodData[String(period)]!;
+    const decisions = buildDecisions(pData.decisiones);
+
+    const state: MarketState = {
+      awareness: P6_AWARENESS,
+      assignedShare: P6_ASSIGNED_SHARE,
+    };
+
+    const options: EngineOptions = {
+      seed: "test-golden",
+      noiseEnabled: false,
+      period,
+      numCompanies: 5,
+    };
+
+    const result = runCommercialPeriod(MEZQUITE_CONFIG, state, decisions, options);
+
+    for (const zone of ZONES) {
+      for (const segment of SEGMENTS) {
+        const key = `${zone}|${segment}`;
+        const expected = pData.esperado[key];
+        if (!expected) continue;
+
+        describe(`${key}`, () => {
+          it("Precio", () => {
+            const tol = segment === "Alto" ? TOLERANCES.Precio.Alto : TOLERANCES.Precio.Bajo;
+            for (let i = 0; i < COMPANIES.length; i++) {
+              const r = getResult(result.results, COMPANIES[i]!, zone, segment);
+              if (expected.Precio[i] === 0 || r?.factorPrecio === 0) continue;
+              expect(
+                Math.abs((r?.factorPrecio ?? 0) - expected.Precio[i]!),
+                `${COMPANIES[i]} Precio: got ${r?.factorPrecio?.toFixed(2)}, expected ${expected.Precio[i]}`,
+              ).toBeLessThan(tol);
+            }
+          });
+
+          it("Presupuesto", () => {
+            for (let i = 0; i < COMPANIES.length; i++) {
+              const r = getResult(result.results, COMPANIES[i]!, zone, segment);
+              if (expected.Presupuesto[i] === 0 || r?.factorPresupuesto === 0) continue;
+              expect(
+                Math.abs((r?.factorPresupuesto ?? 0) - expected.Presupuesto[i]!),
+                `${COMPANIES[i]} Presupuesto: got ${r?.factorPresupuesto?.toFixed(2)}, expected ${expected.Presupuesto[i]}`,
+              ).toBeLessThan(TOLERANCES.Presupuesto);
+            }
+          });
+
+          it("Promocion", () => {
+            for (let i = 0; i < COMPANIES.length; i++) {
+              const r = getResult(result.results, COMPANIES[i]!, zone, segment);
+              if (expected.Promocion[i] === 0 || r?.factorPromocion === 0) continue;
+              expect(
+                Math.abs((r?.factorPromocion ?? 0) - expected.Promocion[i]!),
+                `${COMPANIES[i]} Promocion: got ${r?.factorPromocion?.toFixed(2)}, expected ${expected.Promocion[i]}`,
+              ).toBeLessThan(TOLERANCES.Promocion);
+            }
+          });
+        });
+      }
+    }
+
+    it("sum of shares per zone-segment is approximately 100", () => {
+      for (const zone of ZONES) {
+        for (const segment of SEGMENTS) {
+          const zoneResults = result.results.filter(
+            (r) => r.zoneKey === zone && r.segmentKey === segment,
+          );
+          if (zoneResults.length === 0) continue;
+          const shareSum = zoneResults.reduce((s, r) => s + r.cuotaAsignada, 0);
+          expect(
+            Math.abs(shareSum - 100),
+            `${zone}|${segment} share sum: ${shareSum.toFixed(4)}`,
+          ).toBeLessThan(0.01);
+        }
+      }
+    });
+  });
+}
