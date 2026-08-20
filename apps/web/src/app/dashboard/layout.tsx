@@ -14,6 +14,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  if (user.user_metadata?.role === "participant") {
+    redirect("/team");
+  }
+
   return (
     <div className="flex min-h-screen">
       <Sidebar user={user} />

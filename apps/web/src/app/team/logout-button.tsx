@@ -16,7 +16,7 @@ export function LogoutButton() {
 
   async function handleLogout() {
     await getSupabase().auth.signOut();
-    router.push("/login?tab=participant");
+    router.push("/acceso");
     router.refresh();
   }
 

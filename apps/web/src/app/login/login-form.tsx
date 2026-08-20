@@ -7,11 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 const IPADE_LOGO_WHITE = "https://www.ipade.mx/wp-content/uploads/2022/11/logo-ipade-color-white.svg?w=347";
 const IPADE_LOGO_COLOR = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
 
-type AuthTab = "login" | "signup" | "participant";
+type AuthTab = "login" | "signup";
 
 export function LoginForm() {
   const searchParams = useSearchParams();
-  const initialTab = (searchParams.get("tab") as AuthTab) || "participant";
+  const initialTab = (searchParams.get("tab") as AuthTab) || "login";
   const [tab, setTab] = useState<AuthTab>(initialTab);
 
   return (
@@ -61,7 +61,7 @@ export function LoginForm() {
                   : "text-ipade-text-secondary hover:text-ipade-text"
               }`}
             >
-              Iniciar Sesión
+              Iniciar Sesion
             </button>
             <button
               onClick={() => setTab("signup")}
@@ -73,23 +73,19 @@ export function LoginForm() {
             >
               Crear Cuenta
             </button>
-            <button
-              onClick={() => setTab("participant")}
-              className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                tab === "participant"
-                  ? "bg-ipade-primary text-white shadow-sm"
-                  : "text-ipade-text-secondary hover:text-ipade-text"
-              }`}
-            >
-              Participante
-            </button>
           </div>
 
           <div key={tab} className="animate-fade-in rounded-lg border border-ipade-border bg-ipade-surface p-8 shadow-sm">
             {tab === "login" && <LoginTab onSwitchTab={setTab} />}
             {tab === "signup" && <SignupTab onSwitchTab={setTab} />}
-            {tab === "participant" && <ParticipantTab />}
           </div>
+
+          <p className="mt-6 text-center text-xs text-ipade-text-muted">
+            Si eres participante,{" "}
+            <a href="/acceso" className="font-medium text-ipade-primary hover:underline">
+              ingresa aqui
+            </a>.
+          </p>
         </div>
       </div>
     </div>
@@ -326,133 +322,3 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
   );
 }
 
-function ParticipantTab() {
-  const [email, setEmail] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [token, setToken] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const supabaseRef = useRef<ReturnType<typeof createSupabaseClient> | null>(null);
-
-  function getSupabase() {
-    if (!supabaseRef.current) supabaseRef.current = createSupabaseClient();
-    return supabaseRef.current;
-  }
-
-  async function handleSendOtp(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const { error: otpError } = await getSupabase().auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: false },
-    });
-
-    if (otpError) {
-      setError(otpError.message);
-      setLoading(false);
-      return;
-    }
-    setOtpSent(true);
-    setLoading(false);
-  }
-
-  async function handleVerifyOtp(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const { error: verifyError } = await getSupabase().auth.verifyOtp({
-      email,
-      token,
-      type: "email",
-    });
-
-    if (verifyError) {
-      setError(verifyError.message);
-      setLoading(false);
-      return;
-    }
-
-    router.push("/team");
-    router.refresh();
-  }
-
-  if (otpSent) {
-    return (
-      <>
-        <h2 className="mb-1 text-lg font-semibold text-ipade-text">Código de Verificación</h2>
-        <p className="mb-6 text-sm text-ipade-text-muted">
-          Ingresa el código de 6 dígitos enviado a <strong className="text-ipade-text">{email}</strong>.
-        </p>
-        <form onSubmit={handleVerifyOtp} className="flex flex-col gap-4">
-          <div>
-            <label htmlFor="otp-code" className="mb-1 block text-sm font-medium text-ipade-text">Código</label>
-            <input
-              id="otp-code"
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={6}
-              value={token}
-              onChange={(e) => setToken(e.target.value.replace(/\D/g, ""))}
-              required
-              className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-center text-2xl tracking-[0.5em] text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-              placeholder="000000"
-              autoFocus
-            />
-          </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || token.length < 6}
-            className="mt-2 rounded-md bg-ipade-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover disabled:opacity-50"
-          >
-            {loading ? "Verificando..." : "Verificar"}
-          </button>
-        </form>
-        <button
-          onClick={() => { setOtpSent(false); setToken(""); setError(null); }}
-          className="mt-4 block w-full text-center text-sm text-ipade-text-muted hover:text-ipade-text"
-        >
-          Cambiar correo
-        </button>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <h2 className="mb-1 text-lg font-semibold text-ipade-text">Acceso Participante</h2>
-      <p className="mb-6 text-sm text-ipade-text-muted">
-        Ingresa con tu correo IPADE. Te enviaremos un código de acceso.
-      </p>
-      <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
-        <div>
-          <label htmlFor="participant-email" className="mb-1 block text-sm font-medium text-ipade-text">
-            Correo electrónico
-          </label>
-          <input
-            id="participant-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-            placeholder="tu@correo.com"
-          />
-        </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-2 rounded-md bg-ipade-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover disabled:opacity-50"
-        >
-          {loading ? "Enviando..." : "Enviar Código"}
-        </button>
-      </form>
-    </>
-  );
-}

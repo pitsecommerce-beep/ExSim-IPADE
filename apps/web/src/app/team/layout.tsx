@@ -9,7 +9,7 @@ export default async function TeamLayout({ children }: { children: React.ReactNo
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?tab=participant");
+    redirect("/acceso");
   }
 
   const { data: membership } = await supabase
