@@ -1,0 +1,444 @@
+#!/usr/bin/env python3
+"""Genera html/showcase.html: los componentes renderizados, no descritos."""
+from build_html import shell, OUT
+
+BODY = r"""<h1>Showcase</h1>
+
+<p class="ipd-lead">Los componentes del sistema renderizados con los tokens reales. Si algo se ve
+mal aquí, está mal en producción. Esta página es la prueba de que el sistema funciona.</p>
+
+<h2 id="botones">Botones</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Variantes sobre fondo claro</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-cluster">
+      <button class="ipd-btn ipd-btn--primary" type="button">Solicitar informes</button>
+      <button class="ipd-btn ipd-btn--secondary" type="button">Ver el programa</button>
+      <button class="ipd-btn ipd-btn--accent" type="button">Última convocatoria</button>
+      <button class="ipd-btn ipd-btn--ghost" type="button">Descargar folleto</button>
+      <button class="ipd-btn ipd-btn--danger" type="button">Cancelar inscripción</button>
+      <button class="ipd-btn ipd-btn--primary" type="button" disabled>No disponible</button>
+    </div>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Tamaños · 36px, 44px, 56px</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-cluster">
+      <button class="ipd-btn ipd-btn--primary ipd-btn--sm" type="button">Pequeño</button>
+      <button class="ipd-btn ipd-btn--primary" type="button">Base</button>
+      <button class="ipd-btn ipd-btn--primary ipd-btn--lg" type="button">Grande</button>
+    </div>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Sobre superficie oscura · clase .ipd-theme-dark</p>
+  <div class="ds-demo__stage ds-demo__stage--dark ipd-theme-dark">
+    <div class="ipd-cluster">
+      <button class="ipd-btn ipd-btn--primary" type="button">Solicitar informes</button>
+      <button class="ipd-btn ipd-btn--secondary" type="button">Ver el programa</button>
+      <button class="ipd-btn ipd-btn--accent" type="button">Última convocatoria</button>
+    </div>
+  </div>
+</div>
+
+<h2 id="enlaces">Enlaces</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Enlace en texto y enlace con flecha</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <p class="ipd-body" style="margin-bottom:1rem">El método del caso se incorporó desde la fundación y hoy se usa en
+      <a class="ipd-link" href="#enlaces">todos los programas</a> de la escuela.</p>
+    <a class="ipd-link-arrow" href="#enlaces">Ver más</a>
+  </div>
+</div>
+
+<h2 id="formulario">Campos de formulario</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Campo en reposo, con ayuda y con error</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div style="display:grid; gap:1.5rem; max-width:460px">
+      <div class="ipd-field">
+        <label class="ipd-label" for="sc-nombre">Nombre completo <span class="ipd-label__required" aria-hidden="true">*</span></label>
+        <input class="ipd-input" id="sc-nombre" type="text" autocomplete="name" placeholder="Ana Ruiz Montes" />
+      </div>
+
+      <div class="ipd-field">
+        <label class="ipd-label" for="sc-correo">Correo corporativo <span class="ipd-label__required" aria-hidden="true">*</span></label>
+        <input class="ipd-input" id="sc-correo" type="email" value="ana.ruiz" aria-invalid="true"
+               aria-describedby="sc-correo-ayuda sc-correo-error" autocomplete="email" />
+        <p class="ipd-help" id="sc-correo-ayuda">Usaremos este correo para enviarle la confirmación.</p>
+        <p class="ipd-error" id="sc-correo-error">Falta el signo @. Ejemplo: nombre@empresa.com</p>
+      </div>
+
+      <div class="ipd-field">
+        <label class="ipd-label" for="sc-programa">Programa de interés</label>
+        <select class="ipd-select" id="sc-programa">
+          <option>Perfeccionamiento Directivo</option>
+          <option>MEDEX</option>
+          <option>MEDE</option>
+          <option>Programas Enfocados</option>
+        </select>
+      </div>
+
+      <div class="ipd-field">
+        <label class="ipd-label" for="sc-mensaje">Cuéntenos su objetivo</label>
+        <textarea class="ipd-textarea" id="sc-mensaje" placeholder="Busco fortalecer la toma de decisiones en mi empresa familiar."></textarea>
+      </div>
+
+      <fieldset style="border:0; padding:0; margin:0">
+        <legend class="ipd-label" style="margin-bottom:.5rem">Modalidad preferida</legend>
+        <label class="ipd-choice"><input type="radio" name="sc-mod" checked /><span>Presencial</span></label>
+        <label class="ipd-choice"><input type="radio" name="sc-mod" /><span>Blended</span></label>
+      </fieldset>
+
+      <label class="ipd-choice">
+        <input type="checkbox" />
+        <span>He leído y acepto el <a class="ipd-link" href="#formulario">aviso de privacidad</a>.</span>
+      </label>
+
+      <button class="ipd-btn ipd-btn--primary ipd-btn--block" type="button">Solicitar informes</button>
+    </div>
+  </div>
+</div>
+
+<h2 id="tarjetas">Tarjetas</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Tarjeta de artículo · toda la superficie es clicable</p>
+  <div class="ds-demo__stage">
+    <div class="ipd-cards">
+      <article class="ipd-card ipd-card--interactive">
+        <div class="ipd-card__media" style="background:linear-gradient(135deg,#00305B,#14487A)"></div>
+        <div class="ipd-card__body">
+          <p class="ipd-card__meta"><time datetime="2026-08-19">19 de agosto de 2026</time> · Factor humano</p>
+          <h3 class="ipd-card__title"><a href="#tarjetas">La línea de vida en la empresa familiar</a></h3>
+          <p class="ipd-card__excerpt">El ejercicio de línea de vida ayuda a entender cómo el pasado condiciona las decisiones de la siguiente generación.</p>
+          <p class="ipd-card__footer"><span class="ipd-link-arrow" aria-hidden="true">Ver más</span></p>
+        </div>
+      </article>
+
+      <article class="ipd-card ipd-card--interactive">
+        <div class="ipd-card__media" style="background:linear-gradient(135deg,#B08D3F,#E9DDBF)"></div>
+        <div class="ipd-card__body">
+          <p class="ipd-card__meta"><time datetime="2026-08-13">13 de agosto de 2026</time> · Vida IPADE</p>
+          <h3 class="ipd-card__title"><a href="#tarjetas">Mujeres líderes y el director como persona</a></h3>
+          <p class="ipd-card__excerpt">Los Programas Enfocados reunieron a empresarias y directoras para revisar el papel personal de quien dirige.</p>
+          <p class="ipd-card__footer"><span class="ipd-link-arrow" aria-hidden="true">Ver más</span></p>
+        </div>
+      </article>
+
+      <article class="ipd-card">
+        <div class="ipd-card__media ipd-skeleton"></div>
+        <div class="ipd-card__body">
+          <div class="ipd-skeleton" style="height:12px; width:40%"></div>
+          <div class="ipd-skeleton" style="height:22px; width:90%"></div>
+          <div class="ipd-skeleton" style="height:14px; width:100%"></div>
+          <div class="ipd-skeleton" style="height:14px; width:70%"></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Tarjeta de programa · filete en oro al pasar el cursor</p>
+  <div class="ds-demo__stage">
+    <div class="ipd-cards">
+      <a class="ipd-program-card" href="#tarjetas">
+        <span class="ipd-program-card__title">Perfeccionamiento Directivo</span>
+        <span class="ipd-program-card__desc">Actualización para la alta dirección.</span>
+      </a>
+      <a class="ipd-program-card" href="#tarjetas">
+        <span class="ipd-program-card__title">MEDEX</span>
+        <span class="ipd-program-card__desc">Maestría para directivos en activo.</span>
+      </a>
+      <a class="ipd-program-card" href="#tarjetas">
+        <span class="ipd-program-card__title">Programas Enfocados</span>
+        <span class="ipd-program-card__desc">Sectoriales, gobierno corporativo y más.</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<h2 id="cifras">Cifras institucionales</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Bloque de datos · cifra en display y oro</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-stats">
+      <div class="ipd-stat"><p class="ipd-stat__value">58</p><p class="ipd-stat__label">Años</p></div>
+      <div class="ipd-stat"><p class="ipd-stat__value">40,000</p><p class="ipd-stat__label">Egresados</p></div>
+      <div class="ipd-stat"><p class="ipd-stat__value">3</p><p class="ipd-stat__label">Sedes activas</p></div>
+      <div class="ipd-stat"><p class="ipd-stat__value">70</p><p class="ipd-stat__label">Convenios</p></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="testimonio">Testimonio</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Prueba social · siempre con programa y año</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <figure class="ipd-testimonial">
+      <div class="ipd-testimonial__avatar" style="background:linear-gradient(135deg,#C0D6E9,#00305B)"></div>
+      <div>
+        <blockquote class="ipd-testimonial__quote">Llegar aquí y construir una red de colegas me confirmó que no
+          estoy sola en los retos de la dirección. El programa fortaleció mi criterio para decidir.</blockquote>
+        <figcaption>
+          <p class="ipd-testimonial__author">Gabriela Malanco</p>
+          <p class="ipd-testimonial__role">Egresada del programa AD 2025</p>
+        </figcaption>
+      </div>
+    </figure>
+  </div>
+</div>
+
+<h2 id="hero">Hero</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Titular sobre imagen · cortina de contraste obligatoria</p>
+  <div class="ds-demo__stage" style="padding:0">
+    <section class="ipd-hero ipd-theme-dark" style="min-height:380px">
+      <div class="ipd-hero__media" style="background:linear-gradient(120deg,#14487A,#00152B)"></div>
+      <div class="ipd-hero__scrim"></div>
+      <div class="ipd-container">
+        <div class="ipd-hero__content">
+          <p class="ipd-eyebrow">Educación ejecutiva</p>
+          <p class="ipd-hero__title" style="font-size:var(--ipd-size-5xl)">Mejores líderes para el mundo actual</p>
+          <p class="ipd-hero__subtitle">Formación para quienes dirigen, con el método del caso desde 1967.</p>
+          <div class="ipd-cluster">
+            <a class="ipd-btn ipd-btn--primary" href="#hero">Conocer los programas</a>
+            <a class="ipd-link-arrow" href="#hero" style="color:var(--ipd-color-gold-400)">Ver las sedes</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<h2 id="etiquetas">Etiquetas y avisos</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Etiquetas</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-cluster">
+      <span class="ipd-badge">Neutra</span>
+      <span class="ipd-badge ipd-badge--brand">Presencial</span>
+      <span class="ipd-badge ipd-badge--accent">Nuevo</span>
+      <span class="ipd-badge ipd-badge--success">Inscripción abierta</span>
+      <span class="ipd-badge ipd-badge--warning">Últimos lugares</span>
+      <span class="ipd-badge ipd-badge--danger">Cerrado</span>
+    </div>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Avisos · el color nunca va solo</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div style="display:grid; gap:1rem">
+      <div class="ipd-alert ipd-alert--info" role="status">
+        <div class="ipd-alert__body"><p class="ipd-alert__title">Cambio de sede</p>
+        <p>La sesión del 12 de septiembre se imparte en el campus Guadalajara.</p></div>
+      </div>
+      <div class="ipd-alert ipd-alert--success" role="status">
+        <div class="ipd-alert__body"><p class="ipd-alert__title">Solicitud enviada</p>
+        <p>Le responderemos por correo en un plazo de dos días hábiles.</p></div>
+      </div>
+      <div class="ipd-alert ipd-alert--warning" role="status">
+        <div class="ipd-alert__body"><p class="ipd-alert__title">Quedan cuatro lugares</p>
+        <p>El cupo del grupo de octubre está por cerrarse.</p></div>
+      </div>
+      <div class="ipd-alert ipd-alert--danger" role="alert">
+        <div class="ipd-alert__body"><p class="ipd-alert__title">No se pudo enviar la solicitud</p>
+        <p>Revise su conexión e intente de nuevo.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="navegacion">Navegación</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Encabezado</p>
+  <div class="ds-demo__stage" style="padding:0">
+    <header class="ipd-header" style="position:static">
+      <div class="ipd-container ipd-header__inner">
+        <a class="ds-brand" href="#navegacion" style="margin:0; text-decoration:none">
+          <span style="font-family:var(--ipd-font-display); font-size:1.5rem; font-weight:700; color:var(--ipd-color-navy-700)">IPADE</span>
+        </a>
+        <nav class="ipd-nav" aria-label="Ejemplo de navegación principal">
+          <a class="ipd-nav__link" href="#navegacion">IPADE</a>
+          <a class="ipd-nav__link" href="#navegacion" aria-current="page">Programas</a>
+          <a class="ipd-nav__link" href="#navegacion">Faculty &amp; Research</a>
+          <a class="ipd-nav__link" href="#navegacion">Alumni</a>
+        </nav>
+        <div class="ipd-cluster">
+          <p class="ipd-lang"><a href="#navegacion" aria-current="true">ES</a><a href="#navegacion">EN</a></p>
+          <button class="ipd-btn ipd-btn--ghost ipd-btn--sm" type="button" aria-expanded="false">Menú</button>
+        </div>
+      </div>
+    </header>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Migas de pan y paginación</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <nav class="ipd-breadcrumb" aria-label="Ruta de navegación" style="margin-bottom:2rem">
+      <ol>
+        <li><a href="#navegacion">Inicio</a></li>
+        <li><a href="#navegacion">Programas</a></li>
+        <li><a href="#navegacion">Enfocados</a></li>
+        <li aria-current="page">Gobierno corporativo</li>
+      </ol>
+    </nav>
+    <nav class="ipd-pagination" aria-label="Paginación de ejemplo">
+      <a href="#navegacion">Anterior</a>
+      <a href="#navegacion">1</a>
+      <span aria-current="page">2</span>
+      <a href="#navegacion">3</a>
+      <a href="#navegacion">Siguiente</a>
+    </nav>
+  </div>
+</div>
+
+<h2 id="acordeon">Acordeón y pestañas</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Acordeón · construido sobre details nativo</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-accordion">
+      <details class="ipd-accordion__item" open>
+        <summary class="ipd-accordion__trigger" style="list-style:none">Módulo 1 · Dirección general</summary>
+        <div class="ipd-accordion__panel">Visión integral de la empresa y del papel de quien dirige. Diez sesiones con método del caso.</div>
+      </details>
+      <details class="ipd-accordion__item">
+        <summary class="ipd-accordion__trigger" style="list-style:none">Módulo 2 · Factor humano</summary>
+        <div class="ipd-accordion__panel">Comportamiento organizacional, liderazgo y desarrollo de equipos directivos.</div>
+      </details>
+      <details class="ipd-accordion__item">
+        <summary class="ipd-accordion__trigger" style="list-style:none">Módulo 3 · Entorno económico</summary>
+        <div class="ipd-accordion__panel">Macroeconomía aplicada a la decisión empresarial en mercados volátiles.</div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Pestañas</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-tabs">
+      <div class="ipd-tabs__list" role="tablist" aria-label="Sedes">
+        <button class="ipd-tabs__tab" role="tab" aria-selected="true" type="button">Ciudad de México</button>
+        <button class="ipd-tabs__tab" role="tab" aria-selected="false" type="button">Guadalajara</button>
+        <button class="ipd-tabs__tab" role="tab" aria-selected="false" type="button">Monterrey</button>
+      </div>
+      <div class="ipd-tabs__panel" role="tabpanel">
+        <p class="ipd-body">Hacienda de San Antonio Clavería, Azcapotzalco. Sesiones cada 15 días, de jueves a sábado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="tabla">Tabla</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Comparativa de programas</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <table class="ipd-table">
+      <caption>Programas de posgrado por modalidad y duración</caption>
+      <thead>
+        <tr><th scope="col">Programa</th><th scope="col">Modalidad</th><th scope="col">Duración</th><th scope="col">Sede</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>MEDE</td><td>Tiempo completo</td><td>18 meses</td><td>Ciudad de México</td></tr>
+        <tr><td>MEDEX</td><td>Ejecutiva</td><td>24 meses</td><td>Tres sedes</td></tr>
+        <tr><td>MEDEX Blended</td><td>Híbrida</td><td>24 meses</td><td>En línea y presencial</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 id="cronologia">Cronología</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Historia institucional · siempre una columna</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div class="ipd-timeline">
+      <div class="ipd-timeline__item">
+        <p class="ipd-timeline__year">1967</p>
+        <p class="ipd-body">Un grupo de empresarios funda la institución con el método del caso desde el primer día.</p>
+      </div>
+      <div class="ipd-timeline__item">
+        <p class="ipd-timeline__year">1995</p>
+        <p class="ipd-body">Apertura de las sedes de Guadalajara y Monterrey.</p>
+      </div>
+      <div class="ipd-timeline__item">
+        <p class="ipd-timeline__year">2026</p>
+        <p class="ipd-body">La escuela se mantiene en el top 20 global de educación ejecutiva del Financial Times.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="vacio">Estado vacío</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Un listado sin resultados nunca es una pantalla en blanco</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <div style="text-align:center; padding:2rem 1rem; max-width:440px; margin-inline:auto">
+      <p class="ipd-h4" style="margin-bottom:.5rem">No encontramos programas con esos filtros</p>
+      <p class="ipd-body" style="color:var(--ipd-text-secondary); margin-bottom:1.5rem">
+        Pruebe quitando la sede o amplíe el rango de fechas.</p>
+      <button class="ipd-btn ipd-btn--secondary" type="button">Limpiar filtros</button>
+    </div>
+  </div>
+</div>
+
+<h2 id="pie">Pie de página</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Superficie oscura · encabezados de bloque en oro</p>
+  <div class="ds-demo__stage" style="padding:0">
+    <footer class="ipd-footer ipd-theme-dark" style="padding-block:3rem 2rem">
+      <div class="ipd-container">
+        <div class="ipd-footer__grid">
+          <div>
+            <p class="ipd-footer__heading">Comunidad</p>
+            <ul><li><a href="#pie">Biblioteca</a></li><li><a href="#pie">Capellanía</a></li><li><a href="#pie">Intranet</a></li></ul>
+          </div>
+          <div>
+            <p class="ipd-footer__heading">Contenidos</p>
+            <ul><li><a href="#pie">Newsmedia</a></li><li><a href="#pie">istmo</a></li><li><a href="#pie">Podcast</a></li></ul>
+          </div>
+          <div>
+            <p class="ipd-footer__heading">Información general</p>
+            <ul><li><a href="#pie">Aviso de privacidad</a></li><li><a href="#pie">Contacto</a></li><li><a href="#pie">Rankings</a></li></ul>
+          </div>
+        </div>
+        <p class="ipd-footer__legal">IPADE Business School © 2026. Ejemplo de documentación, no es el pie real del sitio.</p>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<h2 id="foco">Prueba de teclado</h2>
+
+<p>Recorra esta página con <code>Tab</code>. Todo elemento interactivo debe mostrar el anillo de foco
+de 2px con desplazamiento de 2px. Si alguno no lo muestra, hay un <code>outline: none</code> sin
+reemplazo y es un defecto que bloquea la publicación.</p>
+"""
+
+
+def main() -> None:
+    (OUT / "showcase.html").write_text(shell("showcase.html", BODY), encoding="utf-8")
+    print("escrito showcase.html")
+
+
+if __name__ == "__main__":
+    main()

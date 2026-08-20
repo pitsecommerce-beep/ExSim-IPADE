@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portada · IPADE Design System</title>
+<meta name="description" content="Índice general — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html" aria-current="page">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html">Componentes</a>
+    <a href="03-patrones.html">Patrones</a>
+    <a href="04-accesibilidad.html">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>Portada</span>
+  </div>
+  <div class="ds-content">
+<h1>IPADE Business School<br />Design System</h1>
+
+<p class="ipd-lead">Sistema de diseño para el ecosistema digital de IPADE. Documenta cada elemento
+gráfico, su razón de ser, sus estados y sus reglas de uso, de manera que cualquier persona o
+agente pueda construir una interfaz nueva sin consultar a nadie y sin inventar valores.</p>
+
+<blockquote>
+<p><strong>Antes de producción.</strong> Los hexadecimales y las familias tipográficas se
+reconstruyeron por inspección del sitio público, porque el manual de identidad no es de acceso
+abierto. Sustitúyalos en <code>tokens/tokens.css</code> por los oficiales. Ningún componente se
+ve afectado, porque todos consumen tokens semánticos y no valores literales.</p>
+</blockquote>
+
+<h2 id="que-contiene">Qué contiene</h2>
+
+<table>
+<thead><tr><th>Sección</th><th>Contenido</th></tr></thead>
+<tbody>
+<tr><td><a href="01-fundamentos.html">1. Fundamentos</a></td><td>Principios, color, tipografía, espaciado, rejilla, elevación, iconografía, imagen y movimiento</td></tr>
+<tr><td><a href="02-componentes.html">2. Componentes</a></td><td>22 fichas con anatomía, variantes, estados, marcado de referencia y accesibilidad</td></tr>
+<tr><td><a href="03-patrones.html">3. Patrones</a></td><td>Portada, página de programa, captación, listados, artículo, buscador, multilingüe y responsivo</td></tr>
+<tr><td><a href="04-accesibilidad.html">4. Accesibilidad</a></td><td>WCAG 2.2 AA, contraste, teclado, semántica y listas de verificación</td></tr>
+<tr><td><a href="05-contenido-y-gobierno.html">5. Contenido y gobierno</a></td><td>Voz de marca, redacción de interfaz, arquitectura de archivos, versionado y deuda conocida</td></tr>
+<tr><td><a href="showcase.html">Showcase</a></td><td>Los componentes renderizados en vivo, no solo descritos</td></tr>
+<tr><td><a href="99-goal.html">/goal</a></td><td>Contrato operativo para el equipo y para los agentes</td></tr>
+</tbody>
+</table>
+
+<h2 id="paleta">Paleta completa</h2>
+
+<p>Cada muestra indica su contraste real contra blanco y si cumple WCAG 2.2 AA. Los valores se
+calculan al construir esta página, así que no pueden desviarse de los tokens.</p>
+
+    <h3>Azul institucional</h3>
+    <p>El color ancla de la marca. Sostiene fondos de sección, encabezados y la acción primaria.</p>
+    <div class="ds-swatches">
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#00152B"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-950</p>
+          <p class="ds-swatch__hex">#00152B</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 18.39:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#001F3D"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-900</p>
+          <p class="ds-swatch__hex">#001F3D</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 16.62:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#00284E"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-800</p>
+          <p class="ds-swatch__hex">#00284E</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 14.86:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#00305B"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-700</p>
+          <p class="ds-swatch__hex">#00305B</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 13.34:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#14487A"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-600</p>
+          <p class="ds-swatch__hex">#14487A</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 9.38:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#1E5A96"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-500</p>
+          <p class="ds-swatch__hex">#1E5A96</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 7.10:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#4C82B8"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-400</p>
+          <p class="ds-swatch__hex">#4C82B8</p>
+          <span class="ds-swatch__ratio" data-pass="large">Solo grande · 4.04:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#8AAFD3"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-300</p>
+          <p class="ds-swatch__hex">#8AAFD3</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 2.29:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#C0D6E9"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-200</p>
+          <p class="ds-swatch__hex">#C0D6E9</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.50:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#E1ECF5"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-100</p>
+          <p class="ds-swatch__hex">#E1ECF5</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.20:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#F0F6FB"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">navy-50</p>
+          <p class="ds-swatch__hex">#F0F6FB</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.09:1</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Oro académico</h3>
+    <p>Acento y señalamiento. Nunca fondo de bloques grandes ni texto de párrafo.</p>
+    <div class="ds-swatches">
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#6B5219"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-900</p>
+          <p class="ds-swatch__hex">#6B5219</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 7.38:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#8A6A24"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-800</p>
+          <p class="ds-swatch__hex">#8A6A24</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 5.04:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#9C7A2C"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-700</p>
+          <p class="ds-swatch__hex">#9C7A2C</p>
+          <span class="ds-swatch__ratio" data-pass="large">Solo grande · 4.01:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#B08D3F"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-600</p>
+          <p class="ds-swatch__hex">#B08D3F</p>
+          <span class="ds-swatch__ratio" data-pass="large">Solo grande · 3.12:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#C6A65C"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-500</p>
+          <p class="ds-swatch__hex">#C6A65C</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 2.33:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#D9BF86"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-400</p>
+          <p class="ds-swatch__hex">#D9BF86</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.79:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#E9DDBF"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-300</p>
+          <p class="ds-swatch__hex">#E9DDBF</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.35:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#F3EDDC"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-200</p>
+          <p class="ds-swatch__hex">#F3EDDC</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.17:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#FAF7EF"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">gold-100</p>
+          <p class="ds-swatch__hex">#FAF7EF</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.07:1</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Neutrales</h3>
+    <p>Grises fríos. Un gris cálido junto a este azul se ve sucio.</p>
+    <div class="ds-swatches">
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#10141A"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-900</p>
+          <p class="ds-swatch__hex">#10141A</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 18.47:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#20252C"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-800</p>
+          <p class="ds-swatch__hex">#20252C</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 15.41:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#343B45"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-700</p>
+          <p class="ds-swatch__hex">#343B45</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 11.31:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#4D5561"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-600</p>
+          <p class="ds-swatch__hex">#4D5561</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 7.53:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#66707E"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-500</p>
+          <p class="ds-swatch__hex">#66707E</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 5.02:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#9AA3B0"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-400</p>
+          <p class="ds-swatch__hex">#9AA3B0</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 2.55:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#C2C8D1"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-300</p>
+          <p class="ds-swatch__hex">#C2C8D1</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.68:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#DDE1E7"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-200</p>
+          <p class="ds-swatch__hex">#DDE1E7</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.31:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#EFF1F4"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-100</p>
+          <p class="ds-swatch__hex">#EFF1F4</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.13:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#F7F8FA"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-50</p>
+          <p class="ds-swatch__hex">#F7F8FA</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.06:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#FFFFFF" style="border-bottom:1px solid var(--ipd-border-subtle)"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">neutral-0</p>
+          <p class="ds-swatch__hex">#FFFFFF</p>
+          <span class="ds-swatch__ratio" data-pass="fail">No texto · 1.00:1</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Estado</h3>
+    <p>El color nunca es el único portador del significado: todo estado lleva ícono y texto.</p>
+    <div class="ds-swatches">
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#1E7A46"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">success-600</p>
+          <p class="ds-swatch__hex">#1E7A46</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 5.35:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#A96206"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">warning-600</p>
+          <p class="ds-swatch__hex">#A96206</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 4.73:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#B3261E"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">danger-600</p>
+          <p class="ds-swatch__hex">#B3261E</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 6.54:1</span>
+        </div>
+      </div>
+      <div class="ds-swatch">
+        <div class="ds-swatch__chip" style="background:#1E5A96"></div>
+        <div class="ds-swatch__meta">
+          <p class="ds-swatch__name">info-600</p>
+          <p class="ds-swatch__hex">#1E5A96</p>
+          <span class="ds-swatch__ratio" data-pass="aa">AA · 7.10:1</span>
+        </div>
+      </div>
+    </div>
+
+<h2 id="escala-tipografica">Escala tipográfica</h2>
+
+<div class="ds-demo">
+  <p class="ds-demo__label">Escala fluida · Source Serif 4 en display, Inter en texto</p>
+  <div class="ds-demo__stage ds-demo__stage--plain">
+    <p class="ipd-display-1" style="margin-bottom:.4em">Mejores líderes</p>
+    <p class="ipd-h1" style="margin-bottom:.4em">Titular de página</p>
+    <p class="ipd-h2" style="margin-bottom:.4em">Encabezado de sección</p>
+    <p class="ipd-h3" style="margin-bottom:.6em">Encabezado de bloque</p>
+    <p class="ipd-lead" style="margin-bottom:.6em">Entradilla en 18px con color secundario, para el primer párrafo de una sección.</p>
+    <p class="ipd-body" style="margin-bottom:.6em">Cuerpo de texto en 16px con interlineado 1.65, la medida que sostiene la lectura larga sin fatigar.</p>
+    <p class="ipd-caption" style="margin-bottom:.8em">Pie de foto en 13px con color terciario.</p>
+    <p class="ipd-eyebrow">Rótulo de sección</p>
+  </div>
+</div>
+
+<h2 id="instalacion">Instalación</h2>
+
+<pre><code>&lt;link rel="stylesheet" href="tokens/tokens.css" /&gt;
+&lt;link rel="stylesheet" href="tokens/base.css" /&gt;
+&lt;link rel="stylesheet" href="tokens/components.css" /&gt;</code></pre>
+
+<p>El orden importa: <code>tokens</code> define las variables, <code>base</code> las aplica a los
+elementos HTML, <code>components</code> construye sobre ambos.</p>
+
+<h2 id="claude-code">Uso en Claude Code</h2>
+
+<p>Copie la carpeta a la raíz del proyecto y agregue esto a su <code>CLAUDE.md</code>:</p>
+
+<pre><code>## Design system
+
+Este proyecto usa el IPADE Design System v1.0.0.
+
+Antes de escribir cualquier UI:
+- Leer `ipade-design-system/DESIGN-SYSTEM.md`
+- Consumir los tokens de `ipade-design-system/tokens/tokens.css`
+- Cumplir el contrato de la seccion `/goal`
+
+No introducir valores de color, tipografia o espaciado fuera de los tokens.</code></pre>
+
+<p>El comando <code>/goal</code> queda disponible en <code>.claude/commands/goal.md</code> y audita
+el trabajo contra el sistema en cualquier momento de la sesión.</p>
+
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a class="ds-pager__next" href="01-fundamentos.html"><small>Siguiente</small><span>Fundamentos</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>

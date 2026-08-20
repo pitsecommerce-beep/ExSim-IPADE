@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { isApproved } from "@/lib/auth/email-rules";
 import { Sidebar } from "./sidebar";
 
 export default async function DashboardLayout({
@@ -16,6 +17,10 @@ export default async function DashboardLayout({
 
   if (user.user_metadata?.role === "participant") {
     redirect("/team");
+  }
+
+  if (!isApproved(user.user_metadata)) {
+    redirect("/pendiente");
   }
 
   return (

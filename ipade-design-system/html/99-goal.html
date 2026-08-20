@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>/goal · IPADE Design System</title>
+<meta name="description" content="Contrato operativo — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html">Componentes</a>
+    <a href="03-patrones.html">Patrones</a>
+    <a href="04-accesibilidad.html">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html" aria-current="page">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>/goal</span>
+  </div>
+  <div class="ds-content">
+<h1 id="goal">/goal</h1>
+<p>Directiva operativa del sistema. Todo lo anterior describe el sistema; esta sección dice qué hacer con él.</p>
+<hr />
+<h2 id="objetivo">Objetivo</h2>
+<p>Que cualquier persona o agente que construya una interfaz para IPADE produzca un resultado indistinguible del resto del ecosistema digital, sin consultar a nadie y sin inventar valores.</p>
+<p><strong>Medida de éxito:</strong> una pantalla nueva pasa la lista de verificación del punto 4.8 en la primera revisión, y no introduce ni un solo valor de color, tamaño o espacio fuera de los tokens.</p>
+<hr />
+<h2 id="contrato-para-el-agente">Contrato para el agente</h2>
+<p>Al trabajar en este repositorio:</p>
+<ol>
+<li><strong>Leer <code>tokens/tokens.css</code> antes de escribir CSS.</strong> Si un valor no está ahí, no se usa. Si hace falta, se propone como token nuevo, no se escribe en línea.</li>
+<li><strong>Consumir solo tokens semánticos</strong> en componentes (<code>--ipd-bg-brand</code>), nunca primitivos (<code>--ipd-color-navy-700</code>).</li>
+<li><strong>Nombrar con BEM y prefijo <code>ipd-</code>.</strong></li>
+<li><strong>Diseñar los ocho estados</strong> de cualquier componente interactivo: reposo, hover, foco, activo, deshabilitado, cargando, error, vacío. Un componente con menos estados está incompleto.</li>
+<li><strong>Cumplir WCAG 2.2 AA</strong> como criterio de aceptación, verificado con la lista del punto 4.8.</li>
+<li><strong>Una acción primaria por sección.</strong></li>
+<li><strong>Móvil primero</strong>, con piso de diseño en 360px.</li>
+<li><strong>Documentar todo componente nuevo</strong> en <code>docs/02-componentes.md</code> con la misma estructura de ficha.</li>
+<li><strong>No introducir dependencias</strong> de interfaz sin justificarlo. El sistema es CSS y HTML; el JavaScript se limita a comportamiento, no a estilo.</li>
+<li><strong>Si una petición contradice el sistema</strong>, señalarlo, proponer la alternativa que sí lo cumple y esperar decisión. No resolverlo en silencio.</li>
+</ol>
+<hr />
+<h2 id="orden-de-precedencia-ante-conflictos">Orden de precedencia ante conflictos</h2>
+<pre><code>1. Accesibilidad (WCAG 2.2 AA)
+2. Claridad para el usuario
+3. Consistencia con el sistema
+4. Preferencia estética individual
+</code></pre>
+<p>Una preferencia estética nunca gana sobre accesibilidad. Si chocan, gana el nivel más alto y se documenta la excepción.</p>
+<hr />
+<h2 id="como-usar-este-paquete-en-claude-code">Cómo usar este paquete en Claude Code</h2>
+<pre><code class="language-bash"># 1. Colocar el sistema en la raíz del proyecto
+cp -r ipade-design-system/ ./
+
+# 2. Referenciarlo desde CLAUDE.md
+</code></pre>
+<p>En el <code>CLAUDE.md</code> del proyecto:</p>
+<pre><code class="language-markdown">## Design system
+
+Este proyecto usa el IPADE Design System v1.0.0.
+
+Antes de escribir cualquier UI:
+- Leer `ipade-design-system/DESIGN-SYSTEM.md`
+- Consumir los tokens de `ipade-design-system/tokens/tokens.css`
+- Cumplir el contrato de la sección `/goal`
+
+No introducir valores de color, tipografía o espaciado fuera de los tokens.
+</code></pre>
+<p>El comando <code>/goal</code> queda disponible en <code>.claude/commands/goal.md</code> y devuelve este contrato en cualquier momento de la sesión.</p>
+<hr />
+<h2 id="alcance-de-la-version-100">Alcance de la versión 1.0.0</h2>
+<p><strong>Incluye:</strong> fundamentos, 22 componentes, 9 patrones, criterios de accesibilidad, guía de contenido, tokens en tres formatos.</p>
+<p><strong>No incluye todavía:</strong> biblioteca de íconos definitiva, componentes de campaña, reglas de uso del escudo institucional, plantillas de correo, componentes de la intranet.</p>
+<p><strong>Antes de producción:</strong> validar los hexadecimales y las familias tipográficas contra el manual de identidad oficial y sustituirlos en <code>tokens/tokens.css</code>. Es una edición en un archivo; ningún componente se ve afectado porque ninguno referencia valores literales.</p>
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a href="showcase.html"><small>Anterior</small><span>Showcase</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>

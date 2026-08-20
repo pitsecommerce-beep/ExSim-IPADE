@@ -34,19 +34,44 @@ export async function updateSession(request: NextRequest) {
   const isTeamPage = pathname.startsWith("/team");
   const isSimulatorPage = pathname.startsWith("/simulator");
   const isDashboardPage = pathname.startsWith("/dashboard");
+  const isPendingPage = pathname === "/pendiente";
 
-  const role = user?.user_metadata?.role;
+  const role = user?.user_metadata?.role as string | undefined;
   const isParticipant = role === "participant";
+  const isAdmin = role === "admin";
+  const isProfessor = role === "professor";
 
-  if (!user && !isAuthPage && !isPublicPage && !isApiRoute) {
+  const email = user?.email?.toLowerCase() ?? "";
+  const isSuperAdmin = email === "ftallabs@ipade.mx";
+  const approved = user?.user_metadata?.approved === true || isAdmin || isSuperAdmin;
+
+  if (!user && !isAuthPage && !isPublicPage && !isApiRoute && !isPendingPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthPage) {
+  if (user && isProfessor && !approved && !isPendingPage && !isAuthPage && !isApiRoute) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/pendiente";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && approved && isPendingPage) {
     const url = request.nextUrl.clone();
     url.pathname = isParticipant ? "/team" : "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && isAuthPage) {
+    const url = request.nextUrl.clone();
+    if (isParticipant) {
+      url.pathname = "/team";
+    } else if (isProfessor && !approved) {
+      url.pathname = "/pendiente";
+    } else {
+      url.pathname = "/dashboard";
+    }
     return NextResponse.redirect(url);
   }
 

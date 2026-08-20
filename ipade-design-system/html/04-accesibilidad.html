@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Accesibilidad · IPADE Design System</title>
+<meta name="description" content="WCAG 2.2 AA — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html">Componentes</a>
+    <a href="03-patrones.html">Patrones</a>
+    <a href="04-accesibilidad.html" aria-current="page">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>Accesibilidad</span>
+  </div>
+  <div class="ds-content">
+<h1 id="4-accesibilidad">4. Accesibilidad</h1>
+<p>Objetivo: <strong>WCAG 2.2 nivel AA</strong>. Es criterio de aceptación de cada componente, no una revisión posterior.</p>
+<hr />
+<h2 id="41-contraste">4.1 Contraste</h2>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Mínimo</th>
+<th>Combinaciones validadas del sistema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Texto normal (&lt; 24px)</td>
+<td>4.5:1</td>
+<td><code>neutral-900</code> sobre blanco = 18.47:1 · <code>neutral-600</code> sobre blanco = 7.53:1 · <code>neutral-500</code> sobre blanco = 5.02:1 · <code>gold-800</code> sobre blanco = 5.04:1</td>
+</tr>
+<tr>
+<td>Texto grande (≥ 24px o ≥ 19px en negrita)</td>
+<td>3:1</td>
+<td><code>navy-500</code> sobre blanco = 7.1:1 · <code>navy-400</code> sobre blanco = 4.04:1</td>
+</tr>
+<tr>
+<td>Componentes de interfaz y gráficos</td>
+<td>3:1</td>
+<td><code>navy-700</code> sobre blanco = 13.34:1 · <code>gold-600</code> sobre blanco = 3.12:1</td>
+</tr>
+<tr>
+<td>Texto sobre azul de marca</td>
+<td>4.5:1</td>
+<td>blanco sobre <code>navy-700</code> = 13.34:1 · <code>navy-100</code> sobre <code>navy-900</code> = 13.87:1 · <code>gold-400</code> sobre <code>navy-900</code> = 9.3:1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Combinaciones prohibidas</strong></p>
+<ul>
+<li><code>gold-600</code> como texto pequeño sobre blanco (3.12:1). Use <code>gold-800</code>.</li>
+<li><code>navy-400</code> como texto de cuerpo sobre blanco (4.04:1). Solo gráficos o texto de 24px o más.</li>
+<li><code>neutral-400</code> como texto sobre blanco (2.55:1). Reservado a estado deshabilitado, exento del requisito, pero el motivo debe explicarse con texto.</li>
+<li>Texto sobre fotografía sin la cortina de contraste.</li>
+</ul>
+<hr />
+<h2 id="42-teclado">4.2 Teclado</h2>
+<ul>
+<li>Todo lo que se puede hacer con el ratón se puede hacer con el teclado.</li>
+<li>El orden de tabulación sigue el orden visual. Si difiere, el problema está en el orden del DOM, no en <code>tabindex</code>.</li>
+<li><code>tabindex</code> positivo está prohibido.</li>
+<li>Enlace de salto al contenido como primer elemento enfocable de la página.</li>
+<li>El foco es visible siempre: anillo de 2px con desplazamiento de 2px, contraste mínimo 3:1 contra el fondo adyacente.</li>
+<li>Componentes con trampa de foco deliberada: modal y menú de pantalla completa. Ambos devuelven el foco al disparador al cerrar.</li>
+</ul>
+<p><strong>Atajos esperados</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tecla</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Tab</code> / <code>Shift+Tab</code></td>
+<td>Avanzar y retroceder</td>
+</tr>
+<tr>
+<td><code>Enter</code></td>
+<td>Activar enlace o botón</td>
+</tr>
+<tr>
+<td><code>Espacio</code></td>
+<td>Activar botón, marcar casilla</td>
+</tr>
+<tr>
+<td><code>Escape</code></td>
+<td>Cerrar modal, menú, buscador</td>
+</tr>
+<tr>
+<td><code>Flechas</code></td>
+<td>Moverse entre pestañas y entre opciones de un grupo de radio</td>
+</tr>
+<tr>
+<td><code>Home</code> / <code>End</code></td>
+<td>Primera y última pestaña</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="43-semantica">4.3 Semántica</h2>
+<ul>
+<li>Un solo <code>&lt;h1&gt;</code> por página, que coincide con el tema de la página.</li>
+<li>Jerarquía sin saltos. El estilo visual se controla con clases, no eligiendo el nivel de encabezado por su tamaño.</li>
+<li>Puntos de referencia: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>. Si hay dos <code>&lt;nav&gt;</code>, cada uno lleva <code>aria-label</code>.</li>
+<li>Listas reales para colecciones reales.</li>
+<li>ARIA solo cuando el HTML nativo no alcanza. Un <code>&lt;button&gt;</code> bien usado no necesita <code>role="button"</code>.</li>
+</ul>
+<hr />
+<h2 id="44-imagenes-y-multimedia">4.4 Imágenes y multimedia</h2>
+<ul>
+<li><code>alt</code> descriptivo por función. Imagen decorativa con <code>alt=""</code>.</li>
+<li>El texto alternativo del logotipo en el encabezado es "IPADE Business School"; en el pie, si se repite, va <code>alt=""</code> para no duplicar el anuncio.</li>
+<li>Los videos llevan subtítulos. Los testimonios en video llevan además transcripción.</li>
+<li>Nada con autoplay y sonido.</li>
+<li>No se transmite información solo en imagen: las cifras del hero y los datos de los infogramas también viven en texto.</li>
+</ul>
+<hr />
+<h2 id="45-formularios">4.5 Formularios</h2>
+<ul>
+<li>Toda etiqueta asociada con <code>for</code> e <code>id</code>. <code>aria-label</code> solo cuando la etiqueta visible es imposible.</li>
+<li>Los errores se identifican con texto, color e ícono, y se vinculan con <code>aria-describedby</code>.</li>
+<li>El resumen de errores al inicio del formulario enlaza a cada campo afectado.</li>
+<li>Los grupos de opciones van en <code>&lt;fieldset&gt;</code> con <code>&lt;legend&gt;</code>.</li>
+<li><code>autocomplete</code> con los valores estándar: <code>name</code>, <code>email</code>, <code>tel</code>, <code>organization</code>.</li>
+<li>Nada de límites de tiempo para completar un formulario.</li>
+</ul>
+<hr />
+<h2 id="46-movimiento-y-sensorial">4.6 Movimiento y sensorial</h2>
+<ul>
+<li><code>prefers-reduced-motion</code> desactiva parallax, autoplay de carrusel, conteo animado y shimmer.</li>
+<li>Nada parpadea más de tres veces por segundo.</li>
+<li>El carrusel de testimonios tiene controles de pausa, anterior y siguiente. No avanza solo sin control visible.</li>
+</ul>
+<hr />
+<h2 id="47-zoom-y-adaptacion">4.7 Zoom y adaptación</h2>
+<ul>
+<li>El contenido funciona al 200% de zoom sin scroll horizontal, y al 400% en 320px de ancho reflujando a una columna.</li>
+<li>Se usan unidades relativas para tipografía. Nada de <code>px</code> fijos en tamaños de texto de cuerpo.</li>
+<li>El texto se puede espaciar (interlineado 1.5, entre letras 0.12em, entre palabras 0.16em) sin perder contenido.</li>
+</ul>
+<hr />
+<h2 id="48-lista-de-verificacion-previa-a-publicar">4.8 Lista de verificación previa a publicar</h2>
+<p><strong>Diseño</strong></p>
+<ul>
+<li>[ ] Toda combinación de color pasa el contraste requerido</li>
+<li>[ ] El estado no depende solo del color</li>
+<li>[ ] Los objetivos táctiles miden al menos 44×44px</li>
+<li>[ ] Se diseñaron los estados vacío, de carga y de error</li>
+<li>[ ] Se revisó a 360px y a 1440px</li>
+</ul>
+<p><strong>Código</strong></p>
+<ul>
+<li>[ ] Solo se consumen tokens semánticos, sin valores literales</li>
+<li>[ ] Jerarquía de encabezados correcta y sin saltos</li>
+<li>[ ] Navegación completa con teclado, con foco visible</li>
+<li>[ ] Recorrido con lector de pantalla (NVDA o VoiceOver) sin bloqueos</li>
+<li>[ ] Imágenes con <code>alt</code>, <code>width</code>, <code>height</code> y <code>loading</code> correctos</li>
+<li>[ ] <code>prefers-reduced-motion</code> respetado</li>
+<li>[ ] Sin <code>outline: none</code> sin reemplazo</li>
+<li>[ ] Sin <code>tabindex</code> positivo</li>
+<li>[ ] <code>lang</code> correcto, incluidos los fragmentos en otro idioma</li>
+</ul>
+<p><strong>Rendimiento</strong></p>
+<ul>
+<li>[ ] LCP por debajo de 2.5s</li>
+<li>[ ] CLS por debajo de 0.1</li>
+<li>[ ] INP por debajo de 200ms</li>
+<li>[ ] Imágenes en WebP con dimensiones declaradas</li>
+<li>[ ] Fuentes con <code>font-display: swap</code> y precarga de la variante crítica</li>
+</ul>
+<p><strong>Contenido</strong></p>
+<ul>
+<li>[ ] Títulos y botones dicen la acción concreta</li>
+<li>[ ] Sin jerga institucional donde cabe una palabra común</li>
+<li>[ ] Aviso de privacidad enlazado en todo formulario</li>
+<li>[ ] Fechas en formato largo y sin ambigüedad</li>
+</ul>
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a href="03-patrones.html"><small>Anterior</small><span>Patrones</span></a>
+  <a class="ds-pager__next" href="05-contenido-y-gobierno.html"><small>Siguiente</small><span>Contenido y gobierno</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
+import { isParticipantEmail } from "@/lib/auth/email-rules";
 
 interface Participant {
   email: string;
@@ -83,6 +84,10 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
           errors.push(`Fila ${i + 2}: correo faltante`);
           continue;
         }
+        if (!isParticipantEmail(email)) {
+          errors.push(`Fila ${i + 2}: ${email} no es un correo @alumni.ipade.mx`);
+          continue;
+        }
         if (!team || !teams.includes(team)) {
           errors.push(`Fila ${i + 2}: equipo "${team}" no válido`);
           continue;
@@ -116,6 +121,12 @@ export function CourseForm({ profiles }: { profiles: { id: string; name: string 
   async function handleCreate() {
     if (!name.trim()) { setError("El nombre del curso es requerido."); return; }
     if (!profileId) { setError("Selecciona un perfil de simulación."); return; }
+
+    const invalidEmails = participants.filter((p) => p.email && !isParticipantEmail(p.email));
+    if (invalidEmails.length > 0) {
+      setError(`Correos invalidos (deben ser @alumni.ipade.mx): ${invalidEmails.map((p) => p.email).join(", ")}`);
+      return;
+    }
 
     setSaving(true);
     setError(null);
