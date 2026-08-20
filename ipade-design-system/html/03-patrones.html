@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Patrones · IPADE Design System</title>
+<meta name="description" content="Plantillas y flujos — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html">Componentes</a>
+    <a href="03-patrones.html" aria-current="page">Patrones</a>
+    <a href="04-accesibilidad.html">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>Patrones</span>
+  </div>
+  <div class="ds-content">
+<h1 id="3-patrones">3. Patrones</h1>
+<p>Un patrón es una combinación de componentes que resuelve un problema recurrente. Los componentes se pueden mezclar; los patrones deciden en qué orden y con qué jerarquía.</p>
+<hr />
+<h2 id="31-portada-institucional">3.1 Portada institucional</h2>
+<p>Secuencia canónica. El orden responde a la pregunta que el visitante trae en cada momento.</p>
+<pre><code>┌──────────────────────────────────────────┐
+│ Encabezado transparente sobre el hero    │
+├──────────────────────────────────────────┤
+│ HERO   titular + una acción primaria     │  ¿Qué es esto?
+├──────────────────────────────────────────┤
+│ CIFRAS institucionales                   │  ¿Por qué debería confiar?
+├──────────────────────────────────────────┤
+│ DESTACADO editorial (ranking, noticia)   │  ¿Qué está pasando ahora?
+├──────────────────────────────────────────┤
+│ PARRILLA de programas                    │  ¿Qué puedo estudiar?
+├──────────────────────────────────────────┤
+│ TESTIMONIOS                              │  ¿A quién se parece esto?
+├──────────────────────────────────────────┤
+│ COMUNIDAD alumni + CTA                   │  ¿Qué gano después?
+├──────────────────────────────────────────┤
+│ ÚLTIMOS artículos de Newsmedia           │  ¿Producen ideas propias?
+├──────────────────────────────────────────┤
+│ Pie de página                            │
+└──────────────────────────────────────────┘
+</code></pre>
+<p><strong>Reglas del patrón</strong></p>
+<ul>
+<li>Alternancia de fondo: blanco, <code>neutral-50</code>, blanco, azul de marca. Dos secciones sólidas de marca seguidas saturan la página.</li>
+<li>Una sola acción primaria por sección.</li>
+<li>Las cifras van inmediatamente después del hero: es el momento de mayor atención y el argumento más rápido de credibilidad.</li>
+</ul>
+<hr />
+<h2 id="32-pagina-de-programa">3.2 Página de programa</h2>
+<p>Es la página que convierte. Su estructura responde a las objeciones en el orden en que surgen.</p>
+<table>
+<thead>
+<tr>
+<th>Bloque</th>
+<th>Contenido</th>
+<th>Objeción que resuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hero</td>
+<td>Nombre, duración, modalidad, sede, CTA de informes</td>
+<td>¿Es para mí?</td>
+</tr>
+<tr>
+<td>Resumen</td>
+<td>Tres a cinco puntos de valor</td>
+<td>¿Qué me llevo?</td>
+</tr>
+<tr>
+<td>Perfil del participante</td>
+<td>A quién va dirigido, años de experiencia esperados</td>
+<td>¿Estoy en el nivel?</td>
+</tr>
+<tr>
+<td>Plan de estudios</td>
+<td>Acordeón por módulo</td>
+<td>¿Qué voy a ver?</td>
+</tr>
+<tr>
+<td>Claustro</td>
+<td>Tarjetas de profesores</td>
+<td>¿Quién lo imparte?</td>
+</tr>
+<tr>
+<td>Metodología</td>
+<td>Método del caso, sesiones, dinámica</td>
+<td>¿Cómo se estudia?</td>
+</tr>
+<tr>
+<td>Logística</td>
+<td>Fechas, sedes, horarios, inversión</td>
+<td>¿Me acomoda?</td>
+</tr>
+<tr>
+<td>Testimonios</td>
+<td>Egresados del mismo programa</td>
+<td>¿Le funcionó a alguien como yo?</td>
+</tr>
+<tr>
+<td>Preguntas frecuentes</td>
+<td>Acordeón</td>
+<td>Dudas residuales</td>
+</tr>
+<tr>
+<td>CTA final</td>
+<td>Formulario de informes</td>
+<td>Conversión</td>
+</tr>
+</tbody>
+</table>
+<p><strong>CTA persistente.</strong> En desktop, una barra fija inferior con nombre del programa y botón de informes aparece al pasar el primer bloque. En móvil se reduce a un botón de ancho completo anclado al borde inferior, respetando el área segura.</p>
+<hr />
+<h2 id="33-formulario-de-captacion">3.3 Formulario de captación</h2>
+<p>El formulario más importante del sitio. Cada campo agregado reduce la conversión.</p>
+<p><strong>Campos mínimos:</strong> nombre, correo, teléfono, programa de interés, aviso de privacidad.</p>
+<p><strong>Reglas</strong></p>
+<ul>
+<li>Una columna. Los formularios de dos columnas provocan errores de tabulación y saltos de lectura.</li>
+<li>Etiquetas arriba, siempre visibles.</li>
+<li>El consentimiento del aviso de privacidad es una casilla explícita, nunca premarcada, con enlace al aviso que abre en ventana nueva y lo anuncia.</li>
+<li>El botón dice la acción concreta: "Solicitar informes", no "Enviar".</li>
+<li>Al enviar: mensaje de éxito en la misma vista con <code>role="status"</code>, qué sigue y en cuánto tiempo. Redirigir a una página de gracias sin explicación desorienta.</li>
+<li>Si falla: el foco va al primer campo con error y se lista el resumen de errores arriba del formulario.</li>
+</ul>
+<hr />
+<h2 id="34-listado-de-newsmedia">3.4 Listado de Newsmedia</h2>
+<ul>
+<li>Rejilla de tres columnas en desktop, dos en tableta, una en móvil.</li>
+<li>Filtro por categoría en pestañas o etiquetas. El estado del filtro se refleja en la URL para que sea compartible.</li>
+<li>Paginación numerada. El pie debe seguir alcanzable.</li>
+<li>La imagen de tarjeta usa la proporción 585:295 que ya produce el CMS.</li>
+</ul>
+<hr />
+<h2 id="35-articulo">3.5 Artículo</h2>
+<ul>
+<li>Contenedor de 760px para respetar la longitud de línea.</li>
+<li>Encabezado: categoría, título, autor, fecha, tiempo estimado de lectura.</li>
+<li>Índice flotante en desktop cuando el artículo supera cinco encabezados.</li>
+<li>Compartir por correo y LinkedIn, que es donde vive la audiencia directiva. No se ponen ocho botones de redes.</li>
+<li>Al final: tres artículos relacionados y una llamada a un programa afín, no genérica.</li>
+</ul>
+<hr />
+<h2 id="36-ficha-de-profesor">3.6 Ficha de profesor</h2>
+<p>Retrato en 3:4, área académica, semblanza, publicaciones, temas de interés y programas en los que imparte. Las publicaciones enlazan al directorio, no a PDFs sueltos.</p>
+<hr />
+<h2 id="37-buscador">3.7 Buscador</h2>
+<ul>
+<li>Se abre como capa de pantalla completa desde el encabezado.</li>
+<li>El campo recibe el foco al abrir.</li>
+<li>Sugerencias por sección: programas, profesores, artículos, sedes.</li>
+<li>Resultado vacío con la estructura de estado vacío del punto 2.22.</li>
+<li>Cierra con <code>Escape</code> y devuelve el foco al ícono de búsqueda.</li>
+</ul>
+<hr />
+<h2 id="38-multilingue">3.8 Multilingüe</h2>
+<ul>
+<li>El selector ES/EN vive en el encabezado y en el pie.</li>
+<li>Cambiar de idioma conserva la página equivalente cuando existe; si no existe, lleva a la portada del otro idioma y lo advierte.</li>
+<li><code>&lt;html lang&gt;</code> correcto en cada versión y <code>hreflang</code> recíproco entre pares de páginas.</li>
+<li>Los textos en inglés dentro de la versión en español se marcan con <code>lang="en"</code> para que el lector de pantalla los pronuncie bien. Esto aplica a "Faculty &amp; Research" y a los nombres de programa en inglés.</li>
+</ul>
+<hr />
+<h2 id="39-comportamiento-responsivo">3.9 Comportamiento responsivo</h2>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Móvil</th>
+<th>Tableta</th>
+<th>Escritorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Navegación</td>
+<td>Menú de pantalla completa</td>
+<td>Menú de pantalla completa</td>
+<td>Barra horizontal más menú ampliado</td>
+</tr>
+<tr>
+<td>Parrilla de programas</td>
+<td>1 columna</td>
+<td>2 columnas</td>
+<td>3 columnas</td>
+</tr>
+<tr>
+<td>Hero</td>
+<td>Texto abajo, alto 420px</td>
+<td>Alto 60vh</td>
+<td>Alto hasta 700px</td>
+</tr>
+<tr>
+<td>Cifras</td>
+<td>2 por fila</td>
+<td>3 por fila</td>
+<td>5 en línea</td>
+</tr>
+<tr>
+<td>Testimonios</td>
+<td>Apilado, retrato arriba</td>
+<td>Apilado</td>
+<td>Retrato a la izquierda</td>
+</tr>
+<tr>
+<td>CTA de programa</td>
+<td>Barra inferior fija</td>
+<td>Barra inferior fija</td>
+<td>Barra inferior fija con nombre</td>
+</tr>
+<tr>
+<td>Tabla</td>
+<td>Scroll horizontal</td>
+<td>Scroll horizontal</td>
+<td>Completa</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reglas transversales</strong></p>
+<ul>
+<li>Nada horizontal que no sea deliberado: <code>overflow-x: hidden</code> en <code>body</code> es un parche, no una solución. Se corrige el elemento que desborda.</li>
+<li>El objetivo táctil mínimo de 44px aplica también a los enlaces del pie.</li>
+<li>Se prueba a 360px de ancho y con el texto al 200% de escala.</li>
+</ul>
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a href="02-componentes.html"><small>Anterior</small><span>Componentes</span></a>
+  <a class="ds-pager__next" href="04-accesibilidad.html"><small>Siguiente</small><span>Accesibilidad</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>

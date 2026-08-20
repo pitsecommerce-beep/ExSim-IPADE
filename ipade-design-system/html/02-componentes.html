@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Componentes · IPADE Design System</title>
+<meta name="description" content="22 fichas con estados y marcado — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html" aria-current="page">Componentes</a>
+    <a href="03-patrones.html">Patrones</a>
+    <a href="04-accesibilidad.html">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>Componentes</span>
+  </div>
+  <div class="ds-content">
+<h1 id="2-componentes">2. Componentes</h1>
+<p>Cada ficha sigue la misma estructura: para qué sirve, anatomía, variantes, estados, marcado de referencia, accesibilidad y errores frecuentes.</p>
+<p>Convención de nombres: BEM con prefijo <code>ipd-</code>.</p>
+<pre><code>.ipd-card              bloque
+.ipd-card__title       elemento
+.ipd-card--interactive modificador
+</code></pre>
+<hr />
+<h2 id="21-boton">2.1 Botón</h2>
+<p><strong>Para qué sirve.</strong> Ejecutar una acción. Si navega a otra página, es un enlace con apariencia de botón, y debe ser una etiqueta <code>&lt;a&gt;</code>.</p>
+<p><strong>Anatomía:</strong> contenedor, ícono opcional a la izquierda, etiqueta, ícono opcional a la derecha.</p>
+<p><strong>Variantes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variante</th>
+<th>Uso</th>
+<th>Cuántos por vista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--primary</code></td>
+<td>La acción principal: inscribirse, solicitar informes, descargar folleto</td>
+<td>Uno por sección</td>
+</tr>
+<tr>
+<td><code>--secondary</code></td>
+<td>Acción alterna de peso similar: conocer el programa</td>
+<td>Sin límite estricto</td>
+</tr>
+<tr>
+<td><code>--accent</code></td>
+<td>Campaña o urgencia: última convocatoria</td>
+<td>Uno por página como máximo</td>
+</tr>
+<tr>
+<td><code>--ghost</code></td>
+<td>Acción terciaria dentro de un grupo denso</td>
+<td>Sin límite</td>
+</tr>
+<tr>
+<td><code>--danger</code></td>
+<td>Acción destructiva confirmada</td>
+<td>Uno por diálogo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tamaños.</strong> <code>--sm</code> 36px, base 44px, <code>--lg</code> 56px. El mínimo táctil es 44×44px, incluido el móvil.</p>
+<p><strong>Estados.</strong> Reposo, hover, foco visible, activo, deshabilitado, cargando.</p>
+<ul>
+<li>El foco usa el anillo global de 2px con desplazamiento de 2px. Nunca se suprime.</li>
+<li>Deshabilitado usa <code>aria-disabled="true"</code> cuando el control debe seguir siendo enfocable para que un lector de pantalla explique por qué no está disponible.</li>
+<li>Cargando: <code>data-loading="true"</code>, la etiqueta cambia a gerundio y se anuncia con <code>aria-live="polite"</code>.</li>
+</ul>
+<pre><code class="language-html">&lt;a class=&quot;ipd-btn ipd-btn--primary&quot; href=&quot;/contactanos&quot;&gt;
+  Solicitar informes
+&lt;/a&gt;
+
+&lt;button class=&quot;ipd-btn ipd-btn--secondary&quot; type=&quot;button&quot;&gt;
+  &lt;svg class=&quot;ipd-btn__icon&quot; aria-hidden=&quot;true&quot;&gt;…&lt;/svg&gt;
+  Descargar folleto
+&lt;/button&gt;
+
+&lt;button class=&quot;ipd-btn ipd-btn--primary&quot; data-loading=&quot;true&quot; aria-live=&quot;polite&quot;&gt;
+  Enviando
+&lt;/button&gt;
+</code></pre>
+<p><strong>Errores frecuentes</strong></p>
+<ul>
+<li>Dos botones primarios juntos. El usuario deja de saber cuál es la ruta esperada.</li>
+<li>Etiquetas que no dicen la acción: "Enviar", "Aceptar", "Más". Use "Solicitar informes", "Guardar cambios", "Ver el plan de estudios".</li>
+<li>Usar <code>&lt;div&gt;</code> con <code>onclick</code>. No es enfocable ni se activa con teclado.</li>
+</ul>
+<hr />
+<h2 id="22-enlace">2.2 Enlace</h2>
+<p><strong>En texto corrido:</strong> <code>.ipd-link</code>, subrayado siempre presente. El color por sí solo no distingue el enlace para quien no percibe el contraste cromático.</p>
+<p><strong>Enlace con flecha:</strong> <code>.ipd-link-arrow</code>, el patrón de "Ver más" del sitio. La flecha se desplaza 3px en hover.</p>
+<p><strong>Enlace externo:</strong> se indica en el texto o con ícono más <code>aria-label</code> que aclare que abre en una ventana nueva. Un <code>target="_blank"</code> sin aviso rompe la expectativa del usuario.</p>
+<pre><code class="language-html">&lt;a class=&quot;ipd-link-arrow&quot; href=&quot;/newsmedia/articulo&quot;&gt;Ver más&lt;/a&gt;
+</code></pre>
+<hr />
+<h2 id="23-campo-de-formulario">2.3 Campo de formulario</h2>
+<p><strong>Anatomía:</strong> etiqueta, campo, texto de ayuda, mensaje de error.</p>
+<p><strong>Reglas</strong></p>
+<ul>
+<li>La etiqueta va arriba y siempre visible. El placeholder no sustituye la etiqueta: desaparece al escribir y deja al usuario sin referencia.</li>
+<li>El campo obligatorio se marca con asterisco y con <code>required</code>. En formularios donde casi todo es obligatorio, marque los opcionales.</li>
+<li>El texto de ayuda va antes del error, ambos vinculados con <code>aria-describedby</code>.</li>
+<li>El error aparece al salir del campo, no en cada tecla. Dice qué pasó y cómo corregirlo.</li>
+</ul>
+<pre><code class="language-html">&lt;div class=&quot;ipd-field&quot;&gt;
+  &lt;label class=&quot;ipd-label&quot; for=&quot;correo&quot;&gt;
+    Correo corporativo &lt;span class=&quot;ipd-label__required&quot; aria-hidden=&quot;true&quot;&gt;*&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;input class=&quot;ipd-input&quot; id=&quot;correo&quot; type=&quot;email&quot; name=&quot;correo&quot; required
+         aria-describedby=&quot;correo-ayuda correo-error&quot; aria-invalid=&quot;true&quot; /&gt;
+  &lt;p class=&quot;ipd-help&quot; id=&quot;correo-ayuda&quot;&gt;Usaremos este correo para enviarle la confirmación.&lt;/p&gt;
+  &lt;p class=&quot;ipd-error&quot; id=&quot;correo-error&quot; role=&quot;alert&quot;&gt;
+    Falta el signo @. Ejemplo: nombre@empresa.com
+  &lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+<p><strong>Variantes de control:</strong> <code>.ipd-input</code>, <code>.ipd-textarea</code> (redimensionable solo en vertical), <code>.ipd-select</code>, <code>.ipd-choice</code> para casillas y botones de opción.</p>
+<p><strong>Errores frecuentes</strong></p>
+<ul>
+<li>Validar el formato del teléfono con reglas rígidas. IPADE recibe candidatos de varios países.</li>
+<li>Poner el mensaje de error solo en color rojo, sin texto.</li>
+<li>Deshabilitar el botón de envío hasta que el formulario sea válido. Es preferible permitir el envío y explicar qué falta.</li>
+</ul>
+<hr />
+<h2 id="24-tarjeta">2.4 Tarjeta</h2>
+<p><strong>Para qué sirve.</strong> Presentar una unidad de contenido resumida que lleva a un destino: artículo, sede, profesor.</p>
+<p><strong>Anatomía:</strong> medio, cuerpo (metadato, título, extracto), pie con enlace.</p>
+<p><strong>Variantes</strong></p>
+<ul>
+<li><code>.ipd-card</code> estática, sin destino.</li>
+<li><code>.ipd-card--interactive</code> toda la tarjeta es clicable. Se logra con un pseudoelemento sobre el enlace del título, no envolviendo la tarjeta en un <code>&lt;a&gt;</code>: así el texto sigue siendo seleccionable y el destino sigue siendo uno solo para el lector de pantalla.</li>
+</ul>
+<pre><code class="language-html">&lt;article class=&quot;ipd-card ipd-card--interactive&quot;&gt;
+  &lt;div class=&quot;ipd-card__media&quot;&gt;
+    &lt;img src=&quot;…&quot; alt=&quot;&quot; width=&quot;585&quot; height=&quot;295&quot; loading=&quot;lazy&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;ipd-card__body&quot;&gt;
+    &lt;p class=&quot;ipd-card__meta&quot;&gt;
+      &lt;time datetime=&quot;2026-08-19&quot;&gt;19 de agosto de 2026&lt;/time&gt; · Factor humano
+    &lt;/p&gt;
+    &lt;h3 class=&quot;ipd-card__title&quot;&gt;
+      &lt;a href=&quot;/newsmedia/articulo&quot;&gt;La línea de vida en la empresa familiar&lt;/a&gt;
+    &lt;/h3&gt;
+    &lt;p class=&quot;ipd-card__excerpt&quot;&gt;El ejercicio de línea de vida ayuda a entender…&lt;/p&gt;
+    &lt;p class=&quot;ipd-card__footer&quot;&gt;&lt;span class=&quot;ipd-link-arrow&quot; aria-hidden=&quot;true&quot;&gt;Ver más&lt;/span&gt;&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/article&gt;
+</code></pre>
+<p>Note que el "Ver más" del pie lleva <code>aria-hidden</code> porque el enlace real es el título. Repetirlo produce dos anuncios para un solo destino.</p>
+<hr />
+<h2 id="25-tarjeta-de-programa">2.5 Tarjeta de programa</h2>
+<p>Bloque sólido en azul de marca sin imagen. Se usa en la parrilla de oferta académica, donde la consistencia importa más que el atractivo individual de cada programa.</p>
+<p>El filete inferior en oro se despliega de izquierda a derecha en hover. Es el único adorno del componente.</p>
+<pre><code class="language-html">&lt;a class=&quot;ipd-program-card&quot; href=&quot;/perfeccionamiento-directivo/&quot;&gt;
+  &lt;span class=&quot;ipd-program-card__title&quot;&gt;Perfeccionamiento Directivo&lt;/span&gt;
+  &lt;span class=&quot;ipd-program-card__desc&quot;&gt;Programas de actualización para la alta dirección.&lt;/span&gt;
+&lt;/a&gt;
+</code></pre>
+<p><strong>Reglas de la parrilla.</strong> Todas las tarjetas de una fila comparten altura. El título no excede tres líneas; si el nombre del programa es más largo, se acorta en el CMS, no con <code>text-overflow</code>.</p>
+<hr />
+<h2 id="26-testimonio">2.6 Testimonio</h2>
+<p>Prueba social. Es el componente donde la marca deja hablar a la persona.</p>
+<p><strong>Anatomía:</strong> retrato circular, cita en tipografía display, nombre, programa y año.</p>
+<p><strong>Reglas</strong></p>
+<ul>
+<li>La cita va sin comillas tipográficas decorativas gigantes. La tipografía display ya la distingue.</li>
+<li>Siempre incluye programa y año de egreso. Sin ese dato el testimonio no es verificable y pierde valor.</li>
+<li>Máximo 70 palabras. Los testimonios largos se recortan con criterio editorial, no con puntos suspensivos automáticos.</li>
+</ul>
+<pre><code class="language-html">&lt;figure class=&quot;ipd-testimonial&quot;&gt;
+  &lt;img class=&quot;ipd-testimonial__avatar&quot; src=&quot;…&quot; alt=&quot;Retrato de Gabriela Malanco&quot; /&gt;
+  &lt;div&gt;
+    &lt;blockquote class=&quot;ipd-testimonial__quote&quot;&gt;
+      Mi experiencia fue de conexión y crecimiento…
+    &lt;/blockquote&gt;
+    &lt;figcaption&gt;
+      &lt;p class=&quot;ipd-testimonial__author&quot;&gt;Gabriela Malanco&lt;/p&gt;
+      &lt;p class=&quot;ipd-testimonial__role&quot;&gt;Egresada del programa AD 2025&lt;/p&gt;
+    &lt;/figcaption&gt;
+  &lt;/div&gt;
+&lt;/figure&gt;
+</code></pre>
+<hr />
+<h2 id="27-cifras-institucionales">2.7 Cifras institucionales</h2>
+<p>Bloque de datos duros: años, egresados, sedes, convenios. La cifra va en display y oro; el rótulo en mayúsculas pequeñas.</p>
+<p><strong>Animación de conteo.</strong> Se dispara una sola vez, al entrar en viewport, con <code>IntersectionObserver</code>. Con <code>prefers-reduced-motion</code> el valor final aparece de inmediato. El valor real vive en el HTML, no en el script, para que sea visible sin JavaScript y para los rastreadores.</p>
+<pre><code class="language-html">&lt;div class=&quot;ipd-stats&quot;&gt;
+  &lt;div class=&quot;ipd-stat&quot;&gt;
+    &lt;p class=&quot;ipd-stat__value&quot; data-count-to=&quot;58&quot;&gt;58&lt;/p&gt;
+    &lt;p class=&quot;ipd-stat__label&quot;&gt;Años&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<hr />
+<h2 id="28-encabezado-y-navegacion">2.8 Encabezado y navegación</h2>
+<p><strong>Comportamiento.</strong> Fijo al hacer scroll con <code>position: sticky</code>. Sobre un hero con imagen arranca transparente y adquiere fondo sólido al superar 80px de desplazamiento.</p>
+<p><strong>Estructura:</strong> logotipo, navegación principal (máximo 5 entradas), selector de idioma, buscador, botón de menú completo.</p>
+<ul>
+<li>La navegación principal aparece a partir de <code>lg</code>. Debajo, todo entra en el menú de pantalla completa.</li>
+<li>La sección activa se marca con <code>aria-current="page"</code> y filete en oro.</li>
+<li>El menú de pantalla completa atrapa el foco mientras está abierto, cierra con <code>Escape</code> y devuelve el foco al botón que lo abrió.</li>
+<li>El logotipo enlaza a la portada y su texto alternativo es "IPADE Business School, ir a la portada".</li>
+</ul>
+<pre><code class="language-html">&lt;header class=&quot;ipd-header&quot;&gt;
+  &lt;div class=&quot;ipd-container ipd-header__inner&quot;&gt;
+    &lt;a class=&quot;ipd-header__logo&quot; href=&quot;/&quot;&gt;&lt;img src=&quot;…&quot; alt=&quot;IPADE Business School&quot; /&gt;&lt;/a&gt;
+    &lt;nav class=&quot;ipd-nav&quot; aria-label=&quot;Navegación principal&quot;&gt;
+      &lt;a class=&quot;ipd-nav__link&quot; href=&quot;/conoce-ipade/&quot;&gt;IPADE&lt;/a&gt;
+      &lt;a class=&quot;ipd-nav__link&quot; href=&quot;/#programas&quot; aria-current=&quot;page&quot;&gt;Programas&lt;/a&gt;
+      &lt;a class=&quot;ipd-nav__link&quot; href=&quot;/claustro-academico/&quot;&gt;Faculty &amp;amp; Research&lt;/a&gt;
+      &lt;a class=&quot;ipd-nav__link&quot; href=&quot;/alumni-egresados/&quot;&gt;Alumni&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;div class=&quot;ipd-cluster&quot;&gt;
+      &lt;p class=&quot;ipd-lang&quot;&gt;&lt;a href=&quot;/&quot; aria-current=&quot;true&quot;&gt;ES&lt;/a&gt;&lt;a href=&quot;/en/&quot;&gt;EN&lt;/a&gt;&lt;/p&gt;
+      &lt;button class=&quot;ipd-btn ipd-btn--ghost&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;menu-full&quot;&gt;Menú&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+</code></pre>
+<hr />
+<h2 id="29-hero">2.9 Hero</h2>
+<p><strong>Para qué sirve.</strong> Establecer la propuesta de la página en una pantalla.</p>
+<p><strong>Anatomía:</strong> imagen de fondo, cortina de contraste, rótulo superior opcional, titular, entradilla, una acción primaria.</p>
+<p><strong>Reglas</strong></p>
+<ul>
+<li>Un solo botón primario. Si hay una acción secundaria, va como enlace con flecha.</li>
+<li>El titular no pasa de 8 palabras.</li>
+<li>La altura es <code>clamp(420px, 60vh, 700px)</code>. No se usa <code>100vh</code>: en móvil deja el contenido siguiente invisible y da la impresión de página vacía.</li>
+<li>La imagen del hero es la única que no lleva <code>loading="lazy"</code>, y se precarga con <code>&lt;link rel="preload"&gt;</code>.</li>
+</ul>
+<hr />
+<h2 id="210-acordeon">2.10 Acordeón</h2>
+<p>Para preguntas frecuentes y planes de estudio por módulo.</p>
+<ul>
+<li>Se construye sobre <code>&lt;button aria-expanded&gt;</code> más panel, o sobre <code>&lt;details&gt;</code> nativo.</li>
+<li>Un ítem abierto por defecto solo si el contenido es imprescindible.</li>
+<li>No se anida. Dos niveles de acordeón esconden el contenido más de lo que lo organizan.</li>
+<li>El indicador cambia de <code>+</code> a <code>−</code> y el estado real vive en <code>aria-expanded</code>.</li>
+</ul>
+<hr />
+<h2 id="211-pestanas">2.11 Pestañas</h2>
+<p>Para contenido paralelo del mismo nivel: modalidades de un programa, sedes.</p>
+<ul>
+<li>Rol <code>tablist</code> / <code>tab</code> / <code>tabpanel</code>, navegación con flechas, <code>Home</code> y <code>End</code>.</li>
+<li>No se usan para pasos secuenciales; para eso va un indicador de progreso.</li>
+<li>En móvil el listado hace scroll horizontal con el primer elemento alineado al margen.</li>
+</ul>
+<hr />
+<h2 id="212-migas-de-pan">2.12 Migas de pan</h2>
+<p>Aparecen desde el tercer nivel de profundidad. La página actual se muestra sin enlace y con <code>aria-current="page"</code>. Van dentro de <code>&lt;nav aria-label="Ruta de navegación"&gt;</code>.</p>
+<hr />
+<h2 id="213-paginacion">2.13 Paginación</h2>
+<p>Para listados largos como Newsmedia. Anterior, números, siguiente. La página actual con <code>aria-current="page"</code>. Los controles mantienen 44×44px.</p>
+<p>Para listados infinitos se prefiere un botón "Cargar más" antes que scroll infinito: el pie de página debe seguir siendo alcanzable.</p>
+<hr />
+<h2 id="214-etiqueta">2.14 Etiqueta</h2>
+<p><code>.ipd-badge</code> clasifica sin ser interactiva: categoría de artículo, sede, modalidad. Si al hacer clic filtra, entonces es un botón y debe verse como tal.</p>
+<p>Variantes: neutra, <code>--brand</code>, <code>--accent</code>, <code>--success</code>, <code>--warning</code>, <code>--danger</code>.</p>
+<hr />
+<h2 id="215-aviso">2.15 Aviso</h2>
+<p><code>.ipd-alert</code> comunica un cambio de estado en contexto.</p>
+<ul>
+<li><code>role="status"</code> para información y éxito, <code>role="alert"</code> para error.</li>
+<li>Lleva ícono, título opcional y cuerpo. El ícono es <code>aria-hidden</code>.</li>
+<li>El texto explica la consecuencia y la salida: "No se pudo enviar el formulario. Revise el correo e intente de nuevo."</li>
+</ul>
+<hr />
+<h2 id="216-modal">2.16 Modal</h2>
+<p>Se usa solo cuando la tarea exige interrumpir: confirmar una acción destructiva o completar un dato imprescindible.</p>
+<ul>
+<li><code>&lt;dialog&gt;</code> nativo con <code>showModal()</code>.</li>
+<li>Cierra con <code>Escape</code>, con el botón de cerrar y con clic en el fondo, salvo que haya cambios sin guardar.</li>
+<li>El foco entra al primer elemento interactivo y regresa al disparador al cerrar.</li>
+<li>El fondo de la página queda inerte y con <code>overflow: hidden</code>.</li>
+<li>No se usa para captación en la primera visita. Un modal de suscripción antes de que el usuario lea nada es la causa más común de abandono.</li>
+</ul>
+<hr />
+<h2 id="217-acciones-flotantes">2.17 Acciones flotantes</h2>
+<p>La columna de accesos rápidos (contacto, WhatsApp, folletos) del sitio.</p>
+<ul>
+<li>Máximo tres. Cada una con <code>aria-label</code> explícito.</li>
+<li>No tapan contenido en móvil: se ocultan al hacer scroll hacia abajo y reaparecen al subir.</li>
+<li>Respetan <code>env(safe-area-inset-bottom)</code> en iOS.</li>
+<li>WhatsApp abre con mensaje prellenado y se anuncia como enlace externo.</li>
+</ul>
+<hr />
+<h2 id="218-pie-de-pagina">2.18 Pie de página</h2>
+<p>Cuatro bloques temáticos, logotipo institucional, redes por marca y línea legal.</p>
+<ul>
+<li>Fondo <code>navy-900</code>, texto <code>navy-100</code>, encabezados de bloque en <code>gold-400</code>.</li>
+<li>Los enlaces del pie mantienen 44px de alto táctil en móvil, no se comprimen.</li>
+<li>El aviso de privacidad y el contacto nunca se quitan de este bloque.</li>
+</ul>
+<hr />
+<h2 id="219-tabla">2.19 Tabla</h2>
+<p>Para comparativas de programas y calendarios.</p>
+<ul>
+<li>Siempre con <code>&lt;caption&gt;</code>, <code>&lt;thead&gt;</code> y <code>scope</code> en los encabezados.</li>
+<li>En móvil, contenedor con scroll horizontal y <code>tabindex="0"</code> para que sea alcanzable con teclado, más una etiqueta que anuncie que la tabla se desplaza.</li>
+<li>Cifras alineadas a la derecha con <code>font-variant-numeric: tabular-nums</code>.</li>
+</ul>
+<hr />
+<h2 id="220-cronologia">2.20 Cronología</h2>
+<p>Para la historia institucional. Línea vertical con hitos, año en display, marcador circular con borde en oro.</p>
+<p>En móvil siempre es de una sola columna. La cronología alternada a dos lados se vuelve ilegible en pantallas angostas.</p>
+<hr />
+<h2 id="221-estado-de-carga">2.21 Estado de carga</h2>
+<p><code>.ipd-skeleton</code> reproduce la forma del contenido que va a llegar, no un spinner genérico. Evita el salto de layout porque ocupa exactamente el mismo espacio.</p>
+<p>Con <code>prefers-reduced-motion</code> el brillo se desactiva y queda un bloque plano.</p>
+<hr />
+<h2 id="222-estados-vacios-y-de-error">2.22 Estados vacíos y de error</h2>
+<p>Un listado sin resultados no muestra una pantalla en blanco. Muestra:</p>
+<ol>
+<li>Qué se buscó.</li>
+<li>Por qué no hay resultados.</li>
+<li>Una acción concreta para salir del callejón.</li>
+</ol>
+<blockquote>
+<p>No encontramos programas con esos filtros.
+Pruebe quitando la sede o amplíe el rango de fechas.
+[Limpiar filtros]</p>
+</blockquote>
+<p>Para el error 404: buscador, enlaces a las cuatro secciones principales y contacto. Nunca un mensaje que culpe al usuario.</p>
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a href="01-fundamentos.html"><small>Anterior</small><span>Fundamentos</span></a>
+  <a class="ds-pager__next" href="03-patrones.html"><small>Siguiente</small><span>Patrones</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>

@@ -5,29 +5,34 @@
 @tailwind utilities;
 
 body {
-  font-family: var(--font-body);
-  background-color: var(--ipade-bg);
-  color: var(--ipade-text);
-}
-
-* {
-  transition-property: background-color, border-color, color, opacity, box-shadow, transform;
-  transition-duration: 200ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--ipd-font-sans);
+  background-color: var(--ipd-bg-subtle);
+  color: var(--ipd-text-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 input, textarea, select {
-  transition-property: border-color, box-shadow;
-  transition-duration: 200ms;
+  transition: border-color var(--ipd-duration-fast) var(--ipd-ease-standard),
+              box-shadow var(--ipd-duration-fast) var(--ipd-ease-standard);
 }
 
 button, a {
-  transition-property: background-color, border-color, color, opacity, box-shadow, transform;
-  transition-duration: 200ms;
+  transition: background-color var(--ipd-duration-fast) var(--ipd-ease-standard),
+              border-color var(--ipd-duration-fast) var(--ipd-ease-standard),
+              color var(--ipd-duration-fast) var(--ipd-ease-standard),
+              opacity var(--ipd-duration-fast) var(--ipd-ease-standard),
+              box-shadow var(--ipd-duration-fast) var(--ipd-ease-standard),
+              transform var(--ipd-duration-fast) var(--ipd-ease-standard);
 }
 
 button:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+:focus-visible {
+  outline: var(--ipd-border-thick) solid var(--ipd-border-focus);
+  outline-offset: 2px;
 }
 
 @keyframes fadeIn {
@@ -41,9 +46,16 @@ button:active:not(:disabled) {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out both;
+  animation: fadeIn var(--ipd-duration-base) var(--ipd-ease-entrance) both;
 }
 
 .animate-slide-in {
-  animation: slideIn 0.4s ease-out both;
+  animation: slideIn var(--ipd-duration-base) var(--ipd-ease-entrance) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in {
+    animation: none;
+  }
 }

@@ -1,0 +1,361 @@
+/* ==========================================================================
+   Estilos del sitio de documentación.
+   Consume los mismos tokens que documenta: si los tokens cambian, esta
+   documentación cambia con ellos. Es la primera prueba del sistema.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+/* ---------- Estructura del documento ------------------------------------ */
+
+.ds-layout { display: block; }
+
+@media (min-width: 1024px) {
+  .ds-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.ds-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--ipd-space-8) var(--ipd-space-6);
+  background: var(--ipd-color-navy-900);
+  color: var(--ipd-color-navy-100);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+@media (max-width: 1023px) {
+  .ds-sidebar { position: static; height: auto; }
+}
+
+.ds-brand { display: block; margin-bottom: var(--ipd-space-8); text-decoration: none; }
+.ds-brand__mark {
+  font-family: var(--ipd-font-display);
+  font-size: var(--ipd-size-2xl);
+  font-weight: 700;
+  color: var(--ipd-color-neutral-0);
+  letter-spacing: var(--ipd-tracking-tight);
+  line-height: 1.1;
+}
+.ds-brand__sub {
+  display: block;
+  margin-top: var(--ipd-space-1);
+  font-size: var(--ipd-size-2xs);
+  letter-spacing: var(--ipd-tracking-wider);
+  text-transform: uppercase;
+  color: var(--ipd-color-gold-400);
+}
+.ds-brand__version {
+  display: inline-block;
+  margin-top: var(--ipd-space-3);
+  padding: 2px var(--ipd-space-2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--ipd-radius-pill);
+  font-family: var(--ipd-font-mono);
+  font-size: 10px;
+  color: var(--ipd-color-navy-200);
+}
+
+.ds-nav { display: flex; flex-direction: column; gap: var(--ipd-space-1); }
+.ds-nav__heading {
+  margin: var(--ipd-space-6) 0 var(--ipd-space-2);
+  font-size: 10px;
+  letter-spacing: var(--ipd-tracking-wider);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+.ds-nav a {
+  display: block;
+  padding: var(--ipd-space-2) var(--ipd-space-3);
+  border-radius: var(--ipd-radius-sm);
+  color: var(--ipd-color-navy-100);
+  text-decoration: none;
+  font-size: var(--ipd-size-sm);
+  border-left: 2px solid transparent;
+  transition: background-color var(--ipd-duration-fast) var(--ipd-ease-standard);
+}
+.ds-nav a:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.ds-nav a[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--ipd-color-gold-600);
+  color: #fff;
+  font-weight: 600;
+}
+
+.ds-main { min-width: 0; padding: var(--ipd-space-10) var(--ipd-space-5) var(--ipd-space-24); }
+@media (min-width: 768px) { .ds-main { padding-inline: var(--ipd-space-12); } }
+.ds-content { max-width: 860px; min-width: 0; }
+
+/* ---------- Tipografía de la documentación ------------------------------ */
+
+.ds-content h1 {
+  font-family: var(--ipd-font-display);
+  font-size: var(--ipd-size-5xl);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: var(--ipd-tracking-tighter);
+  margin-bottom: var(--ipd-space-8);
+  padding-bottom: var(--ipd-space-5);
+  border-bottom: 3px solid var(--ipd-color-gold-600);
+}
+.ds-content h2 {
+  font-family: var(--ipd-font-display);
+  font-size: var(--ipd-size-3xl);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: var(--ipd-space-16) 0 var(--ipd-space-4);
+  padding-top: var(--ipd-space-6);
+  border-top: 1px solid var(--ipd-border-subtle);
+  color: var(--ipd-color-navy-700);
+  scroll-margin-top: var(--ipd-space-6);
+}
+.ds-content h3 {
+  font-family: var(--ipd-font-display);
+  font-size: var(--ipd-size-2xl);
+  font-weight: 600;
+  margin: var(--ipd-space-10) 0 var(--ipd-space-3);
+  scroll-margin-top: var(--ipd-space-6);
+}
+.ds-content h4 {
+  font-size: var(--ipd-size-lg);
+  font-weight: 600;
+  margin: var(--ipd-space-8) 0 var(--ipd-space-2);
+}
+/* Dentro de una demo mandan los estilos del sistema, no los de la documentación. */
+.ds-content .ds-demo h2,
+.ds-content .ds-demo h3,
+.ds-content .ds-demo h4 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+.ds-content p { margin-bottom: var(--ipd-space-4); max-width: 72ch; }
+.ds-content .ds-demo p,
+.ds-content .ds-swatches p { max-width: none; margin-bottom: 0; }
+.ds-content .ds-demo ul { margin: 0; }
+.ds-content ul, .ds-content ol { margin: 0 0 var(--ipd-space-5) var(--ipd-space-6); max-width: 72ch; }
+.ds-content li { margin-bottom: var(--ipd-space-2); }
+.ds-content strong { font-weight: 600; color: var(--ipd-color-navy-800); }
+.ds-content a { color: var(--ipd-text-link); text-underline-offset: 0.2em; }
+.ds-content .ds-demo a.ipd-btn { color: var(--_fg); }
+
+.ds-content blockquote {
+  margin: var(--ipd-space-6) 0;
+  padding: var(--ipd-space-4) var(--ipd-space-6);
+  background: var(--ipd-color-gold-100);
+  border-left: 4px solid var(--ipd-color-gold-600);
+  border-radius: 0 var(--ipd-radius-sm) var(--ipd-radius-sm) 0;
+  color: var(--ipd-color-neutral-800);
+}
+.ds-content blockquote p:last-child { margin-bottom: 0; }
+/* Los componentes demostrados conservan su propio estilo. */
+.ds-content .ds-demo blockquote {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-left: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+.ds-content hr { margin: var(--ipd-space-12) 0; border: 0; height: 1px; background: var(--ipd-border-subtle); }
+
+/* ---------- Tablas ------------------------------------------------------ */
+
+.ds-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--ipd-space-6) 0 var(--ipd-space-8);
+  font-size: var(--ipd-size-sm);
+  display: block;
+  overflow-x: auto;
+}
+@media (min-width: 768px) { .ds-content table { display: table; } }
+.ds-content table { max-width: 100%; }
+.ds-demo__stage { overflow-x: auto; }
+.ds-content th {
+  text-align: left;
+  padding: var(--ipd-space-3) var(--ipd-space-4);
+  background: var(--ipd-color-navy-50);
+  border-bottom: 2px solid var(--ipd-color-navy-700);
+  font-size: var(--ipd-size-2xs);
+  letter-spacing: var(--ipd-tracking-wide);
+  text-transform: uppercase;
+  color: var(--ipd-color-navy-700);
+  white-space: nowrap;
+}
+.ds-content td {
+  padding: var(--ipd-space-3) var(--ipd-space-4);
+  border-bottom: 1px solid var(--ipd-border-subtle);
+  vertical-align: top;
+}
+.ds-content tbody tr:hover { background: var(--ipd-bg-subtle); }
+
+/* ---------- Código ------------------------------------------------------ */
+
+.ds-content code {
+  font-family: var(--ipd-font-mono);
+  font-size: 0.86em;
+  padding: 2px 6px;
+  background: var(--ipd-color-navy-50);
+  border: 1px solid var(--ipd-color-navy-100);
+  border-radius: var(--ipd-radius-xs);
+  color: var(--ipd-color-navy-800);
+  white-space: nowrap;
+}
+.ds-content pre {
+  margin: var(--ipd-space-5) 0 var(--ipd-space-8);
+  padding: var(--ipd-space-5);
+  background: var(--ipd-color-navy-950);
+  border-radius: var(--ipd-radius-md);
+  overflow-x: auto;
+  border-left: 3px solid var(--ipd-color-gold-600);
+}
+.ds-content pre code {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: #DCE6F0;
+  font-size: var(--ipd-size-xs);
+  line-height: 1.7;
+  white-space: pre;
+}
+
+/* ---------- Muestras de color ------------------------------------------- */
+
+.ds-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--ipd-space-3);
+  margin: var(--ipd-space-6) 0 var(--ipd-space-10);
+}
+.ds-swatch {
+  border: 1px solid var(--ipd-border-subtle);
+  border-radius: var(--ipd-radius-md);
+  overflow: hidden;
+}
+.ds-swatch__chip { height: 84px; }
+.ds-swatch__meta { padding: var(--ipd-space-3); background: #fff; }
+.ds-swatch__name { font-size: var(--ipd-size-xs); font-weight: 600; }
+.ds-swatch__hex {
+  font-family: var(--ipd-font-mono);
+  font-size: 11px;
+  color: var(--ipd-text-tertiary);
+  text-transform: uppercase;
+}
+.ds-swatch__ratio {
+  display: inline-block;
+  margin-top: var(--ipd-space-2);
+  padding: 1px 6px;
+  border-radius: var(--ipd-radius-pill);
+  font-family: var(--ipd-font-mono);
+  font-size: 10px;
+  background: var(--ipd-color-neutral-100);
+  color: var(--ipd-color-neutral-600);
+}
+.ds-swatch__ratio[data-pass="aa"] { background: #E3F3EA; color: #146036; }
+.ds-swatch__ratio[data-pass="large"] { background: #FBEEDD; color: #8A4E05; }
+.ds-swatch__ratio[data-pass="fail"] { background: #FBE7E5; color: #93231C; }
+
+/* ---------- Bloques de demostración ------------------------------------- */
+
+.ds-demo {
+  margin: var(--ipd-space-6) 0 var(--ipd-space-10);
+  border: 1px solid var(--ipd-border-subtle);
+  border-radius: var(--ipd-radius-md);
+  overflow: hidden;
+}
+.ds-demo__label {
+  padding: var(--ipd-space-2) var(--ipd-space-4);
+  background: var(--ipd-color-navy-50);
+  border-bottom: 1px solid var(--ipd-border-subtle);
+  font-family: var(--ipd-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ipd-color-navy-700);
+}
+.ds-demo__stage {
+  padding: var(--ipd-space-8);
+  background:
+    linear-gradient(45deg, var(--ipd-color-neutral-50) 25%, transparent 25%) 0 0 / 16px 16px,
+    linear-gradient(-45deg, var(--ipd-color-neutral-50) 25%, transparent 25%) 0 8px / 16px 16px,
+    #fff;
+}
+.ds-demo__stage--plain { background: #fff; }
+.ds-demo__stage--dark { background: var(--ipd-color-navy-900); }
+
+/* ---------- Barra superior ---------------------------------------------- */
+
+.ds-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ipd-space-3);
+  margin-bottom: var(--ipd-space-8);
+  padding-bottom: var(--ipd-space-4);
+  border-bottom: 1px solid var(--ipd-border-subtle);
+  font-size: var(--ipd-size-xs);
+  color: var(--ipd-text-tertiary);
+}
+.ds-topbar__crumb::after { content: "/"; margin-left: var(--ipd-space-3); color: var(--ipd-border-default); }
+
+.ds-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ipd-space-4);
+  margin-top: var(--ipd-space-16);
+  padding-top: var(--ipd-space-6);
+  border-top: 1px solid var(--ipd-border-subtle);
+}
+.ds-pager a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--ipd-space-4) var(--ipd-space-5);
+  border: 1px solid var(--ipd-border-subtle);
+  border-radius: var(--ipd-radius-md);
+  text-decoration: none;
+  min-width: 180px;
+  transition: border-color var(--ipd-duration-fast) var(--ipd-ease-standard);
+}
+.ds-pager a:hover { border-color: var(--ipd-color-navy-700); }
+.ds-pager small { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ipd-text-tertiary); }
+.ds-pager span { font-weight: 600; color: var(--ipd-color-navy-700); }
+.ds-pager .ds-pager__next { text-align: right; margin-left: auto; }
+
+.ds-footnote {
+  margin-top: var(--ipd-space-12);
+  padding: var(--ipd-space-5) var(--ipd-space-6);
+  background: var(--ipd-color-neutral-50);
+  border-radius: var(--ipd-radius-md);
+  font-size: var(--ipd-size-xs);
+  color: var(--ipd-text-secondary);
+}
+
+@media print {
+  .ds-sidebar, .ds-pager { display: none; }
+  .ds-layout { display: block; }
+  .ds-content { max-width: none; }
+}
+
+/* La paginación se apila en pantallas angostas para no forzar scroll horizontal. */
+@media (max-width: 599px) {
+  .ds-pager { flex-direction: column; }
+  .ds-pager a { min-width: 0; }
+  .ds-pager .ds-pager__next { text-align: left; margin-left: 0; }
+}
+
+/* El código en línea puede partirse en pantallas angostas antes que forzar scroll. */
+@media (max-width: 599px) {
+  .ds-content code { white-space: normal; overflow-wrap: anywhere; }
+}

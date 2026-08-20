@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contenido y gobierno · IPADE Design System</title>
+<meta name="description" content="Voz, versionado, deuda — IPADE Business School Design System v1.0.0" />
+<link rel="stylesheet" href="../tokens/tokens.css" />
+<link rel="stylesheet" href="../tokens/base.css" />
+<link rel="stylesheet" href="../tokens/components.css" />
+<link rel="stylesheet" href="assets/ds.css" />
+</head>
+<body>
+<a class="ipd-skip-link" href="#contenido">Ir al contenido</a>
+<div class="ds-layout">
+<aside class="ds-sidebar">
+  <a class="ds-brand" href="index.html">
+    <span class="ds-brand__mark">IPADE</span>
+    <span class="ds-brand__sub">Design System</span>
+    <span class="ds-brand__version">v1.0.0</span>
+  </a>
+  <nav class="ds-nav" aria-label="Secciones de la documentación">
+    <p class="ds-nav__heading">Inicio</p>
+    <a href="index.html">Portada</a>
+    <p class="ds-nav__heading">Documentación</p>
+    <a href="01-fundamentos.html">Fundamentos</a>
+    <a href="02-componentes.html">Componentes</a>
+    <a href="03-patrones.html">Patrones</a>
+    <a href="04-accesibilidad.html">Accesibilidad</a>
+    <a href="05-contenido-y-gobierno.html" aria-current="page">Contenido y gobierno</a>
+    <p class="ds-nav__heading">Referencia</p>
+    <a href="showcase.html">Showcase</a>
+    <a href="99-goal.html">/goal</a>
+  </nav>
+</aside>
+<main class="ds-main" id="contenido">
+  <div class="ds-topbar">
+    <span class="ds-topbar__crumb">IPADE Design System</span>
+    <span>Contenido y gobierno</span>
+  </div>
+  <div class="ds-content">
+<h1 id="5-contenido-voz-y-gobierno">5. Contenido, voz y gobierno</h1>
+<hr />
+<h2 id="51-voz-de-marca">5.1 Voz de marca</h2>
+<p>Cuatro atributos, cada uno con su límite.</p>
+<table>
+<thead>
+<tr>
+<th>Atributo</th>
+<th>Sí suena así</th>
+<th>No suena así</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Con autoridad</strong></td>
+<td>"El método del caso se usa en todos los programas desde 1967."</td>
+<td>"Somos la mejor escuela de negocios del país."</td>
+</tr>
+<tr>
+<td><strong>Cercano</strong></td>
+<td>"Le enviamos el temario y las fechas por correo."</td>
+<td>"Se procederá al envío de la documentación correspondiente."</td>
+</tr>
+<tr>
+<td><strong>Preciso</strong></td>
+<td>"Nueve módulos, 18 meses, sesiones cada 15 días."</td>
+<td>"Un programa integral de amplio alcance."</td>
+</tr>
+<tr>
+<td><strong>Humanista</strong></td>
+<td>"Cada participante llega con una empresa concreta y un problema real."</td>
+<td>"Optimizamos el capital humano de las organizaciones."</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="52-reglas-de-redaccion-de-interfaz">5.2 Reglas de redacción de interfaz</h2>
+<p><strong>Botones.</strong> Verbo en infinitivo más objeto: "Solicitar informes", "Descargar el plan de estudios", "Guardar cambios". Nunca "Enviar", "Aceptar", "Clic aquí".</p>
+<p><strong>Consistencia de la acción.</strong> El botón que dice "Solicitar informes" produce un mensaje que dice "Solicitud enviada". El vocabulario no cambia a la mitad del flujo.</p>
+<p><strong>Títulos.</strong> Mayúscula solo inicial y en nombres propios. Sin punto final.</p>
+<p><strong>Errores.</strong> Explican qué pasó y cómo salir, en la voz de la interfaz, sin disculparse ni culpar.</p>
+<blockquote>
+<p>No se pudo enviar la solicitud. Revise su conexión e intente de nuevo.</p>
+</blockquote>
+<p>En vez de:</p>
+<blockquote>
+<p>Lo sentimos mucho, ha ocurrido un error inesperado.</p>
+</blockquote>
+<p><strong>Estados vacíos.</strong> Son una invitación a actuar, no un aviso de fracaso.</p>
+<p><strong>Cifras.</strong> Separador de miles con coma en español de México (22,000). Los porcentajes con el símbolo pegado (85%). Las fechas en formato largo: 19 de agosto de 2026.</p>
+<p><strong>Jerga.</strong> "VUCA", "lifelong learning" y demás términos del sector se explican la primera vez que aparecen o se sustituyen. La audiencia es directiva, no académica.</p>
+<p><strong>Inclusión.</strong> Se evita el desdoblamiento constante ("los directores y las directoras") en favor de fórmulas colectivas ("la dirección", "quienes dirigen"), que se leen mejor y no excluyen.</p>
+<hr />
+<h2 id="53-arquitectura-de-archivos">5.3 Arquitectura de archivos</h2>
+<pre><code>ipade-design-system/
+├── README.md                       punto de entrada
+├── DESIGN-SYSTEM.md                documento maestro consolidado
+├── build/                          scripts que regeneran el maestro y el HTML
+├── docs/
+│   ├── 01-fundamentos.md
+│   ├── 02-componentes.md
+│   ├── 03-patrones.md
+│   ├── 04-accesibilidad.md
+│   └── 05-contenido-y-gobierno.md
+├── tokens/
+│   ├── tokens.css                  primitivos y semánticos
+│   ├── base.css                    reset, tipografía, layout
+│   ├── components.css              componentes
+│   ├── tokens.json                 formato de intercambio
+│   └── tailwind.preset.js          preset de Tailwind
+├── html/
+│   ├── index.html                  portada de la documentación
+│   ├── 01-fundamentos.html         copia navegable
+│   ├── 02-componentes.html
+│   ├── 03-patrones.html
+│   ├── 04-accesibilidad.html
+│   ├── 05-contenido-y-gobierno.html
+│   ├── showcase.html               componentes renderizados en vivo
+│   └── assets/ds.css               estilos de la documentación
+└── .claude/
+    └── commands/goal.md            comando /goal para Claude Code
+</code></pre>
+<hr />
+<h2 id="54-convenciones-de-nombres">5.4 Convenciones de nombres</h2>
+<p><strong>Tokens CSS:</strong> <code>--ipd-{categoría}-{rol}-{escala}</code></p>
+<pre><code>--ipd-color-navy-700      primitivo
+--ipd-bg-brand            semántico
+--ipd-btn-primary-bg      componente
+</code></pre>
+<p><strong>Clases:</strong> BEM con prefijo <code>ipd-</code>.</p>
+<pre><code>.ipd-card                bloque
+.ipd-card__title         elemento
+.ipd-card--interactive   modificador
+</code></pre>
+<p><strong>Prohibido en componentes</strong></p>
+<ul>
+<li>Valores hexadecimales literales</li>
+<li>Píxeles fuera de la escala de espaciado</li>
+<li><code>!important</code> salvo en utilidades declaradas como tales</li>
+<li><code>z-index</code> numérico fuera de la escala de capas</li>
+</ul>
+<hr />
+<h2 id="55-como-agregar-un-componente">5.5 Cómo agregar un componente</h2>
+<ol>
+<li><strong>Verificar que no existe.</strong> La mayoría de las peticiones son una variante de algo que ya está.</li>
+<li><strong>Justificar.</strong> Se documenta el problema que resuelve y dónde aparece al menos dos veces.</li>
+<li><strong>Diseñar los estados completos</strong> antes de escribir código: reposo, hover, foco, activo, deshabilitado, cargando, error, vacío.</li>
+<li><strong>Construir solo con tokens.</strong></li>
+<li><strong>Documentar</strong> en <code>02-componentes.md</code> con la misma estructura de ficha.</li>
+<li><strong>Revisar accesibilidad</strong> con la lista del punto 4.8.</li>
+<li><strong>Publicar</strong> con nota en el registro de cambios.</li>
+</ol>
+<hr />
+<h2 id="56-versionado">5.6 Versionado</h2>
+<p>Versionado semántico.</p>
+<ul>
+<li><strong>Mayor:</strong> cambio que rompe. Se renombra o elimina un token o una clase.</li>
+<li><strong>Menor:</strong> se agrega un componente, variante o token.</li>
+<li><strong>Parche:</strong> corrección visual, ajuste de contraste, arreglo de documentación.</li>
+</ul>
+<p>Un token que se elimina se marca primero como obsoleto durante una versión menor, con la sustitución indicada en la propia declaración.</p>
+<pre><code class="language-css">/* obsoleto desde 1.2.0 · usar --ipd-bg-brand-subtle */
+--ipd-bg-light-blue: var(--ipd-bg-brand-subtle);
+</code></pre>
+<hr />
+<h2 id="57-deuda-conocida">5.7 Deuda conocida</h2>
+<p>Puntos que este documento resuelve con una decisión provisional y deben validarse contra fuentes oficiales.</p>
+<table>
+<thead>
+<tr>
+<th>Punto</th>
+<th>Estado</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Valores hexadecimales de marca</td>
+<td>Reconstruidos por inspección del sitio público</td>
+<td>Contrastar con el manual de identidad y sustituir en <code>tokens.css</code></td>
+</tr>
+<tr>
+<td>Familias tipográficas</td>
+<td>Propuesta funcional con fallbacks de métrica similar</td>
+<td>Sustituir por las licenciadas por la institución</td>
+</tr>
+<tr>
+<td>Sistema de íconos</td>
+<td>Especificado por reglas, sin biblioteca definida</td>
+<td>Elegir biblioteca o encargar set propio de 24×24</td>
+</tr>
+<tr>
+<td>Escudo institucional</td>
+<td>Sin reglas de uso mínimo ni área de respeto</td>
+<td>Documentar tamaños mínimos y usos permitidos</td>
+</tr>
+<tr>
+<td>Componentes de campaña</td>
+<td>Fuera de alcance de la versión 1.0</td>
+<td>Definir en 1.1 con el equipo de marketing</td>
+</tr>
+</tbody>
+</table>
+<p>Sustituir los hexadecimales de <code>tokens.css</code> por los oficiales no rompe nada: los componentes solo consumen tokens semánticos.</p>
+<hr />
+<h2 id="58-registro-de-cambios">5.8 Registro de cambios</h2>
+<p><strong>1.0.0</strong></p>
+<ul>
+<li>Sistema inicial. Fundamentos, 22 componentes, 9 patrones, criterios de accesibilidad AA, guía de contenido y gobierno.</li>
+<li>Tokens en CSS, JSON y preset de Tailwind.</li>
+<li>Documentación en Markdown con copias navegables en HTML.</li>
+</ul>
+  </div>
+  <nav class="ds-pager" aria-label="Paginación de la documentación">
+  <a href="04-accesibilidad.html"><small>Anterior</small><span>Accesibilidad</span></a>
+  <a class="ds-pager__next" href="showcase.html"><small>Siguiente</small><span>Showcase</span></a>
+</nav>
+  <p class="ds-footnote">
+    IPADE Business School Design System v1.0.0. Los valores de color y tipografía se
+    reconstruyeron por inspección del sitio público y deben validarse contra el manual
+    de identidad oficial antes de producción.
+  </p>
+</main>
+</div>
+</body>
+</html>
