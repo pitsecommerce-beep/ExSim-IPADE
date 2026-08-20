@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { isParticipantEmail } from "@/lib/auth/email-rules";
 
 const IPADE_LOGO_WHITE = "https://www.ipade.mx/wp-content/uploads/2022/11/logo-ipade-color-white.svg?w=347";
 const IPADE_LOGO_COLOR = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
@@ -26,8 +27,16 @@ export function AccesoForm() {
     setLoading(true);
     setError(null);
 
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!isParticipantEmail(trimmedEmail)) {
+      setError("Solo correos @alumni.ipade.mx pueden acceder como participante.");
+      setLoading(false);
+      return;
+    }
+
     const { error: otpError } = await getSupabase().auth.signInWithOtp({
-      email,
+      email: trimmedEmail,
       options: { shouldCreateUser: false },
     });
 
@@ -46,7 +55,7 @@ export function AccesoForm() {
     setError(null);
 
     const { error: verifyError } = await getSupabase().auth.verifyOtp({
-      email,
+      email: email.trim().toLowerCase(),
       token,
       type: "email",
     });
@@ -79,9 +88,9 @@ export function AccesoForm() {
           </h2>
           <div className="mt-4 h-1 w-16 rounded bg-ipade-gold" />
           <p className="mt-6 text-sm leading-relaxed text-white/70">
-            Ingresa con tu correo institucional para acceder a la
-            simulación de tu equipo. Tu profesor te asignará un
-            equipo y un mundo de simulación.
+            Ingresa con tu correo @alumni.ipade.mx para acceder a la
+            simulacion de tu equipo. Tu profesor te asignara un
+            equipo y un mundo de simulacion.
           </p>
         </div>
         <p className="text-xs text-white/40">IPADE Business School</p>
@@ -139,7 +148,7 @@ export function AccesoForm() {
               <>
                 <h2 className="mb-1 text-lg font-semibold text-ipade-text">Acceso Participante</h2>
                 <p className="mb-6 text-sm text-ipade-text-muted">
-                  Ingresa con tu correo IPADE. Te enviaremos un codigo de acceso.
+                  Ingresa con tu correo @alumni.ipade.mx. Te enviaremos un codigo de acceso.
                 </p>
                 <form onSubmit={handleSendOtp} className="flex flex-col gap-4">
                   <div>
@@ -153,7 +162,7 @@ export function AccesoForm() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-                      placeholder="tu@correo.com"
+                      placeholder="tu@alumni.ipade.mx"
                     />
                   </div>
                   {error && <p className="text-sm text-red-500">{error}</p>}

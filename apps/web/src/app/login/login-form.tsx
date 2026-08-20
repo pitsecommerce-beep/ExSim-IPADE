@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { isProfessorEmail, isSuperAdminEmail } from "@/lib/auth/email-rules";
 
 const IPADE_LOGO_WHITE = "https://www.ipade.mx/wp-content/uploads/2022/11/logo-ipade-color-white.svg?w=347";
 const IPADE_LOGO_COLOR = "https://www.ipade.mx/wp-content/uploads/2022/10/fav.png?w=512";
@@ -33,8 +34,8 @@ export function LoginForm() {
           </h2>
           <div className="mt-4 h-1 w-16 rounded bg-ipade-gold" />
           <p className="mt-6 text-sm leading-relaxed text-white/70">
-            Plataforma de simulación empresarial diseñada para la formación
-            ejecutiva. Toma decisiones estratégicas en un entorno competitivo
+            Plataforma de simulacion empresarial diseñada para la formacion
+            ejecutiva. Toma decisiones estrategicas en un entorno competitivo
             y mide tu desempeño en tiempo real.
           </p>
         </div>
@@ -110,12 +111,42 @@ function LoginTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
     setLoading(true);
     setError(null);
 
-    const { error: authError } = await getSupabase().auth.signInWithPassword({ email, password });
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!isProfessorEmail(trimmedEmail)) {
+      setError("Solo correos @ipade.mx pueden iniciar sesion como profesor.");
+      setLoading(false);
+      return;
+    }
+
+    const supabase = getSupabase();
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: trimmedEmail,
+      password,
+    });
+
     if (authError) {
       setError(authError.message);
       setLoading(false);
       return;
     }
+
+    const user = data.user;
+    const role = user?.user_metadata?.role as string | undefined;
+    const approved = user?.user_metadata?.approved === true;
+
+    if (isSuperAdminEmail(trimmedEmail) && role !== "admin") {
+      await supabase.auth.updateUser({
+        data: { role: "admin", approved: true },
+      });
+    }
+
+    if (role === "professor" && !approved && !isSuperAdminEmail(trimmedEmail)) {
+      router.push("/pendiente");
+      router.refresh();
+      return;
+    }
+
     router.push("/dashboard");
     router.refresh();
   }
@@ -123,12 +154,12 @@ function LoginTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
   return (
     <>
       <h2 className="mb-1 text-lg font-semibold text-ipade-text">Bienvenido</h2>
-      <p className="mb-6 text-sm text-ipade-text-muted">Ingresa como profesor o administrador.</p>
+      <p className="mb-6 text-sm text-ipade-text-muted">Ingresa como profesor o administrador con tu correo @ipade.mx.</p>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-4">
         <div>
           <label htmlFor="login-email" className="mb-1 block text-sm font-medium text-ipade-text">
-            Correo electrónico
+            Correo electronico
           </label>
           <input
             id="login-email"
@@ -137,7 +168,7 @@ function LoginTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-            placeholder="tu@correo.com"
+            placeholder="tu@ipade.mx"
           />
         </div>
         <div>
@@ -160,7 +191,7 @@ function LoginTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
           disabled={loading}
           className="mt-2 rounded-md bg-ipade-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ipade-accent-hover disabled:opacity-50"
         >
-          {loading ? "Ingresando..." : "Iniciar Sesión"}
+          {loading ? "Ingresando..." : "Iniciar Sesion"}
         </button>
       </form>
       <p className="mt-5 text-center text-sm text-ipade-text-muted">
@@ -194,6 +225,14 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
     setLoading(true);
     setError(null);
 
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if (!isProfessorEmail(trimmedEmail)) {
+      setError("Solo correos @ipade.mx pueden registrarse como profesor.");
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden.");
       setLoading(false);
@@ -205,10 +244,14 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
       return;
     }
 
+    const isSuperAdminSignup = isSuperAdminEmail(trimmedEmail);
+    const role = isSuperAdminSignup ? "admin" : "professor";
+    const approved = isSuperAdminSignup;
+
     const { data, error: authError } = await getSupabase().auth.signUp({
-      email,
+      email: trimmedEmail,
       password,
-      options: { data: { full_name: fullName, role: "professor" } },
+      options: { data: { full_name: fullName, role, approved } },
     });
 
     if (authError) {
@@ -217,31 +260,36 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
       return;
     }
 
-    if (data.session) {
+    if (isSuperAdminSignup && data.session) {
       router.push("/dashboard");
       router.refresh();
-    } else {
-      setSuccess(true);
+      return;
     }
+
+    setSuccess(true);
   }
 
   if (success) {
     return (
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h2 className="text-lg font-semibold text-ipade-text">Revisa tu correo</h2>
+        <h2 className="text-lg font-semibold text-ipade-text">Registro Recibido</h2>
         <p className="mt-2 text-sm text-ipade-text-secondary">
-          Enviamos un enlace de confirmación a <strong>{email}</strong>.
+          Tu solicitud de registro ha sido enviada. Un administrador debe
+          aprobar tu cuenta antes de que puedas acceder al sistema.
+        </p>
+        <p className="mt-2 text-sm text-ipade-text-muted">
+          Recibiras acceso una vez aprobada tu cuenta.
         </p>
         <button
           onClick={() => onSwitchTab("login")}
           className="mt-6 text-sm font-medium text-ipade-primary hover:underline"
         >
-          Ir a Iniciar Sesión
+          Ir a Iniciar Sesion
         </button>
       </div>
     );
@@ -250,7 +298,7 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
   return (
     <>
       <h2 className="mb-1 text-lg font-semibold text-ipade-text">Crear Cuenta</h2>
-      <p className="mb-6 text-sm text-ipade-text-muted">Registro para profesores y administradores.</p>
+      <p className="mb-6 text-sm text-ipade-text-muted">Registro para profesores. Requiere correo @ipade.mx y aprobacion de un administrador.</p>
 
       <form onSubmit={handleSignup} className="flex flex-col gap-4">
         <div>
@@ -262,11 +310,11 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
             onChange={(e) => setFullName(e.target.value)}
             required
             className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-            placeholder="Juan Pérez"
+            placeholder="Juan Perez"
           />
         </div>
         <div>
-          <label htmlFor="signup-email" className="mb-1 block text-sm font-medium text-ipade-text">Correo electrónico</label>
+          <label htmlFor="signup-email" className="mb-1 block text-sm font-medium text-ipade-text">Correo electronico</label>
           <input
             id="signup-email"
             type="email"
@@ -274,7 +322,7 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
             onChange={(e) => setEmail(e.target.value)}
             required
             className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-            placeholder="tu@correo.com"
+            placeholder="tu@ipade.mx"
           />
         </div>
         <div>
@@ -287,7 +335,7 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
             required
             minLength={6}
             className="w-full rounded-md border border-ipade-border bg-ipade-bg px-3 py-2.5 text-sm text-ipade-text placeholder:text-ipade-text-muted focus:border-ipade-accent focus:outline-none focus:ring-1 focus:ring-ipade-accent"
-            placeholder="Mínimo 6 caracteres"
+            placeholder="Minimo 6 caracteres"
           />
         </div>
         <div>
@@ -315,10 +363,9 @@ function SignupTab({ onSwitchTab }: { onSwitchTab: (t: AuthTab) => void }) {
       <p className="mt-5 text-center text-sm text-ipade-text-muted">
         ¿Ya tienes cuenta?{" "}
         <button onClick={() => onSwitchTab("login")} className="font-medium text-ipade-primary hover:underline">
-          Iniciar Sesión
+          Iniciar Sesion
         </button>
       </p>
     </>
   );
 }
-

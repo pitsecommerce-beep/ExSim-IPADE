@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import * as XLSX from "xlsx";
+import { isParticipantEmail } from "@/lib/auth/email-rules";
 
 interface TeamData {
   id: string;
@@ -87,6 +88,10 @@ export function CourseDetail({ course, worlds, profile }: Props) {
 
   async function handleAddMember() {
     if (!newMemberEmail.trim() || !newMemberTeam) return;
+    if (!isParticipantEmail(newMemberEmail.trim())) {
+      setMemberError("Solo correos @alumni.ipade.mx pueden ser participantes.");
+      return;
+    }
     setAddingMember(true);
     setMemberError(null);
     const supabase = getSupabase();
@@ -154,10 +159,16 @@ export function CourseDetail({ course, worlds, profile }: Props) {
       const supabase = getSupabase();
 
       let added = 0;
+      const skipped: string[] = [];
       for (const row of rows) {
         const email = (row["email"] ?? row["Email"] ?? row["correo"] ?? "").trim();
         const teamName = (row["equipo"] ?? row["Equipo"] ?? row["team"] ?? "").trim();
         if (!email || !teamName) continue;
+
+        if (!isParticipantEmail(email)) {
+          skipped.push(email);
+          continue;
+        }
 
         const team = allTeams.find(
           (t) => t.name.toLowerCase() === teamName.toLowerCase(),
@@ -179,7 +190,10 @@ export function CourseDetail({ course, worlds, profile }: Props) {
         }
       }
 
-      alert(`${added} participantes agregados.`);
+      const msg = skipped.length > 0
+        ? `${added} participantes agregados. ${skipped.length} omitidos (no son @alumni.ipade.mx): ${skipped.slice(0, 3).join(", ")}${skipped.length > 3 ? "..." : ""}`
+        : `${added} participantes agregados.`;
+      alert(msg);
       router.refresh();
     };
     reader.readAsArrayBuffer(file);
