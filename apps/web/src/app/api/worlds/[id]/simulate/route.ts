@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { getStorage } from "@/lib/storage";
-import { simulateCommercialPeriod } from "@exsim/engine/commercial/simulate";
-import type { CommercialInput, EstadoPrevio } from "@exsim/engine/commercial/types";
+import { runCommercialPeriod } from "@exsim/commercial-engine";
+import type {
+  CommercialConfig,
+  CompanyDecisions,
+  MarketState,
+  EngineOptions,
+} from "@exsim/commercial-engine";
+import type { WorldData, DecisionData } from "@/lib/storage/types";
 
 export async function POST(
   _request: Request,
@@ -25,138 +31,297 @@ export async function POST(
 
   const periodoAnterior = world.periodos.find((p) => p.periodo === world.currentPeriod - 1);
 
-  const estadoPrevio: EstadoPrevio | undefined = periodoAnterior
-    ? {
-        conocimiento: periodoAnterior.conocimiento ?? {},
-        cuotaAsignada: periodoAnterior.cuotaAsignada ?? {},
-      }
-    : undefined;
+  const config = buildCommercialConfig(world);
+  const decisions = buildDecisions(world, periodoActual.decisiones);
+  const state = buildMarketState(periodoAnterior);
+  const options: EngineOptions = {
+    seed: `world-${world.id}-period-${world.currentPeriod}`,
+    noiseEnabled: true,
+    period: world.currentPeriod,
+    numCompanies: world.empresas.length,
+  };
 
-  const input = buildCommercialInput(world, periodoActual.decisiones);
-  const output = simulateCommercialPeriod(input, estadoPrevio);
+  const output = runCommercialPeriod(config, state, decisions, options);
 
-  periodoActual.resultados = output.resultados;
-  periodoActual.conocimiento = output.conocimientoNuevo;
-  periodoActual.cuotaAsignada = output.cuotaAsignadaNueva;
+  const conocimientoNuevo: Record<string, Record<string, { alto: number; bajo: number }>> = {};
+  const cuotaAsignadaNueva: Record<string, Record<string, { alto: number; bajo: number }>> = {};
+
+  for (const r of output.results) {
+    if (!conocimientoNuevo[r.companyId]) conocimientoNuevo[r.companyId] = {};
+    if (!conocimientoNuevo[r.companyId]![r.zoneKey]) {
+      conocimientoNuevo[r.companyId]![r.zoneKey] = { alto: 0, bajo: 0 };
+    }
+    const seg = r.segmentKey === "Alto" ? "alto" : "bajo";
+    conocimientoNuevo[r.companyId]![r.zoneKey]![seg] = r.factorPublicidad;
+
+    if (!cuotaAsignadaNueva[r.companyId]) cuotaAsignadaNueva[r.companyId] = {};
+    if (!cuotaAsignadaNueva[r.companyId]![r.zoneKey]) {
+      cuotaAsignadaNueva[r.companyId]![r.zoneKey] = { alto: 0, bajo: 0 };
+    }
+    cuotaAsignadaNueva[r.companyId]![r.zoneKey]![seg] = r.cuotaAsignada;
+  }
+
+  periodoActual.resultados = output.results;
+  periodoActual.conocimiento = conocimientoNuevo;
+  periodoActual.cuotaAsignada = cuotaAsignadaNueva;
   world.currentPeriod += 1;
 
   await storage.saveWorld(world);
 
   return NextResponse.json({
     periodo: periodoActual.periodo,
-    resultados: output.resultados,
+    resultados: output.results,
     siguientePeriodo: world.currentPeriod,
   });
 }
 
-function buildCommercialInput(
-  world: import("@/lib/storage/types").WorldData,
-  decisiones: import("@/lib/storage/types").DecisionData[],
-): CommercialInput {
-  const decisionesPorEmpresa = new Map<string, typeof decisiones>();
-  for (const d of decisiones) {
-    if (!decisionesPorEmpresa.has(d.empresaId)) {
-      decisionesPorEmpresa.set(d.empresaId, []);
-    }
-    decisionesPorEmpresa.get(d.empresaId)!.push(d);
-  }
+const PHASE_MAP: Record<string, string> = {
+  rollout: "1.Roll-out",
+  growth: "2.Growth",
+  maturity: "3.Maturity",
+  hypermaturity: "4.Hypermaturity",
+};
 
-  const primeraDecision = decisiones[0];
-  const spotsTV = primeraDecision?.spotsTV ?? 0;
-  const enfoqueMarcaTV = primeraDecision?.enfoqueMarcaTV ?? 0.5;
-
+function buildCommercialConfig(world: WorldData): CommercialConfig {
   return {
-    periodo: world.currentPeriod,
-    kappaPrecio: {
-      alto: world.config.kappaPrecioAlto,
-      bajo: world.config.kappaPrecioBajo,
+    comercialParams: {
+      dopaje_base100: 105,
+      escala_global: 0.25,
+      actualizacion_instantanea: true,
     },
-    canalParams: {
-      alfa: world.config.canalAlfa,
-      kappa: world.config.canalKappa,
-    },
-    loyalty: {
-      rollout: { alto: 0.25, bajo: 0.25 },
-      growth: { alto: 0.50, bajo: 0.25 },
-      maturity: { alto: 0.60, bajo: 0.40 },
-      hypermaturity: { alto: 0.70, bajo: 0.50 },
-    },
-    pesosSegmento: {
-      alto: {
-        precio: 0.5, producto: 2.0, canal: 1.0,
-        publicidad: 2.0, presupuesto: 1.0, generico: 1.0, caracteristicasMarca: 1.0,
-        correccionUtilidad: 1.0,
+    segments: [
+      {
+        key: "Alto",
+        w_precio: 0.5,
+        w_producto: 2.0,
+        w_canales: 1.0,
+        w_publicidad: 2.0,
+        w_generico: 1.0,
+        w_caracteristicas_marca: 1.0,
+        kappa_precio: world.config.kappaPrecioAlto,
+        correccion_utilidad: 1.0,
       },
-      bajo: {
-        precio: 2.0, producto: 1.4, canal: 1.0,
-        publicidad: 1.8, presupuesto: 1.0, generico: 1.0, caracteristicasMarca: 1.0,
-        correccionUtilidad: 1.7,
+      {
+        key: "Bajo",
+        w_precio: 2.0,
+        w_producto: 1.4,
+        w_canales: 1.0,
+        w_publicidad: 1.8,
+        w_generico: 1.0,
+        w_caracteristicas_marca: 1.0,
+        kappa_precio: world.config.kappaPrecioBajo,
+        correccion_utilidad: 1.7,
       },
-    },
-    multFase: {
-      rollout: { precio: 1.12, producto: 1, canal: 0.25, publicidad: 2.20, presupuesto: 1.0, generico: 3.00, caracteristicasMarca: 1 },
-      growth: { precio: 1.40, producto: 1, canal: 0.225, publicidad: 1.80, presupuesto: 1.0, generico: 2.00, caracteristicasMarca: 1 },
-      maturity: { precio: 1.50, producto: 1, canal: 0.16, publicidad: 1.10, presupuesto: 1.0, generico: 0.85, caracteristicasMarca: 1 },
-      hypermaturity: { precio: 1.80, producto: 1, canal: 0.08, publicidad: 0.70, presupuesto: 1.0, generico: 0.40, caracteristicasMarca: 1 },
-    },
-    rotacionAdquisicion: {
-      rollout: { rotacion: 0.45, adquisicion: 0.55 },
-      growth: { rotacion: 0.30, adquisicion: 0.45 },
-      maturity: { rotacion: 0.20, adquisicion: 0.35 },
-      hypermaturity: { rotacion: 0.15, adquisicion: 0.30 },
-    },
-    desiredValues: {
-      rollout: {
-        alto: { desiredValue: { sostenibilidad: 0.4, conveniencia: 0.4, rendimiento: 0.5, funcionalidadesExtra: 0.4, eficiencia: 0.4 }, propension: { sostenibilidad: 0.5, conveniencia: 0.5, rendimiento: 0.8, funcionalidadesExtra: 0.7, eficiencia: 0.5 } },
-        bajo: { desiredValue: { sostenibilidad: 0.3, conveniencia: 0.5, rendimiento: 0.3, funcionalidadesExtra: 0.3, eficiencia: 0.6 }, propension: { sostenibilidad: 0.3, conveniencia: 0.8, rendimiento: 0.3, funcionalidadesExtra: 0.3, eficiencia: 0.9 } },
+    ],
+    phases: [
+      {
+        key: "1.Roll-out",
+        mult_precio: 1.12,
+        mult_producto: 1,
+        mult_canales: 0.25,
+        mult_publicidad: 2.20,
+        mult_generico: 3.00,
+        mult_caracteristicas_marca: 1,
+        mult_correccion_utilidad: 1,
+        rotacion_conocimiento: 0.45,
+        adquisicion_conocimiento: 0.55,
+        error_base: 10,
       },
-      growth: {
-        alto: { desiredValue: { sostenibilidad: 0.5, conveniencia: 0.5, rendimiento: 0.7, funcionalidadesExtra: 0.6, eficiencia: 0.5 }, propension: { sostenibilidad: 0.5, conveniencia: 0.5, rendimiento: 0.8, funcionalidadesExtra: 0.7, eficiencia: 0.5 } },
-        bajo: { desiredValue: { sostenibilidad: 0.4, conveniencia: 0.6, rendimiento: 0.4, funcionalidadesExtra: 0.4, eficiencia: 0.7 }, propension: { sostenibilidad: 0.3, conveniencia: 0.8, rendimiento: 0.3, funcionalidadesExtra: 0.3, eficiencia: 0.9 } },
+      {
+        key: "2.Growth",
+        mult_precio: 1.40,
+        mult_producto: 1,
+        mult_canales: 0.225,
+        mult_publicidad: 1.80,
+        mult_generico: 2.00,
+        mult_caracteristicas_marca: 1,
+        mult_correccion_utilidad: 1,
+        rotacion_conocimiento: 0.30,
+        adquisicion_conocimiento: 0.45,
+        error_base: 10,
       },
-      maturity: {
-        alto: { desiredValue: { sostenibilidad: 0.6, conveniencia: 0.6, rendimiento: 0.8, funcionalidadesExtra: 0.7, eficiencia: 0.6 }, propension: { sostenibilidad: 0.6, conveniencia: 0.6, rendimiento: 0.8, funcionalidadesExtra: 0.7, eficiencia: 0.6 } },
-        bajo: { desiredValue: { sostenibilidad: 0.5, conveniencia: 0.7, rendimiento: 0.5, funcionalidadesExtra: 0.5, eficiencia: 0.8 }, propension: { sostenibilidad: 0.4, conveniencia: 0.8, rendimiento: 0.4, funcionalidadesExtra: 0.4, eficiencia: 0.9 } },
+      {
+        key: "3.Maturity",
+        mult_precio: 1.50,
+        mult_producto: 1,
+        mult_canales: 0.16,
+        mult_publicidad: 1.10,
+        mult_generico: 0.85,
+        mult_caracteristicas_marca: 1,
+        mult_correccion_utilidad: 1,
+        rotacion_conocimiento: 0.20,
+        adquisicion_conocimiento: 0.35,
+        error_base: 10,
       },
-      hypermaturity: {
-        alto: { desiredValue: { sostenibilidad: 0.7, conveniencia: 0.7, rendimiento: 0.9, funcionalidadesExtra: 0.8, eficiencia: 0.7 }, propension: { sostenibilidad: 0.7, conveniencia: 0.7, rendimiento: 0.9, funcionalidadesExtra: 0.8, eficiencia: 0.7 } },
-        bajo: { desiredValue: { sostenibilidad: 0.6, conveniencia: 0.8, rendimiento: 0.6, funcionalidadesExtra: 0.6, eficiencia: 0.9 }, propension: { sostenibilidad: 0.5, conveniencia: 0.9, rendimiento: 0.5, funcionalidadesExtra: 0.5, eficiencia: 0.9 } },
+      {
+        key: "4.Hypermaturity",
+        mult_precio: 1.80,
+        mult_producto: 1,
+        mult_canales: 0.08,
+        mult_publicidad: 0.70,
+        mult_generico: 0.40,
+        mult_caracteristicas_marca: 1,
+        mult_correccion_utilidad: 1,
+        rotacion_conocimiento: 0.15,
+        adquisicion_conocimiento: 0.30,
+        error_base: 10,
       },
-    },
-    valorInicialDimension: world.config.valorInicialDimension,
-    improvements: [],
-    empresas: world.empresas.map((emp) => {
-      const empDecs = decisionesPorEmpresa.get(emp.id) ?? [];
-      return {
-        empresaId: emp.id,
-        nombre: emp.nombre,
-        mejorasActivas: empDecs[0]?.mejorasActivas ?? [],
-        spotsTV: empDecs[0]?.spotsTV ?? spotsTV,
-        enfoqueMarcaTV: empDecs[0]?.enfoqueMarcaTV ?? enfoqueMarcaTV,
-        decisiones: world.zonas.map((zona) => {
-          const dec = empDecs.find((d) => d.zonaId === zona.id);
-          return {
-            zonaId: zona.id,
-            precio: dec?.precio ?? 0,
-            vendedores: dec?.vendedores ?? 0,
-            spotsRadio: dec?.spotsRadio ?? 0,
-            enfoqueMarcaRadio: dec?.enfoqueMarcaRadio ?? 0.5,
-            productoTerminado: dec?.productoTerminado ?? 0,
-            previsionDemanda: dec?.previsionDemanda ?? 0,
-          };
-        }),
-      };
-    }),
-    zonas: world.zonas.map((z) => ({
-      zonaId: z.id,
-      nombre: z.nombre,
-      fase: z.fase,
+    ],
+    segmentPhases: [
+      { segmentKey: "Alto", phaseKey: "1.Roll-out", loyalty: 0.25, umbral: 0, compra_espontanea: 0 },
+      { segmentKey: "Alto", phaseKey: "2.Growth", loyalty: 0.50, umbral: 10, compra_espontanea: 0 },
+      { segmentKey: "Alto", phaseKey: "3.Maturity", loyalty: 0.60, umbral: 55, compra_espontanea: 0 },
+      { segmentKey: "Alto", phaseKey: "4.Hypermaturity", loyalty: 0.70, umbral: 60, compra_espontanea: 0 },
+      { segmentKey: "Bajo", phaseKey: "1.Roll-out", loyalty: 0.25, umbral: 0, compra_espontanea: 0 },
+      { segmentKey: "Bajo", phaseKey: "2.Growth", loyalty: 0.25, umbral: 10, compra_espontanea: 0 },
+      { segmentKey: "Bajo", phaseKey: "3.Maturity", loyalty: 0.40, umbral: 40, compra_espontanea: 0 },
+      { segmentKey: "Bajo", phaseKey: "4.Hypermaturity", loyalty: 0.50, umbral: 50, compra_espontanea: 0 },
+    ],
+    dimensions: [
+      { key: "sostenibilidad", name: "Eco-friendliness" },
+      { key: "conveniencia", name: "Convenience" },
+      { key: "rendimiento", name: "Performance" },
+      { key: "funcionalidades_extra", name: "Extra features" },
+      { key: "eficiencia", name: "Efficiency" },
+    ],
+    segmentDimensionPhases: [],
+    channels: [
+      { key: "distribuidores", tipo: "fisico", alfa: world.config.canalAlfa, kappa: world.config.canalKappa, active: true },
+    ],
+    channelZones: world.zonas.map((z) => ({
+      channelKey: "distribuidores",
+      zoneKey: z.id,
       distribuidores: z.distribuidores,
-      limitePrecio: { alto: z.limitePrecioAlto, bajo: z.limitePrecioBajo },
-      demanda: {
-        alto: { cantidadPorEmpresa: z.demandaAlto },
-        bajo: { cantidadPorEmpresa: z.demandaBajo },
+      active: true,
+    })),
+    media: [
+      { key: "TV", alcance: "global" as const, costo_spot: 1000, active: true },
+      { key: "Radio", alcance: "local" as const, costo_spot: 200, active: true },
+    ],
+    mediaSegments: [
+      { mediumKey: "TV", segmentKey: "Alto", impacto_generico: 1, impacto_branding: 1, reach_m: 29.2, reach_lambda: 26.5, reach_k: 1.87 },
+      { mediumKey: "TV", segmentKey: "Bajo", impacto_generico: 1, impacto_branding: 1, reach_m: null, reach_lambda: null, reach_k: null },
+      { mediumKey: "Radio", segmentKey: "Alto", impacto_generico: 1, impacto_branding: 1, reach_m: 20.0, reach_lambda: 53.8, reach_k: 1.73 },
+      { mediumKey: "Radio", segmentKey: "Bajo", impacto_generico: 1, impacto_branding: 1, reach_m: null, reach_lambda: null, reach_k: null },
+    ],
+    improvements: [],
+    demand: world.zonas.flatMap((z) => [
+      {
+        period: world.currentPeriod,
+        zoneKey: z.id,
+        segmentKey: "Alto",
+        cantidad: z.demandaAlto,
+        limite_precio: z.limitePrecioAlto,
+        tipo_precio: "promedio",
+        precio_referencia: 0,
       },
+      {
+        period: world.currentPeriod,
+        zoneKey: z.id,
+        segmentKey: "Bajo",
+        cantidad: z.demandaBajo,
+        limite_precio: z.limitePrecioBajo,
+        tipo_precio: "promedio",
+        precio_referencia: 0,
+      },
+    ]),
+    coefficients: [
+      { key: "presupuesto_a", segmentKey: null, mediumKey: null, value: 0.7005 },
+      { key: "presupuesto_n", segmentKey: null, mediumKey: null, value: 15 },
+      { key: "producto_beta", segmentKey: null, mediumKey: null, value: 0.078 },
+      { key: "publicidad_theta", segmentKey: null, mediumKey: null, value: 0.375 },
+    ],
+    flags: {
+      ruido_activo: true,
+      aplicar_mult_seg_fase_precio: false,
+      aplicar_mult_seg_fase_producto: false,
+      aplicar_mult_seg_fase_publicidad: true,
+      aplicar_mult_seg_fase_canales: true,
+      aplicar_mult_seg_fase_presupuesto: false,
+      umbral_activo: false,
+      actualizacion_instantanea: true,
+      clamp_price_factor: true,
+      zero_factor_kills_total: false,
+    },
+    zonePhaseSchedule: world.zonas.map((z) => ({
+      zoneKey: z.id,
+      phaseKey: PHASE_MAP[z.fase] ?? "2.Growth",
+      periodFrom: 1,
+      periodTo: null,
     })),
   };
+}
+
+function buildDecisions(world: WorldData, decisiones: DecisionData[]): CompanyDecisions[] {
+  const byCompany = new Map<string, DecisionData[]>();
+  for (const d of decisiones) {
+    if (!byCompany.has(d.empresaId)) byCompany.set(d.empresaId, []);
+    byCompany.get(d.empresaId)!.push(d);
+  }
+
+  return world.empresas.map((emp) => {
+    const empDecs = byCompany.get(emp.id) ?? [];
+    const first = empDecs[0];
+
+    return {
+      companyId: emp.id,
+      activeImprovements: first?.mejorasActivas ?? [],
+      zones: world.zonas.map((z) => {
+        const dec = empDecs.find((d) => d.zonaId === z.id);
+        return {
+          zoneKey: z.id,
+          precio: dec?.precio ?? 0,
+          vendedores: dec?.vendedores ?? 0,
+          inventarioDisponible: dec?.productoTerminado ?? 999999,
+        };
+      }),
+      media: [
+        {
+          mediumKey: "TV",
+          zoneKey: null,
+          spots: first?.spotsTV ?? 0,
+          fraccionMarca: first?.enfoqueMarcaTV ?? 0.5,
+        },
+        ...world.zonas.map((z) => {
+          const dec = empDecs.find((d) => d.zonaId === z.id);
+          return {
+            mediumKey: "Radio",
+            zoneKey: z.id,
+            spots: dec?.spotsRadio ?? 0,
+            fraccionMarca: dec?.enfoqueMarcaRadio ?? 0.5,
+          };
+        }),
+      ],
+    };
+  });
+}
+
+function buildMarketState(
+  periodoAnterior?: WorldData["periodos"][number],
+): MarketState {
+  const awareness: Record<string, Record<string, Record<string, number>>> = {};
+  const assignedShare: Record<string, Record<string, Record<string, number>>> = {};
+
+  if (periodoAnterior) {
+    for (const [empId, zones] of Object.entries(periodoAnterior.conocimiento ?? {})) {
+      awareness[empId] = {};
+      for (const [zoneId, segs] of Object.entries(zones)) {
+        awareness[empId]![zoneId] = {
+          Alto: segs.alto,
+          Bajo: segs.bajo,
+        };
+      }
+    }
+    for (const [empId, zones] of Object.entries(periodoAnterior.cuotaAsignada ?? {})) {
+      assignedShare[empId] = {};
+      for (const [zoneId, segs] of Object.entries(zones)) {
+        assignedShare[empId]![zoneId] = {
+          Alto: segs.alto,
+          Bajo: segs.bajo,
+        };
+      }
+    }
+  }
+
+  return { awareness, assignedShare };
 }

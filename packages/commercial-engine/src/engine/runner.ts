@@ -89,7 +89,8 @@ export function runCommercialPeriod(
 
   const beta = getCoeff(config.coefficients, "producto_beta");
   const theta = getCoeff(config.coefficients, "publicidad_theta");
-  const presupuestoC = getCoeff(config.coefficients, "presupuesto_c");
+  const presupuestoA = getCoeff(config.coefficients, "presupuesto_a");
+  const presupuestoN = getCoeff(config.coefficients, "presupuesto_n");
 
   const activeChannels = config.channels.filter((ch) => ch.active);
 
@@ -129,9 +130,6 @@ export function runCommercialPeriod(
         options.numCompanies,
       );
 
-      const precio_a = getCoeff(config.coefficients, "precio_a", segmentKey);
-      const precio_b = getCoeff(config.coefficients, "precio_b", segmentKey);
-
       const hasHistory = decisions.some((d) => {
         const prev = state.assignedShare[d.companyId]?.[zoneKey]?.[segmentKey];
         return prev !== undefined;
@@ -160,12 +158,13 @@ export function runCommercialPeriod(
           continue;
         }
 
-        const factorPrecio = computePriceFactor(zoneDec.precio, avgPrice, precio_a, precio_b);
+        const factorPrecio = computePriceFactor(zoneDec.precio, avgPrice, segment.kappa_precio, config.flags.clamp_price_factor);
 
         const factorPresupuesto = computeBudgetFactor(
           zoneDec.precio,
           demandRow.limite_precio,
-          presupuestoC,
+          presupuestoA,
+          presupuestoN,
         );
 
         let factorPromocion = 0;

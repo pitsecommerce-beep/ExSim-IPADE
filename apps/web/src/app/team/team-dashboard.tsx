@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { WorldData } from "@/lib/storage/types";
-import type { EmpresaZonaSegmentoResult } from "@exsim/engine/commercial/types";
+import type { CompanyZoneSegmentResult } from "@exsim/commercial-engine";
 
 interface Props {
   worldId: string;
@@ -25,7 +25,7 @@ interface DecRow {
 export function TeamDashboard({ worldId, teamId }: Props) {
   const [world, setWorld] = useState<WorldData | null>(null);
   const [decisions, setDecisions] = useState<DecRow[]>([]);
-  const [results, setResults] = useState<EmpresaZonaSegmentoResult[] | null>(null);
+  const [results, setResults] = useState<CompanyZoneSegmentResult[] | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<"decisions" | "results">("decisions");
@@ -38,8 +38,8 @@ export function TeamDashboard({ worldId, teamId }: Props) {
 
     const lastPeriod = w.periodos[w.periodos.length - 1];
     if (lastPeriod?.resultados) {
-      const allResults = lastPeriod.resultados as EmpresaZonaSegmentoResult[];
-      setResults(allResults.filter((r) => r.empresaId === teamId));
+      const allResults = lastPeriod.resultados as CompanyZoneSegmentResult[];
+      setResults(allResults.filter((r) => r.companyId === teamId));
     }
 
     setDecisions((prev) => {
@@ -194,7 +194,7 @@ export function TeamDashboard({ worldId, teamId }: Props) {
       {activeTab === "results" && results && results.length > 0 && (
         <div className="space-y-4">
           {world.zonas.map((zona) => {
-            const zonaResults = results.filter((r) => r.zonaId === zona.id);
+            const zonaResults = results.filter((r) => r.zoneKey === zona.id);
             if (zonaResults.length === 0) return null;
 
             return (
@@ -215,17 +215,17 @@ export function TeamDashboard({ worldId, teamId }: Props) {
                     </thead>
                     <tbody>
                       {zonaResults.map((r) => (
-                        <tr key={r.segmento} className="border-b border-ipade-border last:border-0">
+                        <tr key={r.segmentKey} className="border-b border-ipade-border last:border-0">
                           <td className="px-4 py-2 font-medium text-ipade-text">
-                            {r.segmento === "alto" ? "Alto" : "Bajo"}
+                            {r.segmentKey}
                           </td>
                           <td className="px-4 py-2 text-right font-bold text-ipade-accent">
-                            {(r.cuotaAsignada * 100).toFixed(2)}%
+                            {r.cuotaAsignada.toFixed(2)}%
                           </td>
                           <td className="px-4 py-2 text-right">{Math.round(r.demandaGenerada).toLocaleString()}</td>
                           <td className="px-4 py-2 text-right">{r.ventas.toLocaleString()}</td>
-                          <td className={`px-4 py-2 text-right ${r.faltante > 0 ? "font-medium text-red-600" : "text-ipade-text-muted"}`}>
-                            {r.faltante.toLocaleString()}
+                          <td className={`px-4 py-2 text-right ${r.ventasPerdidas > 0 ? "font-medium text-red-600" : "text-ipade-text-muted"}`}>
+                            {r.ventasPerdidas.toLocaleString()}
                           </td>
                         </tr>
                       ))}

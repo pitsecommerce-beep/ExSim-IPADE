@@ -34,6 +34,7 @@ export {
   computeMessageWeight,
   computeAwarenessContribution,
   updateAwareness,
+  validateReachParams,
 } from "./engine/advertising.js";
 export {
   computeDimensionMaxes,

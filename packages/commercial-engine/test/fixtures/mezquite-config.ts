@@ -134,14 +134,6 @@ const mediaSegments: MediaSegmentConfig[] = (seed.medio_segmentos as Array<Recor
     reach_m = radioAlto.M;
     reach_lambda = radioAlto.L;
     reach_k = radioAlto.k;
-  } else if (mediumKey === "TV" && segmentKey === "Bajo") {
-    reach_m = 24.0;
-    reach_lambda = 27.9;
-    reach_k = 2.15;
-  } else if (mediumKey === "Radio" && segmentKey === "Bajo") {
-    reach_m = 21.0;
-    reach_lambda = 40;
-    reach_k = 1.2;
   }
 
   return {
@@ -171,16 +163,8 @@ const demand: DemandRow[] = (seed.demanda as Array<Record<string, unknown>>).map
 }));
 
 const coefficients: CoefficientConfig[] = [];
-const precioA = coefEstimados.precio_a as Record<string, number>;
-const precioB = coefEstimados.precio_b as Record<string, number>;
-
-for (const [seg, val] of Object.entries(precioA)) {
-  coefficients.push({ key: "precio_a", segmentKey: seg, mediumKey: null, value: val });
-}
-for (const [seg, val] of Object.entries(precioB)) {
-  coefficients.push({ key: "precio_b", segmentKey: seg, mediumKey: null, value: val });
-}
-coefficients.push({ key: "presupuesto_c", segmentKey: null, mediumKey: null, value: coefEstimados.presupuesto_c as number });
+coefficients.push({ key: "presupuesto_a", segmentKey: null, mediumKey: null, value: coefEstimados.presupuesto_a as number });
+coefficients.push({ key: "presupuesto_n", segmentKey: null, mediumKey: null, value: coefEstimados.presupuesto_n as number });
 coefficients.push({ key: "producto_beta", segmentKey: null, mediumKey: null, value: coefEstimados.producto_base_beta as number });
 coefficients.push({ key: "publicidad_theta", segmentKey: null, mediumKey: null, value: coefEstimados.publicidad_peso_marca_theta as number });
 
@@ -193,6 +177,8 @@ const flags: EngineFlags = {
   aplicar_mult_seg_fase_presupuesto: false,
   umbral_activo: false,
   actualizacion_instantanea: true,
+  clamp_price_factor: true,
+  zero_factor_kills_total: false,
 };
 
 const zonePhaseSchedule: ZonePhaseScheduleEntry[] = [

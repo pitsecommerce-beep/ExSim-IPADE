@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm --filter @exsim/schema build && pnpm --filter @exsim/ui build && pnpm --filter @exsim/engine build && next build",
+    "build": "pnpm --filter @exsim/schema build && pnpm --filter @exsim/ui build && pnpm --filter @exsim/engine build && pnpm --filter @exsim/commercial-engine build && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "next lint"
   },
   "dependencies": {
+    "@exsim/commercial-engine": "workspace:*",
     "@exsim/engine": "workspace:*",
     "@exsim/schema": "workspace:*",
     "@exsim/ui": "workspace:*",

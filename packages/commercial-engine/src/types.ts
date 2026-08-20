@@ -132,6 +132,8 @@ export interface EngineFlags {
   readonly aplicar_mult_seg_fase_presupuesto: boolean;
   readonly umbral_activo: boolean;
   readonly actualizacion_instantanea: boolean;
+  readonly clamp_price_factor: boolean;
+  readonly zero_factor_kills_total: boolean;
 }
 
 export interface ZonePhaseScheduleEntry {

@@ -1,13 +1,40 @@
-import type {
-  Phase,
-  MultFaseByPhase,
-  LoyaltyByPhase,
-  KappaPrecio,
-  LimitePrecio,
-  UmbralConsideracion,
-} from "./commercial/types.js";
+export type Phase = "rollout" | "growth" | "maturity" | "hypermaturity";
 
-export type { Phase } from "./commercial/types.js";
+type MultFase = {
+  readonly precio: number;
+  readonly producto: number;
+  readonly canal: number;
+  readonly publicidad: number;
+  readonly presupuesto: number;
+  readonly generico: number;
+  readonly caracteristicasMarca: number;
+};
+
+type MultFaseByPhase = {
+  readonly rollout: MultFase;
+  readonly growth: MultFase;
+  readonly maturity: MultFase;
+  readonly hypermaturity: MultFase;
+};
+
+type LoyaltyParams = { readonly alto: number; readonly bajo: number };
+
+type LoyaltyByPhase = {
+  readonly rollout: LoyaltyParams;
+  readonly growth: LoyaltyParams;
+  readonly maturity: LoyaltyParams;
+  readonly hypermaturity: LoyaltyParams;
+};
+
+type KappaPrecio = { readonly alto: number; readonly bajo: number };
+type LimitePrecio = { readonly alto: number; readonly bajo: number };
+
+type UmbralConsideracion = {
+  readonly rollout: { readonly alto: number; readonly bajo: number };
+  readonly growth: { readonly alto: number; readonly bajo: number };
+  readonly maturity: { readonly alto: number; readonly bajo: number };
+  readonly hypermaturity: { readonly alto: number; readonly bajo: number };
+};
 
 export interface ProfileConfig {
   readonly profileId: string;

@@ -3471,7 +3471,8 @@
    "Alto": 113.6,
    "Bajo": 410.8
   },
-  "presupuesto_c": 18.716,
+  "presupuesto_a": 0.7005,
+  "presupuesto_n": 15,
   "producto_base_beta": 0.078,
   "producto_max_por_dimension": {
    "sostenibilidad": 9,
