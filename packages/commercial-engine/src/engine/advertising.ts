@@ -1,4 +1,16 @@
-import type { MediaSegmentConfig, MediumConfig, CompanyMediaDecision } from "../types.js";
+import type { MediaSegmentConfig, MediumConfig, CompanyMediaDecision, CommercialConfig } from "../types.js";
+
+export function validateReachParams(config: CommercialConfig): string[] {
+  const errors: string[] = [];
+  for (const ms of config.mediaSegments) {
+    if (ms.reach_m === null || ms.reach_lambda === null || ms.reach_k === null) {
+      errors.push(
+        `Reach parameters not calibrated for medium=${ms.mediumKey}, segment=${ms.segmentKey}`,
+      );
+    }
+  }
+  return errors;
+}
 
 export function computeReach(
   spots: number,

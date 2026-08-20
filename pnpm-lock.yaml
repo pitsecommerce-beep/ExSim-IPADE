@@ -17,6 +17,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@exsim/commercial-engine':
+        specifier: workspace:*
+        version: link:../../packages/commercial-engine
       '@exsim/engine':
         specifier: workspace:*
         version: link:../../packages/engine

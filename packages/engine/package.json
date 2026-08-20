@@ -9,38 +9,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./commercial/simulate": {
-      "types": "./dist/commercial/simulate.d.ts",
-      "import": "./dist/commercial/simulate.js"
-    },
-    "./commercial/types": {
-      "types": "./dist/commercial/types.d.ts",
-      "import": "./dist/commercial/types.js"
-    },
-    "./commercial/precio": {
-      "types": "./dist/commercial/precio.d.ts",
-      "import": "./dist/commercial/precio.js"
-    },
-    "./commercial/presupuesto": {
-      "types": "./dist/commercial/presupuesto.d.ts",
-      "import": "./dist/commercial/presupuesto.js"
-    },
-    "./commercial/canal": {
-      "types": "./dist/commercial/canal.d.ts",
-      "import": "./dist/commercial/canal.js"
-    },
-    "./commercial/publicidad": {
-      "types": "./dist/commercial/publicidad.d.ts",
-      "import": "./dist/commercial/publicidad.js"
-    },
-    "./commercial/producto": {
-      "types": "./dist/commercial/producto.d.ts",
-      "import": "./dist/commercial/producto.js"
-    },
-    "./commercial/agregacion": {
-      "types": "./dist/commercial/agregacion.d.ts",
-      "import": "./dist/commercial/agregacion.js"
     }
   },
   "scripts": {

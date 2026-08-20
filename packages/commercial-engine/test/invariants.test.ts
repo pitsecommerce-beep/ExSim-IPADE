@@ -1,11 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { computePriceFactor, computeAveragePrice } from "../src/engine/price.js";
-import { computePromotionFactor } from "../src/engine/promotion.js";
 import { computeTotalIndex } from "../src/engine/aggregate.js";
 import { computeFinalIndex, computeRawShare, computeAssignedShare } from "../src/engine/share.js";
 import { computeProductFactor } from "../src/engine/product.js";
 import { mulberry32, hashSeed, generateNoise } from "../src/engine/noise.js";
-import { runCommercialPeriod } from "../src/engine/runner.js";
+import { MEZQUITE_CONFIG } from "./fixtures/mezquite-config.js";
 import type { SegmentConfig, PhaseConfig, EngineFlags, FactorValues } from "../src/index.js";
 
 const SEGMENT_ALTO: SegmentConfig = {
@@ -43,24 +42,53 @@ const FLAGS: EngineFlags = {
   aplicar_mult_seg_fase_presupuesto: false,
   umbral_activo: false,
   actualizacion_instantanea: true,
+  clamp_price_factor: true,
+  zero_factor_kills_total: false,
 };
 
 describe("Invariants", () => {
   it("x=0 in price factor returns exactly 50", () => {
-    const result = computePriceFactor(100, 100, 9.911, 113.6);
+    const result = computePriceFactor(100, 100, 0.2, true);
     expect(result).toBe(50);
   });
 
-  it("promotion zero does not kill total index", () => {
+  it("slope (u-50)/x is constant and equal to -50/kappa for all observations", () => {
+    const kappa = 0.2;
+    const expectedSlope = -50 / kappa;
+    const prices = [77, 75, 75, 79, 80];
+    const avg = computeAveragePrice(prices);
+    for (const price of prices) {
+      const x = (price - avg) / avg;
+      if (Math.abs(x) < 1e-12) continue;
+      const u = computePriceFactor(price, avg, kappa, false);
+      const slope = (u - 50) / x;
+      expect(slope).toBeCloseTo(expectedSlope, 6);
+    }
+  });
+
+  it("a zero factor does NOT kill total index (ECO-KLIN Sur P10 case)", () => {
     const factors: FactorValues = {
-      precio: 50,
-      presupuesto: 100,
+      precio: 39.19,
+      presupuesto: 99.97,
       promocion: 0,
-      publicidad: 50,
-      producto: 20,
+      publicidad: 33.69,
+      producto: 77.30,
     };
     const result = computeTotalIndex(factors, SEGMENT_ALTO, PHASE_GROWTH, 0.25, FLAGS, 1);
     expect(result).toBeGreaterThan(0);
+  });
+
+  it("zero factor kills total when zero_factor_kills_total=true", () => {
+    const flagsKills = { ...FLAGS, zero_factor_kills_total: true };
+    const factors: FactorValues = {
+      precio: 39.19,
+      presupuesto: 99.97,
+      promocion: 0,
+      publicidad: 33.69,
+      producto: 77.30,
+    };
+    const result = computeTotalIndex(factors, SEGMENT_ALTO, PHASE_GROWTH, 0.25, flagsKills, 1);
+    expect(result).toBe(0);
   });
 
   it("final index average includes absent companies as zero", () => {
@@ -75,27 +103,20 @@ describe("Invariants", () => {
     expect(finals.find((f) => f.companyId === "C")!.final).toBe(0);
   });
 
-  it("product factor without improvements gives ~20", () => {
-    const dims = [
-      { key: "sostenibilidad", name: "Eco-friendliness" },
-      { key: "conveniencia", name: "Convenience" },
-      { key: "rendimiento", name: "Performance" },
-      { key: "funcionalidades_extra", name: "Extra features" },
-      { key: "eficiencia", name: "Efficiency" },
-    ];
-    const improvements = [
-      { id: "1", dimensions: { sostenibilidad: 1, conveniencia: 1, rendimiento: 0, funcionalidades_extra: 0, eficiencia: 1 } },
-      { id: "2", dimensions: { sostenibilidad: 2, conveniencia: 0, rendimiento: 0, funcionalidades_extra: 0, eficiencia: 0 } },
-    ];
-    const dimPhases = [
-      { segmentKey: "Alto", phaseKey: "2.Growth", dimensionKey: "sostenibilidad", desired_value: 0.4, propension: 0.3 },
-      { segmentKey: "Alto", phaseKey: "2.Growth", dimensionKey: "conveniencia", desired_value: 0.5, propension: 0.6 },
-      { segmentKey: "Alto", phaseKey: "2.Growth", dimensionKey: "rendimiento", desired_value: 0.7, propension: 0.8 },
-      { segmentKey: "Alto", phaseKey: "2.Growth", dimensionKey: "funcionalidades_extra", desired_value: 0.6, propension: 0.7 },
-      { segmentKey: "Alto", phaseKey: "2.Growth", dimensionKey: "eficiencia", desired_value: 0.4, propension: 0.3 },
-    ];
-    const result = computeProductFactor(dims, [], improvements, dimPhases, "Alto", "2.Growth", 0.078);
-    expect(Math.abs(result - 20)).toBeLessThan(6);
+  it("product factor without improvements is positive and below 20", () => {
+    const cfg = MEZQUITE_CONFIG;
+    const beta = cfg.coefficients.find((c) => c.key === "producto_beta")!.value;
+    const result = computeProductFactor(
+      cfg.dimensions,
+      [],
+      cfg.improvements,
+      cfg.segmentDimensionPhases,
+      "Alto",
+      "2.Growth",
+      beta,
+    );
+    expect(result).toBeGreaterThan(0);
+    expect(result).toBeLessThanOrEqual(20);
   });
 
   it("same seed produces same result twice; different seeds differ", () => {

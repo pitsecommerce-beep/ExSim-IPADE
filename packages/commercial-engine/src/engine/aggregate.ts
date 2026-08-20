@@ -21,42 +21,36 @@ export function computeTotalIndex(
     segWeight: number;
     phaseMult: number;
     applySegFase: boolean;
-    zeroKills: boolean;
   }> = [
     {
       value: factors.precio,
       segWeight: segment.w_precio,
       phaseMult: phase.mult_precio,
       applySegFase: flags.aplicar_mult_seg_fase_precio,
-      zeroKills: true,
     },
     {
       value: factors.presupuesto,
       segWeight: 1.0,
       phaseMult: 1.0,
       applySegFase: flags.aplicar_mult_seg_fase_presupuesto,
-      zeroKills: true,
     },
     {
       value: factors.promocion,
       segWeight: segment.w_canales,
       phaseMult: phase.mult_canales,
       applySegFase: flags.aplicar_mult_seg_fase_canales,
-      zeroKills: false,
     },
     {
       value: factors.publicidad,
       segWeight: segment.w_publicidad,
       phaseMult: phase.mult_publicidad,
       applySegFase: flags.aplicar_mult_seg_fase_publicidad,
-      zeroKills: true,
     },
     {
       value: factors.producto,
       segWeight: segment.w_producto,
       phaseMult: phase.mult_producto,
       applySegFase: flags.aplicar_mult_seg_fase_producto,
-      zeroKills: true,
     },
   ];
 
@@ -65,7 +59,7 @@ export function computeTotalIndex(
   for (const e of entries) {
     const uNorm = e.value / 100;
     if (uNorm <= 0) {
-      if (e.zeroKills) return 0;
+      if (flags.zero_factor_kills_total) return 0;
       continue;
     }
 

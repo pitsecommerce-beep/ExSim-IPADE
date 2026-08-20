@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import type { WorldData, DecisionData } from "@/lib/storage/types";
-import type { EmpresaZonaSegmentoResult } from "@exsim/engine/commercial/types";
+import type { CompanyZoneSegmentResult } from "@exsim/commercial-engine";
 
 type DecRow = Omit<DecisionData, "mejorasActivas"> & { mejorasActivas: string[] };
 
@@ -27,8 +27,8 @@ export default function WorldPage() {
   const params = useParams<{ worldId: string }>();
   const [world, setWorld] = useState<WorldData | null>(null);
   const [decisions, setDecisions] = useState<DecRow[]>([]);
-  const [results, setResults] = useState<EmpresaZonaSegmentoResult[] | null>(null);
-  const [selectedCell, setSelectedCell] = useState<EmpresaZonaSegmentoResult | null>(null);
+  const [results, setResults] = useState<CompanyZoneSegmentResult[] | null>(null);
+  const [selectedCell, setSelectedCell] = useState<CompanyZoneSegmentResult | null>(null);
   const [simulating, setSimulating] = useState(false);
   const [activeTab, setActiveTab] = useState<"decisiones" | "resultados">("decisiones");
   const [selectedZona, setSelectedZona] = useState<string>("");
@@ -214,7 +214,7 @@ export default function WorldPage() {
       {activeTab === "resultados" && results && (
         <ResultsView
           world={world}
-          results={results.filter((r) => r.zonaId === selectedZona)}
+          results={results.filter((r) => r.zoneKey === selectedZona)}
           selectedCell={selectedCell}
           onSelectCell={setSelectedCell}
         />
@@ -361,12 +361,12 @@ function ResultsView({
   onSelectCell,
 }: {
   world: WorldData;
-  results: EmpresaZonaSegmentoResult[];
-  selectedCell: EmpresaZonaSegmentoResult | null;
-  onSelectCell: (cell: EmpresaZonaSegmentoResult | null) => void;
+  results: CompanyZoneSegmentResult[];
+  selectedCell: CompanyZoneSegmentResult | null;
+  onSelectCell: (cell: CompanyZoneSegmentResult | null) => void;
 }) {
-  const altoResults = results.filter((r) => r.segmento === "alto");
-  const bajoResults = results.filter((r) => r.segmento === "bajo");
+  const altoResults = results.filter((r) => r.segmentKey === "Alto");
+  const bajoResults = results.filter((r) => r.segmentKey === "Bajo");
 
   return (
     <div className="space-y-6">
@@ -400,10 +400,10 @@ function SegmentTable({
   onSelectCell,
 }: {
   title: string;
-  results: EmpresaZonaSegmentoResult[];
+  results: CompanyZoneSegmentResult[];
   world: WorldData;
-  selectedCell: EmpresaZonaSegmentoResult | null;
-  onSelectCell: (cell: EmpresaZonaSegmentoResult | null) => void;
+  selectedCell: CompanyZoneSegmentResult | null;
+  onSelectCell: (cell: CompanyZoneSegmentResult | null) => void;
 }) {
   return (
     <div className="rounded-xl border border-ipade-border bg-white shadow-sm">
@@ -430,27 +430,27 @@ function SegmentTable({
           </thead>
           <tbody>
             {results.map((r) => {
-              const emp = world.empresas.find((e) => e.id === r.empresaId);
-              const isSelected = selectedCell?.empresaId === r.empresaId && selectedCell?.segmento === r.segmento;
+              const emp = world.empresas.find((e) => e.id === r.companyId);
+              const isSelected = selectedCell?.companyId === r.companyId && selectedCell?.segmentKey === r.segmentKey;
               return (
                 <tr
-                  key={r.empresaId}
+                  key={r.companyId}
                   onClick={() => onSelectCell(isSelected ? null : r)}
                   className={`cursor-pointer border-b border-ipade-border last:border-0 hover:bg-blue-50 ${isSelected ? "bg-blue-50" : ""}`}
                 >
-                  <td className="px-4 py-2 font-medium text-ipade-text">{emp?.nombre ?? r.empresaId}</td>
-                  <td className="px-4 py-2 text-right">{r.atributos.uPrecio.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">{r.atributos.uPresupuesto.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">{r.atributos.uCanal.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">{r.atributos.uPublicidad.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right">{r.atributos.uProducto.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right font-medium">{r.total.toFixed(4)}</td>
-                  <td className="px-4 py-2 text-right">{r.final.toFixed(2)}</td>
-                  <td className="px-4 py-2 text-right font-bold text-ipade-accent">{(r.cuotaAsignada * 100).toFixed(2)}%</td>
+                  <td className="px-4 py-2 font-medium text-ipade-text">{emp?.nombre ?? r.companyId}</td>
+                  <td className="px-4 py-2 text-right">{r.factorPrecio.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right">{r.factorPresupuesto.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right">{r.factorPromocion.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right">{r.factorPublicidad.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right">{r.factorProducto.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right font-medium">{r.indiceTotal.toFixed(4)}</td>
+                  <td className="px-4 py-2 text-right">{r.indiceFinal.toFixed(2)}</td>
+                  <td className="px-4 py-2 text-right font-bold text-ipade-accent">{r.cuotaAsignada.toFixed(2)}%</td>
                   <td className="px-4 py-2 text-right">{Math.round(r.demandaGenerada).toLocaleString()}</td>
                   <td className="px-4 py-2 text-right">{r.ventas.toLocaleString()}</td>
-                  <td className={`px-4 py-2 text-right ${r.faltante > 0 ? "font-medium text-red-600" : "text-ipade-text-muted"}`}>
-                    {r.faltante.toLocaleString()}
+                  <td className={`px-4 py-2 text-right ${r.ventasPerdidas > 0 ? "font-medium text-red-600" : "text-ipade-text-muted"}`}>
+                    {r.ventasPerdidas.toLocaleString()}
                   </td>
                 </tr>
               );
@@ -467,12 +467,12 @@ function TracePanel({
   world,
   onClose,
 }: {
-  cell: EmpresaZonaSegmentoResult;
+  cell: CompanyZoneSegmentResult;
   world: WorldData;
   onClose: () => void;
 }) {
-  const emp = world.empresas.find((e) => e.id === cell.empresaId);
-  const zona = world.zonas.find((z) => z.id === cell.zonaId);
+  const emp = world.empresas.find((e) => e.id === cell.companyId);
+  const zona = world.zonas.find((z) => z.id === cell.zoneKey);
   const certeza = (nivel: string) => {
     const colors: Record<string, string> = {
       VERIFICADO: "bg-green-100 text-green-800",
@@ -486,7 +486,7 @@ function TracePanel({
     <div className="rounded-xl border border-ipade-accent bg-white p-6 shadow-lg">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="font-bold text-ipade-text">
-          Trazabilidad: {emp?.nombre} — {zona?.nombre} — {cell.segmento === "alto" ? "Alto" : "Bajo"}
+          Trazabilidad: {emp?.nombre} — {zona?.nombre} — {cell.segmentKey}
         </h3>
         <button onClick={onClose} className="text-ipade-text-muted hover:text-ipade-text">Cerrar</button>
       </div>
@@ -498,27 +498,27 @@ function TracePanel({
             <tbody>
               <tr>
                 <td className="py-1 text-ipade-text-muted">u_precio {certeza("VERIFICADO")}</td>
-                <td className="py-1 text-right font-mono">{cell.atributos.uPrecio.toFixed(4)}</td>
+                <td className="py-1 text-right font-mono">{cell.factorPrecio.toFixed(4)}</td>
                 <td className="py-1 pl-3 text-xs text-ipade-text-muted">50 x [1 - (P/Pbar - 1) / kappa]</td>
               </tr>
               <tr>
                 <td className="py-1 text-ipade-text-muted">u_presupuesto {certeza("VERIFICADO")}</td>
-                <td className="py-1 text-right font-mono">{cell.atributos.uPresupuesto.toFixed(4)}</td>
-                <td className="py-1 pl-3 text-xs text-ipade-text-muted">100 x exp(-(P/L)^15)</td>
+                <td className="py-1 text-right font-mono">{cell.factorPresupuesto.toFixed(4)}</td>
+                <td className="py-1 pl-3 text-xs text-ipade-text-muted">100 x exp(-a x (P/L)^n)</td>
               </tr>
               <tr>
                 <td className="py-1 text-ipade-text-muted">u_canal {certeza("VERIFICADO")}</td>
-                <td className="py-1 text-right font-mono">{cell.atributos.uCanal.toFixed(4)}</td>
+                <td className="py-1 text-right font-mono">{cell.factorPromocion.toFixed(4)}</td>
                 <td className="py-1 pl-3 text-xs text-ipade-text-muted">100 x [1 - exp(-(v/d)^2)]</td>
               </tr>
               <tr>
                 <td className="py-1 text-ipade-text-muted">u_publicidad {certeza("CALIBRADO")}</td>
-                <td className="py-1 text-right font-mono">{cell.atributos.uPublicidad.toFixed(4)}</td>
+                <td className="py-1 text-right font-mono">{cell.factorPublicidad.toFixed(4)}</td>
                 <td className="py-1 pl-3 text-xs text-ipade-text-muted">stock de conocimiento</td>
               </tr>
               <tr>
                 <td className="py-1 text-ipade-text-muted">u_producto {certeza("SUPUESTO")}</td>
-                <td className="py-1 text-right font-mono">{cell.atributos.uProducto.toFixed(4)}</td>
+                <td className="py-1 text-right font-mono">{cell.factorProducto.toFixed(4)}</td>
                 <td className="py-1 pl-3 text-xs text-ipade-text-muted">punto ideal vs DesiredValue</td>
               </tr>
             </tbody>
@@ -531,19 +531,19 @@ function TracePanel({
             <tbody>
               <tr>
                 <td className="py-1 text-ipade-text-muted">Total (atraccion)</td>
-                <td className="py-1 text-right font-mono">{cell.total.toFixed(6)}</td>
+                <td className="py-1 text-right font-mono">{cell.indiceTotal.toFixed(6)}</td>
               </tr>
               <tr>
                 <td className="py-1 text-ipade-text-muted">Final (normalizado)</td>
-                <td className="py-1 text-right font-mono">{cell.final.toFixed(4)}</td>
+                <td className="py-1 text-right font-mono">{cell.indiceFinal.toFixed(4)}</td>
               </tr>
               <tr>
-                <td className="py-1 text-ipade-text-muted">Share de atraccion</td>
-                <td className="py-1 text-right font-mono">{(cell.shareAtraccion * 100).toFixed(4)}%</td>
+                <td className="py-1 text-ipade-text-muted">Share bruta</td>
+                <td className="py-1 text-right font-mono">{cell.cuotaBruta.toFixed(4)}%</td>
               </tr>
               <tr className="font-medium">
                 <td className="py-1 text-ipade-text">Cuota asignada</td>
-                <td className="py-1 text-right font-mono text-ipade-accent">{(cell.cuotaAsignada * 100).toFixed(4)}%</td>
+                <td className="py-1 text-right font-mono text-ipade-accent">{cell.cuotaAsignada.toFixed(4)}%</td>
               </tr>
             </tbody>
           </table>
@@ -561,9 +561,9 @@ function TracePanel({
                 <td className="py-1 text-ipade-text-muted">Ventas realizadas</td>
                 <td className="py-1 text-right font-mono">{cell.ventas.toLocaleString()}</td>
               </tr>
-              <tr className={cell.faltante > 0 ? "text-red-600" : ""}>
+              <tr className={cell.ventasPerdidas > 0 ? "text-red-600" : ""}>
                 <td className="py-1">Faltante</td>
-                <td className="py-1 text-right font-mono">{cell.faltante.toLocaleString()}</td>
+                <td className="py-1 text-right font-mono">{cell.ventasPerdidas.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
